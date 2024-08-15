@@ -1,5 +1,5 @@
 import Alamofire
-import HsToolKit
+import WWToolKit
 import ObjectMapper
 
 public class BCoinApi {

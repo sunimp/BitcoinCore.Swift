@@ -1,6 +1,6 @@
 import Foundation
-import HdWalletKit
-import HsToolKit
+import HDWalletKit
+import WWToolKit
 import NIO
 import NIOFoundationCompat
 

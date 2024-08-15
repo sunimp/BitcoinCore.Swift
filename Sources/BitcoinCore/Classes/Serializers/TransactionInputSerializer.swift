@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 enum TransactionInputSerializer {
     static func serialize(input: Input) -> Data {

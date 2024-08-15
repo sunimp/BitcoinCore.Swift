@@ -1,6 +1,6 @@
 import Foundation
-import HsCryptoKit
-import HsExtensions
+import WWCryptoKit
+import WWExtensions
 
 public enum TransactionSerializer {
     public static func serialize(transaction: FullTransaction, withoutWitness: Bool = false) -> Data {

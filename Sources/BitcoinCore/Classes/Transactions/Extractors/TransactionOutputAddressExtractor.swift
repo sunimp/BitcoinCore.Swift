@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 class TransactionOutputAddressExtractor {
     private let storage: IStorage

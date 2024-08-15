@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 public class DoubleShaHasher: IHasher {
     public init() {}

@@ -1,4 +1,4 @@
-import HdWalletKit
+import HDWalletKit
 
 extension Purpose: CustomStringConvertible {
     public var scriptType: ScriptType {

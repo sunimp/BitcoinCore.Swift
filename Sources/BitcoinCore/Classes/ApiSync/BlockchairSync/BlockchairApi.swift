@@ -1,6 +1,6 @@
 import Alamofire
 import Foundation
-import HsToolKit
+import WWToolKit
 import ObjectMapper
 
 public class BlockchairApi {
@@ -41,7 +41,7 @@ public class BlockchairApi {
                 return try await _transactions(addresses: addresses, stopHeight: stopHeight,
                                                receivedScripts: scriptsMerged, receivedTransactions: transactionsMerged)
             }
-        } catch let responseError as HsToolKit.NetworkManager.ResponseError {
+        } catch let responseError as WWToolKit.NetworkManager.ResponseError {
             if responseError.statusCode == 404 {
                 return ([], [])
             } else {
@@ -70,7 +70,7 @@ public class BlockchairApi {
             }
 
             return map
-        } catch let responseError as HsToolKit.NetworkManager.ResponseError {
+        } catch let responseError as WWToolKit.NetworkManager.ResponseError {
             if responseError.statusCode == 404 {
                 return [:]
             } else {
@@ -116,7 +116,7 @@ public class BlockchairApi {
         let url = "\(baseUrl)/\(chainId)/stats"
         let response: BlockchairStatsReponse = try await networkManager.fetch(url: url, method: .get, parameters: parameters)
 
-        return ApiBlockHeaderItem(hash: response.data.bestBlockHash.hs.reversedHexData!, height: response.data.bestBlockHeight, timestamp: response.data.bestBlockTime)
+        return ApiBlockHeaderItem(hash: response.data.bestBlockHash.ww.reversedHexData!, height: response.data.bestBlockHeight, timestamp: response.data.bestBlockTime)
     }
 
     func blockHashes(heights: [Int]) async throws -> [Int: String] {
@@ -132,7 +132,7 @@ public class BlockchairApi {
 
     func broadcastTransaction(hex: Data) async throws {
         let url = "https://api.blockchair.com/\(chainId)/push/transaction"
-        let response: BlockchairBroadcastResponse = try await networkManager.fetch(url: url, method: .post, parameters: ["data": hex.hs.hex])
+        let response: BlockchairBroadcastResponse = try await networkManager.fetch(url: url, method: .post, parameters: ["data": hex.ww.hex])
         guard let data = response.data, data["transaction_hash"] != nil else {
             throw BitcoinCoreErrors.TransactionSendError.apiSendFailed(reason: response.context.error)
         }

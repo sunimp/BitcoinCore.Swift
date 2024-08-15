@@ -1,6 +1,6 @@
 import Foundation
-import HsCryptoKit
-import HsExtensions
+import WWCryptoKit
+import WWExtensions
 
 class NetworkMessageParser: INetworkMessageParser {
     private let magic: UInt32
@@ -21,7 +21,7 @@ class NetworkMessageParser: INetworkMessageParser {
         guard self.magic == magic else {
             return nil
         }
-        let command = byteStream.read(Data.self, count: 12).hs.to(type: String.self)
+        let command = byteStream.read(Data.self, count: 12).ww.to(type: String.self)
         let length = byteStream.read(UInt32.self)
         let checksum = byteStream.read(Data.self, count: 4)
 
@@ -93,10 +93,10 @@ class InventoryMessageParser: IMessageParser {
         for _ in 0 ..< Int(count.underlyingValue) {
             let item = InventoryItem(byteStream: byteStream)
 
-            guard !seen.contains(item.hash.hs.reversedHex) else {
+            guard !seen.contains(item.hash.ww.reversedHex) else {
                 continue
             }
-            seen.insert(item.hash.hs.reversedHex)
+            seen.insert(item.hash.ww.reversedHex)
             inventoryItems.append(item)
         }
 

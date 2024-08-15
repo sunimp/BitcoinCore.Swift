@@ -1,7 +1,7 @@
 import BigInt
 import Foundation
-import HdWalletKit
-import HsToolKit
+import HDWalletKit
+import WWToolKit
 
 public class BitcoinCore {
     private let storage: IStorage
@@ -212,7 +212,7 @@ public extension BitcoinCore {
         }
 
 //        if let t = try transactionBuilder?.buildTransaction(params: params) {
-//            print(TransactionSerializer.serialize(transaction: t.build()).hs.hex)
+//            print(TransactionSerializer.serialize(transaction: t.build()).ww.hex)
 //        }
         return try transactionFeeCalculator.sendInfo(params: params)
     }

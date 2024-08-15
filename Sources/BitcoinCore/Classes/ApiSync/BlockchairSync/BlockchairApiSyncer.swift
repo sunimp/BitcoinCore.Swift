@@ -1,7 +1,7 @@
 import Combine
 import Foundation
-import HsExtensions
-import HsToolKit
+import WWExtensions
+import WWToolKit
 import ObjectMapper
 
 class BlockchairApiSyncer {
@@ -57,7 +57,7 @@ class BlockchairApiSyncer {
         var blockHashPublicKeys = [BlockHashPublicKey]()
 
         for transactionItem in transactionItems {
-            guard let hash = transactionItem.blockHash.hs.reversedHexData else {
+            guard let hash = transactionItem.blockHash.ww.reversedHexData else {
                 continue
             }
 

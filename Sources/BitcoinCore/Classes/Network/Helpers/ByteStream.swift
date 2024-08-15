@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public class ByteStream {
     public let data: Data
@@ -27,7 +27,7 @@ public class ByteStream {
 
     public func read<T>(_ type: T.Type) -> T {
         let size = MemoryLayout<T>.size
-        let value = data[offset ..< (offset + size)].hs.to(type: type)
+        let value = data[offset ..< (offset + size)].ww.to(type: type)
         offset += size
         return value
     }
@@ -37,7 +37,7 @@ public class ByteStream {
             return VarInt(0)
         }
 
-        let len = data[offset ..< (offset + 1)].hs.to(type: UInt8.self)
+        let len = data[offset ..< (offset + 1)].ww.to(type: UInt8.self)
         let length: UInt64
         switch len {
         case 0 ... 252:
@@ -45,19 +45,19 @@ public class ByteStream {
             offset += 1
         case 0xFD:
             offset += 1
-            length = UInt64(data[offset ..< (offset + 2)].hs.to(type: UInt16.self))
+            length = UInt64(data[offset ..< (offset + 2)].ww.to(type: UInt16.self))
             offset += 2
         case 0xFE:
             offset += 1
-            length = UInt64(data[offset ..< (offset + 4)].hs.to(type: UInt32.self))
+            length = UInt64(data[offset ..< (offset + 4)].ww.to(type: UInt32.self))
             offset += 4
         case 0xFF:
             offset += 1
-            length = UInt64(data[offset ..< (offset + 8)].hs.to(type: UInt64.self))
+            length = UInt64(data[offset ..< (offset + 8)].ww.to(type: UInt64.self))
             offset += 8
         default:
             offset += 1
-            length = UInt64(data[offset ..< (offset + 8)].hs.to(type: UInt64.self))
+            length = UInt64(data[offset ..< (offset + 8)].ww.to(type: UInt64.self))
             offset += 8
         }
         return VarInt(length)
@@ -66,7 +66,7 @@ public class ByteStream {
     public func read(_: VarString.Type) -> VarString {
         let length = read(VarInt.self).underlyingValue
         let size = Int(length)
-        let value = data[offset ..< (offset + size)].hs.to(type: String.self)
+        let value = data[offset ..< (offset + size)].ww.to(type: String.self)
         offset += size
         return VarString(value, length: size)
     }

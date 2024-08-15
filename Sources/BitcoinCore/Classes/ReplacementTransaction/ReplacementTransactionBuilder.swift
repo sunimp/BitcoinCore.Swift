@@ -210,7 +210,7 @@ class ReplacementTransactionBuilder {
     }
 
     func replacementTransaction(transactionHash: String, minFee: Int, type: ReplacementType) throws -> (MutableTransaction, FullTransactionForInfo, [String]) {
-        guard let transactionHash = transactionHash.hs.reversedHexData,
+        guard let transactionHash = transactionHash.ww.reversedHexData,
               let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
               originalFullInfo.transactionWithBlock.blockHeight == nil,
               let originalFee = originalFullInfo.metaData.fee,
@@ -276,12 +276,12 @@ class ReplacementTransactionBuilder {
                 outputs: mutableTransaction.outputs,
                 metaData: metadata
             ),
-            descendantTransactions.map(\.metaData.transactionHash.hs.reversedHex)
+            descendantTransactions.map(\.metaData.transactionHash.ww.reversedHex)
         )
     }
 
     func replacementInfo(transactionHash: String, type: ReplacementType) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
-        guard let transactionHash = transactionHash.hs.reversedHexData,
+        guard let transactionHash = transactionHash.ww.reversedHexData,
               let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
               originalFullInfo.transactionWithBlock.blockHeight == nil,
               originalFullInfo.metaData.type != .incoming,

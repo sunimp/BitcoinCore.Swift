@@ -1,6 +1,6 @@
 import Checkpoints
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public struct Checkpoint {
     public let block: Block

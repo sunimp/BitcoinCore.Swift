@@ -1,8 +1,8 @@
 import BigInt
 import Combine
 import Foundation
-import HdWalletKit
-import HsExtensions
+import HDWalletKit
+import WWExtensions
 
 class DataProvider {
     private var cancellables = Set<AnyCancellable>()
@@ -43,7 +43,7 @@ class DataProvider {
 
     private func blockInfo(fromBlock block: Block) -> BlockInfo {
         BlockInfo(
-            headerHash: block.headerHash.hs.reversedHex,
+            headerHash: block.headerHash.ww.reversedHex,
             height: block.height,
             timestamp: block.timestamp
         )

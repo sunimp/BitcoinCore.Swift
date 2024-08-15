@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 class RestoreKeyConverterChain: IRestoreKeyConverter {
     var converters = [IRestoreKeyConverter]()
@@ -116,8 +116,8 @@ public class KeyHashRestoreKeyConverter: IRestoreKeyConverter {
 
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
         switch scriptType {
-        case .p2tr: return [publicKey.convertedForP2tr.hs.hex]
-        default: return [publicKey.hashP2pkh.hs.hex]
+        case .p2tr: return [publicKey.convertedForP2tr.ww.hex]
+        default: return [publicKey.hashP2pkh.ww.hex]
         }
     }
 

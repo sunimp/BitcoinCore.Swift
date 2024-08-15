@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 struct GetBlocksMessage: IMessage {
     /// the protocol version
@@ -19,6 +19,6 @@ struct GetBlocksMessage: IMessage {
     }
 
     var description: String {
-        "\(blockLocatorHashes.map(\.hs.reversedHex))"
+        "\(blockLocatorHashes.map(\.ww.reversedHex))"
     }
 }

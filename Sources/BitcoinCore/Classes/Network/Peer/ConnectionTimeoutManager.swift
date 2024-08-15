@@ -1,5 +1,5 @@
 import Foundation
-import HsToolKit
+import WWToolKit
 
 class ConnectionTimeoutManager: IConnectionTimeoutManager {
     enum TimeoutError: Error {

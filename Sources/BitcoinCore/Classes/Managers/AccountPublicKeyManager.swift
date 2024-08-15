@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 class AccountPublicKeyManager {
     private let restoreKeyConverter: IRestoreKeyConverter

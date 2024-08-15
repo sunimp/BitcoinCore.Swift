@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 class PublicKeyManager {
     enum PublicKeyManagerError: Error {

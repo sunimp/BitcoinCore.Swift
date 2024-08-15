@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 public struct BlockHeader {
     public let version: Int
@@ -134,7 +134,7 @@ public struct FullTransactionForInfo {
     let metaData: TransactionMetadata
 
     var rawTransaction: String {
-        TransactionSerializer.serialize(transaction: fullTransaction).hs.hex
+        TransactionSerializer.serialize(transaction: fullTransaction).ww.hex
     }
 
     var fullTransaction: FullTransaction {

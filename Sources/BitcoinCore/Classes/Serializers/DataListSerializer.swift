@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public enum DataListSerializer {
     static func serialize(dataList: [Data]) -> Data {

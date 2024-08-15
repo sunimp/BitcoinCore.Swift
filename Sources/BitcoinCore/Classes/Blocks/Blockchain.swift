@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 class Blockchain {
     private let storage: IStorage
@@ -93,7 +93,7 @@ extension Blockchain: IBlockchain {
 
     func deleteBlocks(blocks: [Block]) throws {
         let hashes = blocks.reduce(into: [String]()) { acc, block in
-            acc.append(contentsOf: storage.transactions(ofBlock: block).map(\.dataHash.hs.reversedHex))
+            acc.append(contentsOf: storage.transactions(ofBlock: block).map(\.dataHash.ww.reversedHex))
         }
 
         try storage.delete(blocks: blocks)

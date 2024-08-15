@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 class OutputSetter {
     private let outputSorterFactory: ITransactionDataSorterFactory

@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 public class SegWitBech32AddressConverter: IAddressConverter {
     private let prefix: String

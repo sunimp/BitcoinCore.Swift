@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 public class Base58AddressConverter: IAddressConverter {
     private static let checkSumLength = 4

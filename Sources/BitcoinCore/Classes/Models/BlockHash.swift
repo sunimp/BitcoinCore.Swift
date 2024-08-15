@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-import HsExtensions
+import WWExtensions
 
 public class BlockHash: Record {
     let headerHash: Data
@@ -16,7 +16,7 @@ public class BlockHash: Record {
     }
 
     init?(headerHashReversedHex: String?, height: Int?, sequence: Int) {
-        guard let hex = headerHashReversedHex, let height, let headerHash = hex.hs.hexData else {
+        guard let hex = headerHashReversedHex, let height, let headerHash = hex.ww.hexData else {
             return nil
         }
 

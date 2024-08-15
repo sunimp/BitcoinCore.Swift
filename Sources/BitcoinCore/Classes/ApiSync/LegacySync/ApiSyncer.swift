@@ -1,6 +1,6 @@
-import HdWalletKit
-import HsExtensions
-import HsToolKit
+import HDWalletKit
+import WWExtensions
+import WWToolKit
 
 protocol IMultiAccountPublicKeyFetcher {
     var currentAccount: Int { get }

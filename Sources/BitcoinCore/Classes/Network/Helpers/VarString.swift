@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 /// Variable length string can be stored using a variable length integer followed by the string itself.
 public struct VarString {

@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 protocol IHDAccountWallet {
     func publicKey(index: Int, external: Bool) throws -> PublicKey

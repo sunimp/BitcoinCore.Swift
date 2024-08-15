@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public enum OpCode {
     public static let p2pkhStart = Data([OpCode.dup, OpCode.hash160])

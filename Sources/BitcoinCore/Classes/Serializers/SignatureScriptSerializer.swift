@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public enum SignatureScriptSerializer {
     static func deserialize(byteStream: ByteStream) -> [Data] {

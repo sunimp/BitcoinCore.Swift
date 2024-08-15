@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 struct GetHeadersMessage: IMessage {
     /// the protocol version

@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public protocol IBaseTransactionInfoConverter {
     func transactionInfo<T: TransactionInfo>(fromTransaction transactionForInfo: FullTransactionForInfo) -> T
@@ -55,7 +55,7 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
 
         return T(
             uid: transaction.uid,
-            transactionHash: transaction.dataHash.hs.reversedHex,
+            transactionHash: transaction.dataHash.ww.reversedHex,
             transactionIndex: transaction.order,
             inputs: inputsInfo,
             outputs: outputsInfo,
@@ -65,7 +65,7 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
             blockHeight: transactionForInfo.transactionWithBlock.blockHeight,
             timestamp: transactionTimestamp,
             status: transaction.status,
-            conflictingHash: transaction.conflictingTxHash?.hs.reversedHex,
+            conflictingHash: transaction.conflictingTxHash?.ww.reversedHex,
             rbfEnabled: rbfEnabled
         )
     }

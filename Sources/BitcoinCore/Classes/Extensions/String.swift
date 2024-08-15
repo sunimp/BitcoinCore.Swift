@@ -1,8 +1,8 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public extension String {
     var reversedData: Data? {
-        hs.hexData.map { Data($0.reversed()) }
+        self.ww.hexData.map { Data($0.reversed()) }
     }
 }

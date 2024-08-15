@@ -2,7 +2,7 @@
 // import Nimble
 // import XCTest
 // import Cuckoo
-// import HdWalletKit
+// import HDWalletKit
 // @testable import BitcoinCore
 //
 // class WatchedTransactionManagerTests: QuickSpec {

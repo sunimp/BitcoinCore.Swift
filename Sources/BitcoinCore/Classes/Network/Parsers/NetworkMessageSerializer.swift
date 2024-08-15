@@ -1,6 +1,6 @@
 import Foundation
-import HsCryptoKit
-import HsExtensions
+import WWCryptoKit
+import WWExtensions
 
 class NetworkMessageSerializer: INetworkMessageSerializer {
     let magic: UInt32

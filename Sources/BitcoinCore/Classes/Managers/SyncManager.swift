@@ -1,5 +1,5 @@
 import Combine
-import HsToolKit
+import WWToolKit
 
 class SyncManager {
     private var cancellables = Set<AnyCancellable>()

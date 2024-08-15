@@ -1,7 +1,7 @@
 import BigInt
 import Combine
 import Foundation
-import HsToolKit
+import WWToolKit
 import NIO
 
 enum BlockValidatorType { case header, bits, legacy, testNet, EDA, DAA, DGW }

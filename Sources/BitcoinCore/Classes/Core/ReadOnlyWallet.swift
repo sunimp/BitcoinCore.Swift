@@ -1,4 +1,4 @@
-import HdWalletKit
+import HDWalletKit
 
 class ReadOnlyWallet {
     enum ReadOnlyWalletError: Error {

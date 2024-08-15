@@ -1,6 +1,6 @@
 import Foundation
-import HsCryptoKit
-import HsToolKit
+import WWCryptoKit
+import WWToolKit
 
 enum ScriptError: Error { case wrongScriptLength, wrongSequence }
 

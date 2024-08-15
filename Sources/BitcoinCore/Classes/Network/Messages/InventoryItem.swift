@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public struct InventoryItem {
     /// Identifies the object type linked to this inventory

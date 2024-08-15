@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 public struct TransactionMessage: IMessage {
     let transaction: FullTransaction
@@ -11,6 +11,6 @@ public struct TransactionMessage: IMessage {
     }
 
     public var description: String {
-        "\(transaction.header.dataHash.hs.reversedHex)"
+        "\(transaction.header.dataHash.ww.reversedHex)"
     }
 }

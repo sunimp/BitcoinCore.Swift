@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 class PublicKeyFetcher {
     private let hdAccountWallet: HDAccountWallet

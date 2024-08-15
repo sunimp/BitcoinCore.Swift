@@ -469,7 +469,7 @@ open class GrdbStorage {
         SELECT inputs.*, outputs.*
         FROM inputs
         LEFT JOIN outputs ON inputs.previousOutputTxHash = outputs.transactionHash AND inputs.previousOutputIndex = outputs."index"
-        WHERE inputs.transactionHash IN (\(transactionHashes.map { "x'" + $0.hs.hex + "'" }.joined(separator: ",")))
+        WHERE inputs.transactionHash IN (\(transactionHashes.map { "x'" + $0.ww.hex + "'" }.joined(separator: ",")))
         """
         let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
 
@@ -1039,7 +1039,7 @@ extension GrdbStorage: IStorage {
             SELECT transactions.*, blocks.height as blockHeight
             FROM transactions
             LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
-            WHERE transactions.dataHash = \("x'" + hash.hs.hex + "'")                    
+            WHERE transactions.dataHash = \("x'" + hash.ww.hex + "'")                    
             """
 
             let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)

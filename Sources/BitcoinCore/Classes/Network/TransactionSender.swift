@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import HsToolKit
+import WWToolKit
 import QuartzCore
 
 class TransactionSender {

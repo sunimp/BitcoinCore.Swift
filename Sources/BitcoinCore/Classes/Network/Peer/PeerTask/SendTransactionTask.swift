@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 class SendTransactionTask: PeerTask {
     var transaction: FullTransaction
@@ -13,7 +13,7 @@ class SendTransactionTask: PeerTask {
     }
 
     override var state: String {
-        "transaction: \(transaction.header.dataHash.hs.reversedHex)"
+        "transaction: \(transaction.header.dataHash.ww.reversedHex)"
     }
 
     override func start() {

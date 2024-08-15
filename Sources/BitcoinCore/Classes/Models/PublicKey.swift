@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-import HsCryptoKit
+import WWCryptoKit
 
 public class PublicKey: Record {
     public enum InitError: Error {

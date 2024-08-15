@@ -1,5 +1,5 @@
 import Foundation
-import HdWalletKit
+import HDWalletKit
 
 extension HDWallet: IHDWallet {
     public enum HDWalletError: Error {

@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 struct MerkleBlockMessage: IMessage {
     let blockHeader: BlockHeader
@@ -14,7 +14,7 @@ struct MerkleBlockMessage: IMessage {
     let flags: [UInt8]
 
     var description: String {
-        "\(blockHeader.headerHash.hs.reversedHex)"
+        "\(blockHeader.headerHash.ww.reversedHex)"
     }
 }
 

@@ -1,7 +1,7 @@
 import Foundation
-import HdWalletKit
-import HsCryptoKit
-import HsExtensions
+import HDWalletKit
+import WWCryptoKit
+import WWExtensions
 
 class EcdsaInputSigner {
     enum SignError: Error {

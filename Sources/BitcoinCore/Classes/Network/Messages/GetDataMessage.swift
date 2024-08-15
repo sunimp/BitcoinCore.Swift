@@ -1,4 +1,4 @@
-import HsExtensions
+import WWExtensions
 
 /// getdata is used in response to inv, to retrieve the content of a specific object,
 /// and is usually sent after receiving an inv packet, after filtering known elements.

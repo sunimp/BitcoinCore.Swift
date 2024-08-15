@@ -1,5 +1,5 @@
 import Foundation
-import HsExtensions
+import WWExtensions
 
 /// When a network address is needed somewhere,
 /// this structure is used. Network addresses are not prefixed with a timestamp in the version message.

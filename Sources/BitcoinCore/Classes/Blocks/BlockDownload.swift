@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import HsToolKit
+import WWToolKit
 
 public class BlockDownload {
     public weak var listener: IBlockSyncListener?
