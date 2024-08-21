@@ -1,5 +1,13 @@
-import Combine
+//
+//  InitialBlockDownload.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+import Combine
+
 import WWToolKit
 
 public enum InitialDownloadEvent {
@@ -35,7 +43,7 @@ public class InitialBlockDownload {
     public var syncPeer: IPeer?
 
     init(blockSyncer: IBlockSyncer, peerManager: IPeerManager, merkleBlockValidator: IMerkleBlockValidator,
-         peersQueue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.initial-block-download", qos: .userInitiated),
+         peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.initial-block-download", qos: .userInitiated),
          logger: Logger? = nil)
     {
         self.blockSyncer = blockSyncer

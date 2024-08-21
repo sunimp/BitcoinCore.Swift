@@ -1,3 +1,12 @@
+//
+//  TransactionDataSorters.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 class Bip69Sorter: ITransactionDataSorter {
     func sort(outputs: [Output]) -> [Output] {
         outputs.sorted(by: Bip69.outputComparator)

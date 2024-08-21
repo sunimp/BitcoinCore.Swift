@@ -1,6 +1,6 @@
 # BitcoinCore.Swift
 
-`BitcoinCore.Swift` is a core package that implements a full Simplified Payment Verification (`SPV`) client in `Swift`. It implements Bitcoin `P2P Protocol` and can be extended to be a client of other Bitcoin forks like BitcoinCash, Litecoin, etc. Currently, we have extensions [BitcoinKit.Swift](https://github.com/horizontalsystems/BitcoinKit.Swift), [BitcoinCashKit.Swift](https://github.com/horizontalsystems/BitcoinCashKit.Swift), [LitecoinKit.Swift](https://github.com/horizontalsystems/LitecoinKit.Swift) and [DashKit.Swift](https://github.com/horizontalsystems/DashKit.Swift) that complement this package with blockchain(fork) specific logic and used by `UnstoppableWallet` for integration of them.
+`BitcoinCore.Swift` is a core package that implements a full Simplified Payment Verification (`SPV`) client in `Swift`. It implements Bitcoin `P2P Protocol` and can be extended to be a client of other Bitcoin forks like BitcoinCash, Litecoin, etc. Currently, we have extensions [BitcoinKit.Swift](https://github.com/sunimp/BitcoinKit.Swift), [BitcoinCashKit.Swift](https://github.com/sunimp/BitcoinCashKit.Swift), [LitecoinKit.Swift](https://github.com/sunimp/LitecoinKit.Swift) and [DashKit.Swift](https://github.com/sunimp/DashKit.Swift) that complement this package with blockchain(fork) specific logic.
 
 Being an SPV client, `BitcoinCore.Swift` downloads and validates all the block headers, inclusion of transactions in the blocks, integrity and immutability of transactions as described in the Bitcoin whitepaper or delegates validation to the extensions that implement the forks of Bitcoin.  
 
@@ -20,7 +20,7 @@ Being an SPV client, `BitcoinCore.Swift` downloads and validates all the block h
 
 ## Usage
 
-This package is designed to be used by a concrete kit like BitcoinKit.Swift. See [BitcoinKit.Swift](https://github.com/horizontalsystems/BitcoinKit.Swift) for more documentation.
+This package is designed to be used by a concrete kit like BitcoinKit.Swift. See [BitcoinKit.Swift](https://github.com/sunimp/BitcoinKit.Swift) for more documentation.
 
 ## Prerequisites
 
@@ -34,11 +34,11 @@ This package is designed to be used by a concrete kit like BitcoinKit.Swift. See
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/horizontalsystems/BitcoinCore.Swift.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/sunimp/BitcoinCore.Swift.git", .upToNextMajor(from: "1.0.0"))
 ]
 ```
 
 ## License
 
-The `BitcoinCore.Swift` toolkit is open source and available under the terms of the [MIT License](https://github.com/horizontalsystems/BitcoinCore.Swift/blob/master/LICENSE).
+The `BitcoinCore.Swift` toolkit is open source and available under the terms of the [MIT License](https://github.com/sunimp/BitcoinCore.Swift/blob/master/LICENSE).
 

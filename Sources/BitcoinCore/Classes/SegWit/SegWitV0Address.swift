@@ -1,3 +1,10 @@
+//
+//  SegWitV0Address.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
 
 public class SegWitV0Address: Address, Equatable {

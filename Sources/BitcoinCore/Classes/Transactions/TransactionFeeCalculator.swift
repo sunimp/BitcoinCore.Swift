@@ -1,3 +1,12 @@
+//
+//  TransactionFeeCalculator.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 class TransactionFeeCalculator {
     private let recipientSetter: IRecipientSetter
     private let inputSetter: IInputSetter

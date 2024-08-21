@@ -1,7 +1,15 @@
-import Combine
+//
+//  TransactionSender.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
-import WWToolKit
 import QuartzCore
+import Combine
+
+import WWToolKit
 
 class TransactionSender {
     static let minConnectedPeersCount = 2
@@ -21,7 +29,7 @@ class TransactionSender {
     private let retriesPeriod: Double // seconds
 
     init(transactionSyncer: ITransactionSyncer, initialBlockDownload: IInitialDownload, peerManager: IPeerManager, storage: IStorage, timer: ITransactionSendTimer,
-         logger: Logger? = nil, queue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.transaction-sender", qos: .background),
+         logger: Logger? = nil, queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.transaction-sender", qos: .background),
          sendType: BitcoinCore.SendType, maxRetriesCount: Int = 3, retriesPeriod: Double = 60)
     {
         self.transactionSyncer = transactionSyncer

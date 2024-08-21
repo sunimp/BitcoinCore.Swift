@@ -1,9 +1,31 @@
+//
+//  BitcoinCoreBuilder.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import HDWalletKit
 import WWToolKit
 
 public class BitcoinCoreBuilder {
-    public enum BuildError: Error { case peerSizeLessThanRequired, noSeedData, noPurpose, noWalletId, noNetwork, noPaymentAddressParser, noAddressSelector, noStorage, noApiProvider, notSupported, noApiSyncStateManager, noCheckpoint }
+    
+    public enum BuildError: Error {
+        case peerSizeLessThanRequired
+        case noSeedData
+        case noPurpose
+        case noWalletId
+        case noNetwork
+        case noPaymentAddressParser
+        case noAddressSelector
+        case noStorage
+        case noApiProvider
+        case notSupported
+        case noApiSyncStateManager
+        case noCheckpoint
+    }
 
     // chains
     public let addressConverter = AddressConverterChain()
@@ -232,7 +254,7 @@ public class BitcoinCoreBuilder {
         let transactionExtractor = TransactionExtractor(outputScriptTypeParser: outputScriptTypeParser, publicKeySetter: publicKeySetter, inputExtractor: transactionInputExtractor, metaDataExtractor: transactionMetadataExtractor, outputAddressExtractor: transactionAddressExtractor, pluginManager: pluginManager)
         let transactionInvalidator = TransactionInvalidator(storage: storage, transactionInfoConverter: transactionInfoConverter, listener: dataProvider)
         let transactionConflictResolver = TransactionConflictsResolver(storage: storage)
-        let transactionsProcessorQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.transaction-processor", qos: .background)
+        let transactionsProcessorQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.transaction-processor", qos: .background)
         let blockTransactionProcessor = BlockTransactionProcessor(storage: storage, extractor: transactionExtractor, publicKeyManager: publicKeyManager, irregularOutputFinder: irregularOutputFinder, conflictsResolver: transactionConflictResolver, invalidator: transactionInvalidator, listener: dataProvider, queue: transactionsProcessorQueue)
         let pendingTransactionProcessor = PendingTransactionProcessor(storage: storage, extractor: transactionExtractor, publicKeyManager: publicKeyManager, irregularOutputFinder: irregularOutputFinder, conflictsResolver: transactionConflictResolver, ignoreIncoming: syncMode == .blockchair, listener: dataProvider, queue: transactionsProcessorQueue)
 

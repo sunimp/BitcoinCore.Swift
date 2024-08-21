@@ -1,3 +1,12 @@
+//
+//  BiApiBlockProvider.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 public class BiApiBlockProvider: IApiTransactionProvider {
     private let restoreProvider: IApiTransactionProvider
     private let syncProvider: IApiTransactionProvider

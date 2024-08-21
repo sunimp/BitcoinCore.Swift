@@ -1,5 +1,13 @@
-import Checkpoints
+//
+//  Checkpoint.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
+import Checkpoints
 import WWExtensions
 
 public struct Checkpoint {

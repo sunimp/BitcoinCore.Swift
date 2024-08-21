@@ -1,3 +1,10 @@
+//
+//  WatchedTransactionManager.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
 
 class WatchedTransactionManager {
@@ -17,7 +24,7 @@ class WatchedTransactionManager {
     private let queue: DispatchQueue
     weak var bloomFilterManager: IBloomFilterManager?
 
-    init(queue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.watched-transactions-manager", qos: .background)) {
+    init(queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.watched-transactions-manager", qos: .background)) {
         self.queue = queue
     }
 

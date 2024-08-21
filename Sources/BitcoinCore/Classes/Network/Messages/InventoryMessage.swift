@@ -1,4 +1,12 @@
+//
+//  InventoryMessage.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import WWExtensions
 
 /// Allows a node to advertise its knowledge of one or more objects. It can be received unsolicited, or in reply to getblocks.

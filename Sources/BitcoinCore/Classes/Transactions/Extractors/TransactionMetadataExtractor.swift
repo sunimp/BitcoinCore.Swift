@@ -1,3 +1,12 @@
+//
+//  TransactionMetadataExtractor.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 class TransactionMetadataExtractor {
     private let myOutputsCache: IOutputsCache
     private let storage: IOutputStorage

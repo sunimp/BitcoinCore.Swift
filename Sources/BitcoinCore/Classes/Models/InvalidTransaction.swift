@@ -1,4 +1,12 @@
+//
+//  InvalidTransaction.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import GRDB
 
 public class InvalidTransaction: Transaction {

@@ -1,5 +1,13 @@
-import BigInt
+//
+//  LegacyTestNetDifficultyValidator.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
+import BigInt
 
 public class LegacyTestNetDifficultyValidator: IBlockChainedValidator {
     private let diffDate = 1_329_264_000 // February 16th 2012

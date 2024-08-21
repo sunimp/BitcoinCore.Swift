@@ -1,4 +1,12 @@
+//
+//  PeerAddressManager.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import WWToolKit
 
 class PeerAddressManager {
@@ -9,7 +17,7 @@ class PeerAddressManager {
     private var peerDiscovery: IPeerDiscovery
     private let state: PeerAddressManagerState
     private let logger: Logger?
-    private let queue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.peer-address-manager", qos: .background)
+    private let queue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-address-manager", qos: .background)
 
     init(storage: IStorage, dnsSeeds: [String], peerDiscovery: IPeerDiscovery, state: PeerAddressManagerState = PeerAddressManagerState(), logger: Logger? = nil) {
         self.storage = storage

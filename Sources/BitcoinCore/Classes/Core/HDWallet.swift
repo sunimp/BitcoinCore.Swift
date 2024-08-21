@@ -1,4 +1,12 @@
+//
+//  HDWallet.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import HDWalletKit
 
 extension HDWallet: IHDWallet {

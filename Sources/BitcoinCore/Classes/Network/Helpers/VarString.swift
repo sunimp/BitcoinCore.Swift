@@ -1,4 +1,12 @@
+//
+//  VarString.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import WWExtensions
 
 /// Variable length string can be stored using a variable length integer followed by the string itself.

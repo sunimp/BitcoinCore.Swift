@@ -1,5 +1,13 @@
-import BigInt
+//
+//  BitcoinCore.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
+import BigInt
 import HDWalletKit
 import WWToolKit
 
@@ -78,7 +86,7 @@ public class BitcoinCore {
 
     // END: Extending
 
-    public var delegateQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.bitcoin-core-delegate-queue")
+    public var delegateQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.bitcoin-core-delegate-queue")
     public weak var delegate: BitcoinCoreDelegate?
 
     init(storage: IStorage, dataProvider: IDataProvider,

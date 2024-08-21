@@ -1,4 +1,12 @@
+//
+//  Transaction.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import GRDB
 
 public enum TransactionStatus: Int, DatabaseValueConvertible, Codable { case new, relayed, invalid }

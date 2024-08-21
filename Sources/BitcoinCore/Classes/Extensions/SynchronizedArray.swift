@@ -1,7 +1,15 @@
+//
+//  SynchronizedArray.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
 
 /// A thread-safe array.
 public class SynchronizedArray<Element> {
+    
     private let queue = DispatchQueue(label: "io.SynchronizedArray", attributes: .concurrent)
     private var array = [Element]()
 }

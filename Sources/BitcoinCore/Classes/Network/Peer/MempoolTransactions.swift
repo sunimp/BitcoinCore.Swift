@@ -1,5 +1,12 @@
-import Combine
+//
+//  MempoolTransactions.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+import Combine
 
 class MempoolTransactions {
     private var cancellables = Set<AnyCancellable>()
@@ -9,7 +16,7 @@ class MempoolTransactions {
     private let peersQueue: DispatchQueue
 
     init(transactionSyncer: ITransactionSyncer, transactionSender: ITransactionSender?,
-         peersQueue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.mempool-transactions", qos: .userInitiated))
+         peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.mempool-transactions", qos: .userInitiated))
     {
         self.transactionSyncer = transactionSyncer
         self.transactionSender = transactionSender

@@ -1,3 +1,10 @@
+//
+//  RejectMessage.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
 
 /// The reject message is sent when messages are rejected.

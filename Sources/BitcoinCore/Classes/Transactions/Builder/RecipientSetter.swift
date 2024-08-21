@@ -1,3 +1,12 @@
+//
+//  RecipientSetter.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 class RecipientSetter {
     private let addressConverter: IAddressConverter
     private let pluginManager: IPluginManager

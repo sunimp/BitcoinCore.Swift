@@ -1,3 +1,12 @@
+//
+//  DustCalculator.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 public class DustCalculator {
     private let minFeeRate: Int
     private let sizeCalculator: ITransactionSizeCalculator

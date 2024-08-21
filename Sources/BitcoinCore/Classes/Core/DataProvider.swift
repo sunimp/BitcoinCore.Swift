@@ -1,6 +1,14 @@
-import BigInt
-import Combine
+//
+//  DataProvider.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+import Combine
+
+import BigInt
 import HDWalletKit
 import WWExtensions
 
@@ -21,7 +29,7 @@ class DataProvider {
         }
     }
 
-    private let lastBlockInfoQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.data-provider.last-block-info", qos: .utility)
+    private let lastBlockInfoQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.data-provider.last-block-info", qos: .utility)
     private var _lastBlockInfo: BlockInfo?
 
     weak var delegate: IDataProviderDelegate?

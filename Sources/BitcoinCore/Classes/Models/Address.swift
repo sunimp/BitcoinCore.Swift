@@ -1,3 +1,10 @@
+//
+//  Address.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
 
 public enum AddressType: UInt8 { case pubKeyHash = 0, scriptHash = 8 }

@@ -1,3 +1,12 @@
+//
+//  BlockMedianTimeHelper.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 public class BlockMedianTimeHelper {
     private let medianTimeSpan = 11
     private let storage: IStorage

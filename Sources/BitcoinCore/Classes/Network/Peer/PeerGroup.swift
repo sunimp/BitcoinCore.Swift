@@ -1,5 +1,13 @@
-import Combine
+//
+//  PeerGroup.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+import Combine
+
 import WWToolKit
 import NIO
 
@@ -44,8 +52,8 @@ class PeerGroup {
 
     init(factory: IFactory, reachabilityManager: ReachabilityManager,
          peerAddressManager: IPeerAddressManager, peerCount: Int = 10, localDownloadedBestBlockHeight: Int32,
-         peerManager: IPeerManager, peersQueue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.peer-group.peers", qos: .background),
-         inventoryQueue: DispatchQueue = DispatchQueue(label: "io.horizontalsystems.bitcoin-core.peer-group.inventory", qos: .background),
+         peerManager: IPeerManager, peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.peers", qos: .background),
+         inventoryQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.inventory", qos: .background),
          logger: Logger? = nil)
     {
         self.factory = factory

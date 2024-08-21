@@ -1,7 +1,16 @@
+//
+//  Array+.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import GRDB
 
-extension [FullTransaction] {
+extension Array where Element == FullTransaction {
+    
     func inTopologicalOrder() -> [FullTransaction] {
         var ordered = [FullTransaction]()
 

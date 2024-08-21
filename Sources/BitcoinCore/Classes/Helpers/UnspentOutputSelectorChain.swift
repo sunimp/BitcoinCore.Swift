@@ -1,3 +1,12 @@
+//
+//  UnspentOutputSelectorChain.swift
+//  BitcoinCore
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 class UnspentOutputSelectorChain: IUnspentOutputSelector {
     private let provider: IUnspentOutputProvider
     var concreteSelectors = [IUnspentOutputSelector]()

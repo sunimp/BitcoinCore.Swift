@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## Current Version
 
+## 3.0.3
+Typo
+
+## History Version
+
 ## 0.18.0
 
 * Add transaction filters [ **non-back-compatible api change** ]
