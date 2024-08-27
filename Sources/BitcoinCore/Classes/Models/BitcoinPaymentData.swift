@@ -17,7 +17,14 @@ public struct BitcoinPaymentData: Equatable {
 
     public let parameters: [String: String]?
 
-    init(address: String, version: String? = nil, amount: Double? = nil, label: String? = nil, message: String? = nil, parameters: [String: String]? = nil) {
+    init(
+        address: String,
+        version: String? = nil,
+        amount: Double? = nil,
+        label: String? = nil,
+        message: String? = nil,
+        parameters: [String: String]? = nil
+    ) {
         self.address = address
         self.version = version
         self.amount = amount

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - PendingTransactionProcessor
+
 class PendingTransactionProcessor {
     private let storage: IStorage
     private let extractor: ITransactionExtractor
@@ -15,16 +17,23 @@ class PendingTransactionProcessor {
     private let conflictsResolver: ITransactionConflictsResolver
     private let ignoreIncoming: Bool
 
-    weak var listener: IBlockchainDataListener?
-    weak var transactionListener: ITransactionListener?
+    weak var listener: IBlockchainDataListener? = nil
+    weak var transactionListener: ITransactionListener? = nil
 
     private let queue: DispatchQueue
 
     private var notMineTransactions = Set<Data>()
 
-    init(storage: IStorage, extractor: ITransactionExtractor, publicKeyManager: IPublicKeyManager, irregularOutputFinder: IIrregularOutputFinder, conflictsResolver: ITransactionConflictsResolver, ignoreIncoming: Bool,
-         listener: IBlockchainDataListener? = nil, queue: DispatchQueue)
-    {
+    init(
+        storage: IStorage,
+        extractor: ITransactionExtractor,
+        publicKeyManager: IPublicKeyManager,
+        irregularOutputFinder: IIrregularOutputFinder,
+        conflictsResolver: ITransactionConflictsResolver,
+        ignoreIncoming: Bool,
+        listener: IBlockchainDataListener? = nil,
+        queue: DispatchQueue
+    ) {
         self.storage = storage
         self.extractor = extractor
         self.publicKeyManager = publicKeyManager
@@ -52,6 +61,8 @@ class PendingTransactionProcessor {
         }
     }
 }
+
+// MARK: IPendingTransactionProcessor
 
 extension PendingTransactionProcessor: IPendingTransactionProcessor {
     func processReceived(transactions: [FullTransaction], skipCheckBloomFilter: Bool) throws {

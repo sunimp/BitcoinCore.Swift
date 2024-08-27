@@ -9,6 +9,8 @@ import Foundation
 
 import WWToolKit
 
+// MARK: - PluginManager
+
 class PluginManager {
     enum PluginError: Error {
         case pluginNotFound
@@ -24,6 +26,8 @@ class PluginManager {
         self.logger = logger
     }
 }
+
+// MARK: IPluginManager
 
 extension PluginManager: IPluginManager {
     func validate(address: Address, pluginData: [UInt8: IPluginData]) throws {
@@ -50,7 +54,11 @@ extension PluginManager: IPluginManager {
         plugins[plugin.id] = plugin
     }
 
-    func processOutputs(mutableTransaction: MutableTransaction, pluginData: [UInt8: IPluginData], skipChecks: Bool = false) throws {
+    func processOutputs(
+        mutableTransaction: MutableTransaction,
+        pluginData: [UInt8: IPluginData],
+        skipChecks: Bool = false
+    ) throws {
         for (key, data) in pluginData {
             guard let plugin = plugins[key] else {
                 throw PluginError.pluginNotFound
@@ -62,11 +70,11 @@ extension PluginManager: IPluginManager {
 
     func processInputs(mutableTransaction: MutableTransaction) throws {
         for inputToSign in mutableTransaction.inputsToSign {
-            guard let pluginId = inputToSign.previousOutput.pluginId else {
+            guard let pluginID = inputToSign.previousOutput.pluginID else {
                 continue
             }
 
-            guard let plugin = plugins[pluginId] else {
+            guard let plugin = plugins[pluginID] else {
                 throw PluginError.pluginNotFound
             }
 
@@ -85,8 +93,8 @@ extension PluginManager: IPluginManager {
         _ = iterator.next()
 
         do {
-            while let pluginId = iterator.next() {
-                guard let plugin = plugins[pluginId.opCode] else {
+            while let pluginID = iterator.next() {
+                guard let plugin = plugins[pluginID.opCode] else {
                     break
                 }
 
@@ -98,19 +106,23 @@ extension PluginManager: IPluginManager {
     }
 
     func isSpendable(unspentOutput: UnspentOutput) -> Bool {
-        guard let pluginId = unspentOutput.output.pluginId else {
+        guard let pluginID = unspentOutput.output.pluginID else {
             return true
         }
 
-        guard let plugin = plugins[pluginId] else {
+        guard let plugin = plugins[pluginID] else {
             return false
         }
 
         return (try? plugin.isSpendable(unspentOutput: unspentOutput)) ?? true
     }
 
-    public func parsePluginData(fromPlugin pluginId: UInt8, pluginDataString: String, transactionTimestamp: Int) -> IPluginOutputData? {
-        guard let plugin = plugins[pluginId] else {
+    public func parsePluginData(
+        fromPlugin pluginID: UInt8,
+        pluginDataString: String,
+        transactionTimestamp: Int
+    ) -> IPluginOutputData? {
+        guard let plugin = plugins[pluginID] else {
             return nil
         }
 
@@ -118,8 +130,9 @@ extension PluginManager: IPluginManager {
     }
 
     public func incrementedSequence(of inputWithPreviousOutput: InputWithPreviousOutput) -> Int {
-        guard let pluginId = inputWithPreviousOutput.previousOutput?.pluginId,
-              let plugin = plugins[pluginId]
+        guard
+            let pluginID = inputWithPreviousOutput.previousOutput?.pluginID,
+            let plugin = plugins[pluginID]
         else {
             return inputWithPreviousOutput.input.sequence + 1
         }

@@ -11,6 +11,8 @@ import BigInt
 import HDWalletKit
 import WWToolKit
 
+// MARK: - BitcoinCore
+
 public class BitcoinCore {
     private let storage: IStorage
     private var dataProvider: IDataProvider
@@ -58,12 +60,14 @@ public class BitcoinCore {
         restoreKeyConverterChain.add(converter: restoreKeyConverter)
     }
 
-    @discardableResult public func add(messageParser: IMessageParser) -> Self {
+    @discardableResult
+    public func add(messageParser: IMessageParser) -> Self {
         networkMessageParser.add(parser: messageParser)
         return self
     }
 
-    @discardableResult public func add(messageSerializer: IMessageSerializer) -> Self {
+    @discardableResult
+    public func add(messageSerializer: IMessageSerializer) -> Self {
         networkMessageSerializer.add(serializer: messageSerializer)
         return self
     }
@@ -87,17 +91,33 @@ public class BitcoinCore {
     // END: Extending
 
     public var delegateQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.bitcoin-core-delegate-queue")
-    public weak var delegate: BitcoinCoreDelegate?
+    public weak var delegate: BitcoinCoreDelegate? = nil
 
-    init(storage: IStorage, dataProvider: IDataProvider,
-         peerGroup: IPeerGroup, initialDownload: IInitialDownload, bloomFilterLoader: BloomFilterLoader, transactionSyncer: ITransactionSyncer,
-         publicKeyManager: IPublicKeyManager, addressConverter: AddressConverterChain, restoreKeyConverterChain: RestoreKeyConverterChain,
-         unspentOutputSelector: UnspentOutputSelectorChain,
-         transactionCreator: ITransactionCreator?, transactionFeeCalculator: ITransactionFeeCalculator?, transactionBuilder: ITransactionBuilder?, replacementTransactionBuilder: ReplacementTransactionBuilder?, dustCalculator: IDustCalculator?,
-         paymentAddressParser: IPaymentAddressParser, networkMessageParser: NetworkMessageParser, networkMessageSerializer: NetworkMessageSerializer,
-         syncManager: SyncManager, pluginManager: IPluginManager, watchedTransactionManager: IWatchedTransactionManager, purpose: Purpose,
-         peerManager: IPeerManager)
-    {
+    init(
+        storage: IStorage,
+        dataProvider: IDataProvider,
+        peerGroup: IPeerGroup,
+        initialDownload: IInitialDownload,
+        bloomFilterLoader: BloomFilterLoader,
+        transactionSyncer: ITransactionSyncer,
+        publicKeyManager: IPublicKeyManager,
+        addressConverter: AddressConverterChain,
+        restoreKeyConverterChain: RestoreKeyConverterChain,
+        unspentOutputSelector: UnspentOutputSelectorChain,
+        transactionCreator: ITransactionCreator?,
+        transactionFeeCalculator: ITransactionFeeCalculator?,
+        transactionBuilder: ITransactionBuilder?,
+        replacementTransactionBuilder: ReplacementTransactionBuilder?,
+        dustCalculator: IDustCalculator?,
+        paymentAddressParser: IPaymentAddressParser,
+        networkMessageParser: NetworkMessageParser,
+        networkMessageSerializer: NetworkMessageSerializer,
+        syncManager: SyncManager,
+        pluginManager: IPluginManager,
+        watchedTransactionManager: IWatchedTransactionManager,
+        purpose: Purpose,
+        peerManager: IPeerManager
+    ) {
         self.storage = storage
         self.dataProvider = dataProvider
         self.peerGroup = peerGroup
@@ -137,36 +157,36 @@ extension BitcoinCore {
     }
 }
 
-public extension BitcoinCore {
-    var watchAccount: Bool { // TODO: What is better way to determine watch?
+extension BitcoinCore {
+    public var watchAccount: Bool { // TODO: What is better way to determine watch?
         transactionCreator == nil
     }
 
-    var lastBlockInfo: BlockInfo? {
+    public var lastBlockInfo: BlockInfo? {
         dataProvider.lastBlockInfo
     }
 
-    var balance: BalanceInfo {
+    public var balance: BalanceInfo {
         dataProvider.balance
     }
 
-    var syncState: BitcoinCore.KitState {
+    public var syncState: BitcoinCore.KitState {
         syncManager.syncState
     }
 
-    func transactions(fromUid: String? = nil, type: TransactionFilterType?, limit: Int? = nil) -> [TransactionInfo] {
+    public func transactions(fromUid: String? = nil, type: TransactionFilterType?, limit: Int? = nil) -> [TransactionInfo] {
         dataProvider.transactions(fromUid: fromUid, type: type, limit: limit)
     }
 
-    func transaction(hash: String) -> TransactionInfo? {
+    public func transaction(hash: String) -> TransactionInfo? {
         dataProvider.transaction(hash: hash)
     }
 
-    func unspentOutputs(filters: UtxoFilters) -> [UnspentOutput] {
+    public func unspentOutputs(filters: UtxoFilters) -> [UnspentOutput] {
         unspentOutputSelector.all(filters: filters)
     }
 
-    func unspentOutputsInfo(filters: UtxoFilters) -> [UnspentOutputInfo] {
+    public func unspentOutputsInfo(filters: UtxoFilters) -> [UnspentOutputInfo] {
         unspentOutputSelector.all(filters: filters).map {
             .init(
                 outputIndex: $0.output.index,
@@ -178,11 +198,11 @@ public extension BitcoinCore {
         }
     }
 
-    func address(fromHash hash: Data, scriptType: ScriptType) throws -> Address {
+    public func address(fromHash hash: Data, scriptType: ScriptType) throws -> Address {
         try addressConverter.convert(lockingScriptPayload: hash, type: scriptType)
     }
 
-    func send(params: SendParameters) throws -> FullTransaction {
+    public func send(params: SendParameters) throws -> FullTransaction {
         guard let transactionCreator else {
             throw CoreError.readOnlyCore
         }
@@ -190,7 +210,7 @@ public extension BitcoinCore {
         return try transactionCreator.create(params: params)
     }
 
-    internal func redeem(from unspentOutput: UnspentOutput, params: SendParameters) throws -> FullTransaction {
+    func redeem(from unspentOutput: UnspentOutput, params: SendParameters) throws -> FullTransaction {
         guard let transactionCreator else {
             throw CoreError.readOnlyCore
         }
@@ -198,7 +218,7 @@ public extension BitcoinCore {
         return try transactionCreator.create(from: unspentOutput, params: params)
     }
 
-    func createRawTransaction(params: SendParameters) throws -> Data {
+    public func createRawTransaction(params: SendParameters) throws -> Data {
         guard let transactionCreator else {
             throw CoreError.readOnlyCore
         }
@@ -206,15 +226,15 @@ public extension BitcoinCore {
         return try transactionCreator.createRawTransaction(params: params)
     }
 
-    func validate(address: String, pluginData: [UInt8: IPluginData] = [:]) throws {
+    public func validate(address: String, pluginData: [UInt8: IPluginData] = [:]) throws {
         try pluginManager.validate(address: addressConverter.convert(address: address), pluginData: pluginData)
     }
 
-    func parse(paymentAddress: String) -> BitcoinPaymentData {
+    public func parse(paymentAddress: String) -> BitcoinPaymentData {
         paymentAddressParser.parse(paymentAddress: paymentAddress)
     }
 
-    func sendInfo(params: SendParameters) throws -> BitcoinSendInfo {
+    public func sendInfo(params: SendParameters) throws -> BitcoinSendInfo {
         guard let transactionFeeCalculator else {
             throw CoreError.readOnlyCore
         }
@@ -225,7 +245,7 @@ public extension BitcoinCore {
         return try transactionFeeCalculator.sendInfo(params: params)
     }
 
-    func maxSpendableValue(params: SendParameters) throws -> Int {
+    public func maxSpendableValue(params: SendParameters) throws -> Int {
         guard let transactionFeeCalculator else {
             throw CoreError.readOnlyCore
         }
@@ -240,7 +260,7 @@ public extension BitcoinCore {
         return max(0, balance - sendAllFee)
     }
 
-    func minSpendableValue(params: SendParameters) throws -> Int {
+    public func minSpendableValue(params: SendParameters) throws -> Int {
         guard let dustCalculator else {
             throw CoreError.readOnlyCore
         }
@@ -253,13 +273,14 @@ public extension BitcoinCore {
         return dustCalculator.dust(type: scriptType, dustThreshold: params.dustThreshold)
     }
 
-    func maxSpendLimit(pluginData: [UInt8: IPluginData]) throws -> Int? {
+    public func maxSpendLimit(pluginData: [UInt8: IPluginData]) throws -> Int? {
         try pluginManager.maxSpendLimit(pluginData: pluginData)
     }
 
-    func receiveAddress() -> String {
-        guard let publicKey = try? publicKeyManager.receivePublicKey(),
-              let address = try? addressConverter.convert(publicKey: publicKey, type: purpose.scriptType)
+    public func receiveAddress() -> String {
+        guard
+            let publicKey = try? publicKeyManager.receivePublicKey(),
+            let address = try? addressConverter.convert(publicKey: publicKey, type: purpose.scriptType)
         else {
             return ""
         }
@@ -267,41 +288,54 @@ public extension BitcoinCore {
         return address.stringValue
     }
 
-    func address(from publicKey: PublicKey) throws -> Address {
+    public func address(from publicKey: PublicKey) throws -> Address {
         try addressConverter.convert(publicKey: publicKey, type: purpose.scriptType)
     }
 
-    func changePublicKey() throws -> PublicKey {
+    public func changePublicKey() throws -> PublicKey {
         try publicKeyManager.changePublicKey()
     }
 
-    func receivePublicKey() throws -> PublicKey {
+    public func receivePublicKey() throws -> PublicKey {
         try publicKeyManager.receivePublicKey()
     }
 
-    func usedAddresses(change: Bool) -> [UsedAddress] {
+    public func usedAddresses(change: Bool) -> [UsedAddress] {
         publicKeyManager.usedPublicKeys(change: change).compactMap { pubKey in
             let address = try? addressConverter.convert(publicKey: pubKey, type: purpose.scriptType)
             return address.map { UsedAddress(index: pubKey.index, address: $0.stringValue) }
         }
     }
 
-    internal func watch(transaction: BitcoinCore.TransactionFilter, delegate: IWatchedTransactionDelegate) {
+    func watch(transaction: BitcoinCore.TransactionFilter, delegate: IWatchedTransactionDelegate) {
         watchedTransactionManager.add(transactionFilter: transaction, delegatedTo: delegate)
     }
 
-    func replacementTransaction(transactionHash: String, minFee: Int, type: ReplacementType) throws -> ReplacementTransaction {
+    public func replacementTransaction(
+        transactionHash: String,
+        minFee: Int,
+        type: ReplacementType
+    ) throws -> ReplacementTransaction {
         guard let replacementTransactionBuilder else {
             throw CoreError.readOnlyCore
         }
 
-        let (mutableTransaction, fullInfo, descendantTransactionHashes) = try replacementTransactionBuilder.replacementTransaction(transactionHash: transactionHash, minFee: minFee, type: type)
+        let (mutableTransaction, fullInfo, descendantTransactionHashes) = try replacementTransactionBuilder
+            .replacementTransaction(
+                transactionHash: transactionHash,
+                minFee: minFee,
+                type: type
+            )
         let info = dataProvider.transactionInfo(from: fullInfo)
 
-        return ReplacementTransaction(mutableTransaction: mutableTransaction, info: info, replacedTransactionHashes: descendantTransactionHashes)
+        return ReplacementTransaction(
+            mutableTransaction: mutableTransaction,
+            info: info,
+            replacedTransactionHashes: descendantTransactionHashes
+        )
     }
 
-    func send(replacementTransaction: ReplacementTransaction) throws -> FullTransaction {
+    public func send(replacementTransaction: ReplacementTransaction) throws -> FullTransaction {
         guard let transactionCreator else {
             throw CoreError.readOnlyCore
         }
@@ -309,23 +343,30 @@ public extension BitcoinCore {
         return try transactionCreator.create(from: replacementTransaction.mutableTransaction)
     }
 
-    func replacmentTransactionInfo(transactionHash: String, type: ReplacementType) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
+    public func replacmentTransactionInfo(
+        transactionHash: String,
+        type: ReplacementType
+    ) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
         replacementTransactionBuilder?.replacementInfo(transactionHash: transactionHash, type: type)
     }
 
-    func debugInfo(network: INetwork) -> String {
+    public func debugInfo(network: INetwork) -> String {
         dataProvider.debugInfo(network: network, scriptType: purpose.scriptType, addressConverter: addressConverter)
     }
 
-    var statusInfo: [(String, Any)] {
+    public var statusInfo: [(String, Any)] {
         var status = [(String, Any)]()
         status.append(("sync mode", syncManager.syncMode.description))
         status.append(("state", syncManager.syncState.toString()))
-        status.append(("synced until", ((lastBlockInfo?.timestamp.map { Double($0) })?.map { Date(timeIntervalSince1970: $0) }) ?? "n/a"))
+        status.append((
+            "synced until",
+            ((lastBlockInfo?.timestamp.map { Double($0) })?.map { Date(timeIntervalSince1970: $0) }) ?? "n/a"
+        ))
         status.append(("syncing peer", initialDownload.syncPeer?.host ?? "n/a"))
         status.append(("derivation", purpose.description))
 
-        status.append(contentsOf:
+        status.append(
+            contentsOf:
             peerManager.connected.enumerated().map { index, peer in
                 var peerStatus = [(String, Any)]()
                 peerStatus.append(("status", initialDownload.isSynced(peer: peer) ? "synced" : "not synced"))
@@ -349,10 +390,12 @@ public extension BitcoinCore {
         return status
     }
 
-    internal func rawTransaction(transactionHash: String) -> String? {
+    func rawTransaction(transactionHash: String) -> String? {
         dataProvider.rawTransaction(transactionHash: transactionHash)
     }
 }
+
+// MARK: IDataProviderDelegate
 
 extension BitcoinCore: IDataProviderDelegate {
     func transactionsUpdated(inserted: [TransactionInfo], updated: [TransactionInfo]) {
@@ -386,6 +429,8 @@ extension BitcoinCore: IDataProviderDelegate {
     }
 }
 
+// MARK: ISyncManagerDelegate
+
 extension BitcoinCore: ISyncManagerDelegate {
     func kitStateUpdated(state: KitState) {
         delegateQueue.async { [weak self] in
@@ -393,6 +438,8 @@ extension BitcoinCore: ISyncManagerDelegate {
         }
     }
 }
+
+// MARK: - BitcoinCoreDelegate
 
 public protocol BitcoinCoreDelegate: AnyObject {
     func transactionsUpdated(inserted: [TransactionInfo], updated: [TransactionInfo])
@@ -402,16 +449,16 @@ public protocol BitcoinCoreDelegate: AnyObject {
     func kitStateUpdated(state: BitcoinCore.KitState)
 }
 
-public extension BitcoinCoreDelegate {
-    func transactionsUpdated(inserted _: [TransactionInfo], updated _: [TransactionInfo]) {}
-    func transactionsDeleted(hashes _: [String]) {}
-    func balanceUpdated(balance _: BalanceInfo) {}
-    func lastBlockInfoUpdated(lastBlockInfo _: BlockInfo) {}
-    func kitStateUpdated(state _: BitcoinCore.KitState) {}
+extension BitcoinCoreDelegate {
+    public func transactionsUpdated(inserted _: [TransactionInfo], updated _: [TransactionInfo]) { }
+    public func transactionsDeleted(hashes _: [String]) { }
+    public func balanceUpdated(balance _: BalanceInfo) { }
+    public func lastBlockInfoUpdated(lastBlockInfo _: BlockInfo) { }
+    public func kitStateUpdated(state _: BitcoinCore.KitState) { }
 }
 
-public extension BitcoinCore {
-    enum KitState {
+extension BitcoinCore {
+    public enum KitState {
         case synced
         case apiSyncing(transactions: Int)
         case syncing(progress: Double)
@@ -419,90 +466,104 @@ public extension BitcoinCore {
 
         func toString() -> String {
             switch self {
-            case .synced: return "Synced"
-            case let .apiSyncing(transactions): return "ApiSyncing-\(transactions)"
-            case let .syncing(progress): return "Syncing-\(Int(progress * 100))"
-            case let .notSynced(error): return "NotSynced-\(String(reflecting: error))"
+            case .synced: "Synced"
+            case .apiSyncing(let transactions): "ApiSyncing-\(transactions)"
+            case .syncing(let progress): "Syncing-\(Int(progress * 100))"
+            case .notSynced(let error): "NotSynced-\(String(reflecting: error))"
             }
         }
     }
 
-    enum SyncMode: Equatable {
+    public enum SyncMode: Equatable {
         case blockchair // Restore and sync from Blockchair API.
         case api // Restore and sync from API.
         case full // Sync from bip44Checkpoint. Api restore disabled
 
         var description: String {
             switch self {
-            case .blockchair: return "Blockchair API"
-            case .api: return "Hybrid"
-            case .full: return "Blockchain"
+            case .blockchair: "Blockchair API"
+            case .api: "Hybrid"
+            case .full: "Blockchain"
             }
         }
     }
 
-    enum SendType {
+    public enum SendType {
         case p2p
         case api(blockchairApi: BlockchairApi)
     }
 
-    enum TransactionFilter {
+    public enum TransactionFilter {
         case p2shOutput(scriptHash: Data)
         case outpoint(transactionHash: Data, outputIndex: Int)
     }
 }
 
+// MARK: - BitcoinCore.KitState + Equatable
+
 extension BitcoinCore.KitState: Equatable {
     public static func == (lhs: BitcoinCore.KitState, rhs: BitcoinCore.KitState) -> Bool {
         switch (lhs, rhs) {
         case (.synced, .synced):
-            return true
-        case let (.apiSyncing(transactions: leftCount), .apiSyncing(transactions: rightCount)):
-            return leftCount == rightCount
-        case let (.syncing(progress: leftProgress), .syncing(progress: rightProgress)):
-            return leftProgress == rightProgress
-        case let (.notSynced(lhsError), .notSynced(rhsError)):
-            return "\(lhsError)" == "\(rhsError)"
+            true
+        case (.apiSyncing(transactions: let leftCount), .apiSyncing(transactions: let rightCount)):
+            leftCount == rightCount
+        case (.syncing(progress: let leftProgress), .syncing(progress: let rightProgress)):
+            leftProgress == rightProgress
+        case (.notSynced(let lhsError), .notSynced(let rhsError)):
+            "\(lhsError)" == "\(rhsError)"
         default:
-            return false
+            false
         }
     }
 }
 
-public extension BitcoinCore {
-    enum CoreError: Error {
+extension BitcoinCore {
+    public enum CoreError: Error {
         case readOnlyCore
     }
 
-    enum StateError: Error {
+    public enum StateError: Error {
         case notStarted
     }
 }
 
-public extension BitcoinCore {
-    static func firstAddress(seed: Data, purpose: Purpose, network: INetwork, addressCoverter: AddressConverterChain) throws -> Address {
+extension BitcoinCore {
+    public static func firstAddress(
+        seed: Data,
+        purpose: Purpose,
+        network: INetwork,
+        addressCoverter: AddressConverterChain
+    ) throws -> Address {
         let wallet = HDWallet(seed: seed, coinType: network.coinType, xPrivKey: network.xPrivKey, purpose: purpose)
         let publicKey: PublicKey = try wallet.publicKey(account: 0, index: 0, external: true)
 
         return try addressCoverter.convert(publicKey: publicKey, type: purpose.scriptType)
     }
 
-    static func firstAddress(extendedKey: HDExtendedKey, purpose: Purpose, network: INetwork, addressCoverter: AddressConverterChain) throws -> Address {
+    public static func firstAddress(
+        extendedKey: HDExtendedKey,
+        purpose: Purpose,
+        network: INetwork,
+        addressCoverter: AddressConverterChain
+    ) throws -> Address {
         let publicKey: PublicKey
         switch extendedKey {
-        case let .private(key: privateKey):
+        case .private(key: let privateKey):
             switch extendedKey.derivedType {
             case .master:
                 let wallet = HDWallet(masterKey: privateKey, coinType: network.coinType, purpose: purpose)
                 publicKey = try wallet.publicKey(account: 0, index: 0, external: true)
+
             case .account:
                 let wallet = HDAccountWallet(privateKey: privateKey)
                 publicKey = try wallet.publicKey(index: 0, external: true)
+
             case .bip32:
                 throw BitcoinCoreBuilder.BuildError.notSupported
             }
 
-        case let .public(key: hdPublicKey):
+        case .public(key: let hdPublicKey):
             let wallet = HDWatchAccountWallet(publicKey: hdPublicKey)
             publicKey = try wallet.publicKey(index: 0, external: true)
         }
@@ -511,19 +572,21 @@ public extension BitcoinCore {
     }
 }
 
+// MARK: - SendParameters
+
 public class SendParameters {
-    public var address: String?
-    public var value: Int?
-    public var feeRate: Int?
+    public var address: String? = nil
+    public var value: Int? = nil
+    public var feeRate: Int? = nil
     public var sortType: TransactionDataSortType
     public var senderPay: Bool
     public var rbfEnabled: Bool
-    public var memo: String?
-    public var unspentOutputs: [UnspentOutputInfo]?
+    public var memo: String? = nil
+    public var unspentOutputs: [UnspentOutputInfo]? = nil
     public var pluginData: [UInt8: IPluginData]
-    public var dustThreshold: Int?
+    public var dustThreshold: Int? = nil
     public var utxoFilters: UtxoFilters
-    public var maxOutputsCountForInputs: Int?
+    public var maxOutputsCountForInputs: Int? = nil
     public var changeToFirstInput: Bool
 
     public init(
@@ -546,6 +609,8 @@ public class SendParameters {
         self.changeToFirstInput = changeToFirstInput
     }
 }
+
+// MARK: - UtxoFilters
 
 public struct UtxoFilters {
     public let scriptTypes: [ScriptType]?

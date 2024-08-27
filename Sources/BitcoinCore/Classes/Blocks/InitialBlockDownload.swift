@@ -5,10 +5,12 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 import WWToolKit
+
+// MARK: - InitialDownloadEvent
 
 public enum InitialDownloadEvent {
     case onAllPeersSynced
@@ -16,8 +18,10 @@ public enum InitialDownloadEvent {
     case onPeerNotSynced(peer: IPeer)
 }
 
+// MARK: - InitialBlockDownload
+
 public class InitialBlockDownload {
-    public weak var listener: IBlockSyncListener?
+    public weak var listener: IBlockSyncListener? = nil
     private static let peerSwitchMinimumRatio = 1.5
 
     private var cancellables = Set<AnyCancellable>()
@@ -40,12 +44,15 @@ public class InitialBlockDownload {
     private let logger: Logger?
 
     public var syncedPeers = [IPeer]()
-    public var syncPeer: IPeer?
+    public var syncPeer: IPeer? = nil
 
-    init(blockSyncer: IBlockSyncer, peerManager: IPeerManager, merkleBlockValidator: IMerkleBlockValidator,
-         peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.initial-block-download", qos: .userInitiated),
-         logger: Logger? = nil)
-    {
+    init(
+        blockSyncer: IBlockSyncer,
+        peerManager: IPeerManager,
+        merkleBlockValidator: IMerkleBlockValidator,
+        peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.initial-block-download", qos: .userInitiated),
+        logger: Logger? = nil
+    ) {
         self.blockSyncer = blockSyncer
         self.peerManager = peerManager
         self.merkleBlockValidator = merkleBlockValidator
@@ -103,7 +110,8 @@ public class InitialBlockDownload {
         } else {
             syncPeer.add(task: GetMerkleBlocksTask(
                 blockHashes: blockHashes, merkleBlockValidator: merkleBlockValidator, merkleBlockHandler: self,
-                minMerkleBlocksCount: minMerkleBlocksCount, minTransactionsCount: minTransactionsCount, minTransactionsSize: minTransactionsSize
+                minMerkleBlocksCount: minMerkleBlocksCount, minTransactionsCount: minTransactionsCount,
+                minTransactionsSize: minTransactionsSize
             ))
         }
 
@@ -165,10 +173,10 @@ public class InitialBlockDownload {
                 switch event {
                 case .onStart: self?.onStart()
                 case .onStop: self?.onStop()
-                case let .onPeerCreate(peer): self?.onPeerCreate(peer: peer)
-                case let .onPeerConnect(peer): self?.onPeerConnect(peer: peer)
-                case let .onPeerDisconnect(peer, error): self?.onPeerDisconnect(peer: peer, error: error)
-                case let .onPeerReady(peer): self?.onPeerReady(peer: peer)
+                case .onPeerCreate(let peer): self?.onPeerCreate(peer: peer)
+                case .onPeerConnect(let peer): self?.onPeerConnect(peer: peer)
+                case .onPeerDisconnect(let peer, let error): self?.onPeerDisconnect(peer: peer, error: error)
+                case .onPeerReady(let peer): self?.onPeerReady(peer: peer)
                 default: ()
                 }
             }
@@ -176,9 +184,11 @@ public class InitialBlockDownload {
     }
 
     public var hasSyncedPeer: Bool {
-        syncedPeers.count > 0
+        !syncedPeers.isEmpty
     }
 }
+
+// MARK: IInitialDownload
 
 extension InitialBlockDownload: IInitialDownload {
     public func isSynced(peer: IPeer) -> Bool {
@@ -186,16 +196,23 @@ extension InitialBlockDownload: IInitialDownload {
     }
 }
 
+// MARK: IInventoryItemsHandler
+
 extension InitialBlockDownload: IInventoryItemsHandler {
     public func handleInventoryItems(peer: IPeer, inventoryItems: [InventoryItem]) {
         peersQueue.async {
-            if self.syncedState(peer), inventoryItems.first(where: { $0.type == InventoryItem.ObjectType.blockMessage.rawValue }) != nil {
+            if
+                self.syncedState(peer),
+                inventoryItems.first(where: { $0.type == InventoryItem.ObjectType.blockMessage.rawValue }) != nil
+            {
                 self.setPeerNotSynced(peer)
                 self.assignNextSyncPeer()
             }
         }
     }
 }
+
+// MARK: IPeerTaskHandler
 
 extension InitialBlockDownload: IPeerTaskHandler {
     public func handleCompletedTask(peer: IPeer, task: PeerTask) -> Bool {
@@ -209,9 +226,11 @@ extension InitialBlockDownload: IPeerTaskHandler {
                 blockSyncer.add(blockHashes: t.blockHashes)
             }
             return true
+
         case is GetMerkleBlocksTask:
             blockSyncer.downloadIterationCompleted()
             return true
+
         default: return false
         }
     }
@@ -223,7 +242,7 @@ extension InitialBlockDownload {
         blockSyncer.prepareForDownload()
     }
 
-    private func onStop() {}
+    private func onStop() { }
 
     private func onPeerCreate(peer: IPeer) {
         peer.localBestBlockHeight = blockSyncer.localDownloadedBestBlockHeight
@@ -233,7 +252,10 @@ extension InitialBlockDownload {
         peersQueue.async {
             self.syncedStates[peer.host] = false
             self.blockHashesSyncedStates[peer.host] = false
-            if let syncPeer = self.syncPeer, syncPeer.connectionTime > peer.connectionTime * InitialBlockDownload.peerSwitchMinimumRatio {
+            if
+                let syncPeer = self.syncPeer,
+                syncPeer.connectionTime > peer.connectionTime * InitialBlockDownload.peerSwitchMinimumRatio
+            {
                 self.selectNewPeer = true
             }
             self.assignNextSyncPeer()
@@ -272,6 +294,8 @@ extension InitialBlockDownload {
         }
     }
 }
+
+// MARK: IMerkleBlockHandler
 
 extension InitialBlockDownload: IMerkleBlockHandler {
     func handle(merkleBlock: MerkleBlock) throws {

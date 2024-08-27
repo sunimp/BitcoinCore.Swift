@@ -23,12 +23,12 @@ struct InventoryMessage: IMessage {
 
     var description: String {
         let items = inventoryItems.map { item in
-            let objectTypeString: String
-            if case .unknown = item.objectType {
-                objectTypeString = String(item.type)
-            } else {
-                objectTypeString = "\(item.objectType)"
-            }
+            let objectTypeString =
+                if case .unknown = item.objectType {
+                    String(item.type)
+                } else {
+                    "\(item.objectType)"
+                }
             return "[\(objectTypeString): \(item.hash.ww.reversedHex)]"
         }.joined(separator: ", ")
 

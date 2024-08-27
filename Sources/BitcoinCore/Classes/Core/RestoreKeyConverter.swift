@@ -9,6 +9,8 @@ import Foundation
 
 import HDWalletKit
 
+// MARK: - RestoreKeyConverterChain
+
 class RestoreKeyConverterChain: IRestoreKeyConverter {
     var converters = [IRestoreKeyConverter]()
 
@@ -35,6 +37,8 @@ class RestoreKeyConverterChain: IRestoreKeyConverter {
     }
 }
 
+// MARK: - Bip44RestoreKeyConverter
+
 public class Bip44RestoreKeyConverter {
     let addressConverter: IAddressConverter
 
@@ -42,6 +46,8 @@ public class Bip44RestoreKeyConverter {
         self.addressConverter = addressConverter
     }
 }
+
+// MARK: IRestoreKeyConverter
 
 extension Bip44RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
@@ -55,6 +61,8 @@ extension Bip44RestoreKeyConverter: IRestoreKeyConverter {
     }
 }
 
+// MARK: - Bip49RestoreKeyConverter
+
 public class Bip49RestoreKeyConverter {
     let addressConverter: IAddressConverter
 
@@ -62,6 +70,8 @@ public class Bip49RestoreKeyConverter {
         self.addressConverter = addressConverter
     }
 }
+
+// MARK: IRestoreKeyConverter
 
 extension Bip49RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
@@ -75,6 +85,8 @@ extension Bip49RestoreKeyConverter: IRestoreKeyConverter {
     }
 }
 
+// MARK: - Bip84RestoreKeyConverter
+
 public class Bip84RestoreKeyConverter {
     let addressConverter: IAddressConverter
 
@@ -82,6 +94,8 @@ public class Bip84RestoreKeyConverter {
         self.addressConverter = addressConverter
     }
 }
+
+// MARK: IRestoreKeyConverter
 
 extension Bip84RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
@@ -95,6 +109,8 @@ extension Bip84RestoreKeyConverter: IRestoreKeyConverter {
     }
 }
 
+// MARK: - Bip86RestoreKeyConverter
+
 public class Bip86RestoreKeyConverter {
     let addressConverter: IAddressConverter
 
@@ -102,6 +118,8 @@ public class Bip86RestoreKeyConverter {
         self.addressConverter = addressConverter
     }
 }
+
+// MARK: IRestoreKeyConverter
 
 extension Bip86RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
@@ -115,6 +133,8 @@ extension Bip86RestoreKeyConverter: IRestoreKeyConverter {
     }
 }
 
+// MARK: - KeyHashRestoreKeyConverter
+
 public class KeyHashRestoreKeyConverter: IRestoreKeyConverter {
     let scriptType: ScriptType
 
@@ -124,18 +144,20 @@ public class KeyHashRestoreKeyConverter: IRestoreKeyConverter {
 
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
         switch scriptType {
-        case .p2tr: return [publicKey.convertedForP2tr.ww.hex]
-        default: return [publicKey.hashP2pkh.ww.hex]
+        case .p2tr: [publicKey.convertedForP2tr.ww.hex]
+        default: [publicKey.hashP2pkh.ww.hex]
         }
     }
 
     public func bloomFilterElements(publicKey: PublicKey) -> [Data] {
         switch scriptType {
-        case .p2tr: return [publicKey.convertedForP2tr]
-        default: return [publicKey.hashP2pkh]
+        case .p2tr: [publicKey.convertedForP2tr]
+        default: [publicKey.hashP2pkh]
         }
     }
 }
+
+// MARK: - BlockchairCashRestoreKeyConverter
 
 public class BlockchairCashRestoreKeyConverter {
     let addressConverter: IAddressConverter
@@ -146,6 +168,8 @@ public class BlockchairCashRestoreKeyConverter {
         prefixCount = prefix.count + 1
     }
 }
+
+// MARK: IRestoreKeyConverter
 
 extension BlockchairCashRestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {

@@ -16,18 +16,18 @@ struct VersionMessage: IMessage {
     let services: UInt64
     /// standard UNIX timestamp in seconds
     let timestamp: Int64
-    // The network address of the node receiving this message
+    /// The network address of the node receiving this message
     let yourAddress: NetworkAddress
-    /* Fields below require version ≥ 106 */
+    /// Fields below require version ≥ 106
     /// The network address of the node emitting this message
     let myAddress: NetworkAddress?
     /// Node random nonce, randomly generated every time a version packet is sent. This nonce is used to detect connections to self.
     let nonce: UInt64?
     /// User Agent (0x00 if string is 0 bytes long)
     let userAgent: VarString?
-    // The last block received by the emitting node
+    /// The last block received by the emitting node
     let startHeight: Int32?
-    /* Fields below require version ≥ 70001 */
+    /// Fields below require version ≥ 70001
     /// Whether the remote peer should announce relayed transactions or not, see BIP 0037
     let relay: Bool?
 

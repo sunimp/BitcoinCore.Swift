@@ -9,6 +9,8 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - NetworkAddress
+
 /// When a network address is needed somewhere,
 /// this structure is used. Network addresses are not prefixed with a timestamp in the version message.
 public struct NetworkAddress {
@@ -48,6 +50,8 @@ public struct NetworkAddress {
         ServiceFlags(rawValue: services).contains(ServiceFlags.bloom)
     }
 }
+
+// MARK: CustomStringConvertible
 
 extension NetworkAddress: CustomStringConvertible {
     public var description: String {

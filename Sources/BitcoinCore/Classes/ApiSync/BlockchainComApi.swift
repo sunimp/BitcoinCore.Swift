@@ -8,8 +8,10 @@
 import Foundation
 
 import Alamofire
-import WWToolKit
 import ObjectMapper
+import WWToolKit
+
+// MARK: - BlockchainComApi
 
 public class BlockchainComApi {
     private static let paginationLimit = 100
@@ -43,9 +45,9 @@ public class BlockchainComApi {
 
         let filteredTransactions = transactions.filter { transaction in
             if let height = transaction.blockHeight, let stopHeight {
-                return stopHeight < height
+                stopHeight < height
             } else {
-                return true
+                true
             }
         }
 
@@ -53,7 +55,11 @@ public class BlockchainComApi {
             return filteredTransactions
         }
 
-        let nextTransactions = try await _transactions(addressChunk: addressChunk, stopHeight: stopHeight, offset: offset + Self.paginationLimit)
+        let nextTransactions = try await _transactions(
+            addressChunk: addressChunk,
+            stopHeight: stopHeight,
+            offset: offset + Self.paginationLimit
+        )
 
         return transactions + nextTransactions
     }
@@ -69,6 +75,8 @@ public class BlockchainComApi {
         return transactions
     }
 }
+
+// MARK: IApiTransactionProvider
 
 extension BlockchainComApi: IApiTransactionProvider {
     public func transactions(addresses: [String], stopHeight: Int?) async throws -> [ApiTransactionItem] {

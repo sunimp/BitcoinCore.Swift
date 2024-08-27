@@ -26,5 +26,5 @@ struct GetHeadersMessage: IMessage {
         hashStop = Data(count: 32)
     }
 
-    let description: String = ""
+    let description = ""
 }

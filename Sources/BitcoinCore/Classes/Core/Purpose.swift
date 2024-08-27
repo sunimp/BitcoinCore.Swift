@@ -12,19 +12,19 @@ import HDWalletKit
 extension Purpose: CustomStringConvertible {
     public var scriptType: ScriptType {
         switch self {
-        case .bip44: return .p2pkh
-        case .bip49: return .p2wpkhSh
-        case .bip84: return .p2wpkh
-        case .bip86: return .p2tr
+        case .bip44: .p2pkh
+        case .bip49: .p2wpkhSh
+        case .bip84: .p2wpkh
+        case .bip86: .p2tr
         }
     }
 
     public var description: String {
         switch self {
-        case .bip44: return "bip44"
-        case .bip49: return "bip49"
-        case .bip84: return "bip84"
-        case .bip86: return "bip86"
+        case .bip44: "bip44"
+        case .bip49: "bip49"
+        case .bip84: "bip84"
+        case .bip86: "bip86"
         }
     }
 }

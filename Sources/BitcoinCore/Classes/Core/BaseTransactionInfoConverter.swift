@@ -9,9 +9,13 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - IBaseTransactionInfoConverter
+
 public protocol IBaseTransactionInfoConverter {
     func transactionInfo<T: TransactionInfo>(fromTransaction transactionForInfo: FullTransactionForInfo) -> T
 }
+
+// MARK: - BaseTransactionInfoConverter
 
 public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
     private let pluginManager: IPluginManager
@@ -46,12 +50,21 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
         }
 
         for output in transactionForInfo.outputs {
-            let outputInfo = TransactionOutputInfo(mine: output.publicKeyPath != nil, changeOutput: output.changeOutput, value: output.value, address: output.address)
+            let outputInfo = TransactionOutputInfo(
+                mine: output.publicKeyPath != nil,
+                changeOutput: output.changeOutput,
+                value: output.value,
+                address: output.address
+            )
 
-            if let pluginId = output.pluginId, let pluginDataString = output.pluginData {
-                outputInfo.pluginId = pluginId
+            if let pluginID = output.pluginID, let pluginDataString = output.pluginData {
+                outputInfo.pluginID = pluginID
                 outputInfo.pluginDataString = pluginDataString
-                outputInfo.pluginData = pluginManager.parsePluginData(fromPlugin: pluginId, pluginDataString: pluginDataString, transactionTimestamp: transactionTimestamp)
+                outputInfo.pluginData = pluginManager.parsePluginData(
+                    fromPlugin: pluginID,
+                    pluginDataString: pluginDataString,
+                    transactionTimestamp: transactionTimestamp
+                )
             } else if let memo = output.memo {
                 outputInfo.memo = memo
             }
@@ -88,8 +101,12 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
         }
 
         for addressInfo in transactionInfo.outputs {
-            if let pluginId = addressInfo.pluginId, let pluginDataString = addressInfo.pluginDataString {
-                addressInfo.pluginData = pluginManager.parsePluginData(fromPlugin: pluginId, pluginDataString: pluginDataString, transactionTimestamp: invalidTransaction.timestamp)
+            if let pluginID = addressInfo.pluginID, let pluginDataString = addressInfo.pluginDataString {
+                addressInfo.pluginData = pluginManager.parsePluginData(
+                    fromPlugin: pluginID,
+                    pluginDataString: pluginDataString,
+                    transactionTimestamp: invalidTransaction.timestamp
+                )
             }
         }
 

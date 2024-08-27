@@ -7,8 +7,10 @@
 
 import Foundation
 
+// MARK: - ScriptConverter
+
 public class ScriptConverter {
-    public init() {}
+    public init() { }
 
     public func encode(script: Script) -> Data {
         var scriptData = Data()
@@ -29,18 +31,21 @@ public class ScriptConverter {
         var bytesOffset = 1
         switch opCode {
         case 0x01 ... 0x4B: bytesCount = Int(opCode)
+
         case 0x4C: // The next byte contains the number of bytes to be pushed onto the stack
             bytesOffset += 1
             guard data.count > 1 else {
                 throw ScriptError.wrongScriptLength
             }
             bytesCount = Int(data[1])
+
         case 0x4D: // The next two bytes contain the number of bytes to be pushed onto the stack in little endian order
             bytesOffset += 2
             guard data.count > 2 else {
                 throw ScriptError.wrongScriptLength
             }
             bytesCount = Int(data[2]) << 8 + Int(data[1])
+
         case 0x4E: // The next four bytes contain the number of bytes to be pushed onto the stack in little endian order
             bytesOffset += 4
             guard data.count > 5 else {
@@ -53,6 +58,7 @@ public class ScriptConverter {
                 index -= 1
             }
             bytesCount = count
+
         default: break
         }
         guard let keyLength = bytesCount, data.count >= it + bytesOffset + keyLength else {
@@ -61,6 +67,8 @@ public class ScriptConverter {
         return Range(uncheckedBounds: (lower: it + bytesOffset, upper: it + bytesOffset + keyLength))
     }
 }
+
+// MARK: IScriptConverter
 
 extension ScriptConverter: IScriptConverter {
     public func decode(data: Data) throws -> Script {
@@ -73,6 +81,7 @@ extension ScriptConverter: IScriptConverter {
                 let range = try getPushRange(data: data, it: it)
                 chunks.append(Chunk(scriptData: data, index: it, payloadRange: range))
                 it = range.upperBound
+
             default:
                 chunks.append(Chunk(scriptData: data, index: it, payloadRange: nil))
                 it += 1

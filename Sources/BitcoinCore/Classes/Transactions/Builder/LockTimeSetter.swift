@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - LockTimeSetter
+
 class LockTimeSetter {
     private let storage: IStorage
 
@@ -14,6 +16,8 @@ class LockTimeSetter {
         self.storage = storage
     }
 }
+
+// MARK: ILockTimeSetter
 
 extension LockTimeSetter: ILockTimeSetter {
     func setLockTime(to mutableTransaction: MutableTransaction) {

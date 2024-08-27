@@ -8,7 +8,7 @@
 import Foundation
 
 struct MemPoolMessage: IMessage {
-    init() {}
+    init() { }
 
-    let description: String = ""
+    let description = ""
 }

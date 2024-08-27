@@ -10,6 +10,8 @@ import Foundation
 import Checkpoints
 import WWExtensions
 
+// MARK: - Checkpoint
+
 public struct Checkpoint {
     public let block: Block
     public let additionalBlocks: [Block]
@@ -20,8 +22,9 @@ public struct Checkpoint {
     }
 
     public init(bundleName: String, network: String, blockType: CheckpointData.BlockType) throws {
-        guard let blockchain = CheckpointData.Blockchain(rawValue: bundleName),
-              let network = CheckpointData.Network(rawValue: network)
+        guard
+            let blockchain = CheckpointData.Blockchain(rawValue: bundleName),
+            let network = CheckpointData.Network(rawValue: network)
         else {
             throw ParseError.wrongParameters
         }
@@ -58,12 +61,12 @@ public struct Checkpoint {
     }
 }
 
-public extension Checkpoint {
-    enum ParseError: Error {
+extension Checkpoint {
+    public enum ParseError: Error {
         case wrongParameters
     }
 
-    static func resolveCheckpoint(network: INetwork, syncMode: BitcoinCore.SyncMode, storage: IStorage) -> Checkpoint {
+    public static func resolveCheckpoint(network: INetwork, syncMode: BitcoinCore.SyncMode, storage: IStorage) -> Checkpoint {
         let lastBlock = storage.lastBlock
         let checkpoint: Checkpoint
 

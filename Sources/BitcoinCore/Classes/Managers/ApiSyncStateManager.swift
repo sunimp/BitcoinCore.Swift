@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - ApiSyncStateManager
+
 public class ApiSyncStateManager {
     private let storage: IStorage
     private let restoreFromApi: Bool
@@ -16,6 +18,8 @@ public class ApiSyncStateManager {
         self.restoreFromApi = restoreFromApi
     }
 }
+
+// MARK: IApiSyncStateManager
 
 extension ApiSyncStateManager: IApiSyncStateManager {
     var restored: Bool {

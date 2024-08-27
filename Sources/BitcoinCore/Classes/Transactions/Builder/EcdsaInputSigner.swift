@@ -11,6 +11,8 @@ import HDWalletKit
 import WWCryptoKit
 import WWExtensions
 
+// MARK: - EcdsaInputSigner
+
 class EcdsaInputSigner {
     enum SignError: Error {
         case noPreviousOutput
@@ -27,6 +29,8 @@ class EcdsaInputSigner {
     }
 }
 
+// MARK: IInputSigner
+
 extension EcdsaInputSigner: IInputSigner {
     func sigScriptData(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], index: Int) throws -> [Data] {
         let input = inputsToSign[index]
@@ -34,12 +38,24 @@ extension EcdsaInputSigner: IInputSigner {
         let pubKey = input.previousOutputPublicKey
         let publicKey = pubKey.raw
 
-        guard let privateKeyData = try? hdWallet.privateKeyData(account: pubKey.account, index: pubKey.index, external: pubKey.external) else {
+        guard
+            let privateKeyData = try? hdWallet.privateKeyData(
+                account: pubKey.account,
+                index: pubKey.index,
+                external: pubKey.external
+            )
+        else {
             throw SignError.noPrivateKey
         }
         let witness = previousOutput.scriptType == .p2wpkh || previousOutput.scriptType == .p2wpkhSh
 
-        var serializedTransaction = try TransactionSerializer.serializedForSignature(transaction: transaction, inputsToSign: inputsToSign, outputs: outputs, inputIndex: index, forked: witness || network.sigHash.forked)
+        var serializedTransaction = try TransactionSerializer.serializedForSignature(
+            transaction: transaction,
+            inputsToSign: inputsToSign,
+            outputs: outputs,
+            inputIndex: index,
+            forked: witness || network.sigHash.forked
+        )
         serializedTransaction += UInt32(network.sigHash.value)
         let signatureHash = Crypto.doubleSha256(serializedTransaction)
         let signature = try Crypto.sign(data: signatureHash, privateKey: privateKeyData) + Data([network.sigHash.value])

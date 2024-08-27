@@ -9,6 +9,8 @@ import Foundation
 
 import WWCryptoKit
 
+// MARK: - BlockHeader
+
 public struct BlockHeader {
     public let version: Int
     public let headerHash: Data
@@ -18,7 +20,15 @@ public struct BlockHeader {
     public let bits: Int
     public let nonce: Int
 
-    public init(version: Int, headerHash: Data, previousBlockHeaderHash: Data, merkleRoot: Data, timestamp: Int, bits: Int, nonce: Int) {
+    public init(
+        version: Int,
+        headerHash: Data,
+        previousBlockHeaderHash: Data,
+        merkleRoot: Data,
+        timestamp: Int,
+        bits: Int,
+        nonce: Int
+    ) {
         self.version = version
         self.headerHash = headerHash
         self.previousBlockHeaderHash = previousBlockHeaderHash
@@ -28,6 +38,8 @@ public struct BlockHeader {
         self.nonce = nonce
     }
 }
+
+// MARK: - FullTransaction
 
 open class FullTransaction {
     public let header: Transaction
@@ -59,11 +71,15 @@ open class FullTransaction {
     }
 }
 
+// MARK: - InputToSign
+
 public struct InputToSign {
     let input: Input
     let previousOutput: Output
     let previousOutputPublicKey: PublicKey
 }
+
+// MARK: - OutputWithPublicKey
 
 public struct OutputWithPublicKey {
     let output: Output
@@ -72,15 +88,21 @@ public struct OutputWithPublicKey {
     let spendingBlockHeight: Int?
 }
 
+// MARK: - InputWithPreviousOutput
+
 public struct InputWithPreviousOutput {
     let input: Input
     let previousOutput: Output?
 }
 
+// MARK: - TransactionWithBlock
+
 public struct TransactionWithBlock {
     public let transaction: Transaction
     let blockHeight: Int?
 }
+
+// MARK: - UnspentOutput
 
 public struct UnspentOutput {
     public let output: Output
@@ -106,6 +128,8 @@ public struct UnspentOutput {
     }
 }
 
+// MARK: - UnspentOutputInfo
+
 public struct UnspentOutputInfo: Hashable, Equatable {
     public var outputIndex: Int
     public var transactionHash: Data
@@ -124,8 +148,8 @@ public struct UnspentOutputInfo: Hashable, Equatable {
     }
 }
 
-public extension [UnspentOutputInfo] {
-    func outputs(from outputs: [UnspentOutput]) -> [UnspentOutput] {
+extension [UnspentOutputInfo] {
+    public func outputs(from outputs: [UnspentOutput]) -> [UnspentOutput] {
         let selectedKeys = map { ($0.outputIndex, $0.transactionHash) }
         return outputs.filter { output in
             selectedKeys.contains { i, hash in
@@ -134,6 +158,8 @@ public extension [UnspentOutputInfo] {
         }
     }
 }
+
+// MARK: - FullTransactionForInfo
 
 public struct FullTransactionForInfo {
     public let transactionWithBlock: TransactionWithBlock
@@ -153,6 +179,8 @@ public struct FullTransactionForInfo {
         )
     }
 }
+
+// MARK: - PublicKeyWithUsedState
 
 public struct PublicKeyWithUsedState {
     let publicKey: PublicKey

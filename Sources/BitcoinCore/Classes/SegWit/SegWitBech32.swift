@@ -11,6 +11,8 @@
 
 import Foundation
 
+// MARK: - SegWitBech32
+
 /// Segregated Witness Address encoder/decoder
 public class SegWitBech32 {
     private static let bech32 = Bech32()
@@ -77,11 +79,13 @@ public class SegWitBech32 {
         return result
     }
 
-    public init() {}
+    public init() { }
 }
 
-public extension SegWitBech32 {
-    enum CoderError: LocalizedError {
+// MARK: SegWitBech32.CoderError
+
+extension SegWitBech32 {
+    public enum CoderError: LocalizedError {
         case bitsConversionFailed
         case hrpMismatch(String, String)
         case checksumSizeTooLow
@@ -96,21 +100,21 @@ public extension SegWitBech32 {
         public var errorDescription: String? {
             switch self {
             case .bitsConversionFailed:
-                return "Failed to perform bits conversion"
+                "Failed to perform bits conversion"
             case .checksumSizeTooLow:
-                return "Checksum size is too low"
-            case let .dataSizeMismatch(size):
-                return "Program size \(size) does not meet required range 2...40"
+                "Checksum size is too low"
+            case .dataSizeMismatch(let size):
+                "Program size \(size) does not meet required range 2...40"
             case .encodingCheckFailed:
-                return "Failed to check result after encoding"
-            case let .hrpMismatch(got, expected):
-                return "Human-readable-part \"\(got)\" does not match requested \"\(expected)\""
-            case let .segwitV0ProgramSizeMismatch(size):
-                return "Segwit program size \(size) does not meet version 0 requirements"
-            case let .segwitVersionNotSupported(version):
-                return "Segwit version \(version) is not supported by this decoder"
+                "Failed to check result after encoding"
+            case .hrpMismatch(let got, let expected):
+                "Human-readable-part \"\(got)\" does not match requested \"\(expected)\""
+            case .segwitV0ProgramSizeMismatch(let size):
+                "Segwit program size \(size) does not meet version 0 requirements"
+            case .segwitVersionNotSupported(let version):
+                "Segwit version \(version) is not supported by this decoder"
             case .segwitVersionAndEncodingMismatch:
-                return "Wrong encoding is used for the Segwit version being used"
+                "Wrong encoding is used for the Segwit version being used"
             }
         }
     }

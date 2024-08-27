@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Bip69Sorter
+
 class Bip69Sorter: ITransactionDataSorter {
     func sort(outputs: [Output]) -> [Output] {
         outputs.sorted(by: Bip69.outputComparator)
@@ -17,6 +19,8 @@ class Bip69Sorter: ITransactionDataSorter {
     }
 }
 
+// MARK: - ShuffleSorter
+
 class ShuffleSorter: ITransactionDataSorter {
     func sort(outputs: [Output]) -> [Output] {
         outputs.shuffled()
@@ -26,6 +30,8 @@ class ShuffleSorter: ITransactionDataSorter {
         unspentOutputs.shuffled()
     }
 }
+
+// MARK: - StraightSorter
 
 class StraightSorter: ITransactionDataSorter {
     func sort(outputs: [Output]) -> [Output] {

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - InputSetter
+
 class InputSetter {
     enum UnspentOutputError: Error {
         case feeMoreThanValue
@@ -23,9 +25,17 @@ class InputSetter {
     private let changeType: ScriptType
     private let inputSorterFactory: ITransactionDataSorterFactory
 
-    init(unspentOutputSelector: IUnspentOutputSelector, transactionSizeCalculator: ITransactionSizeCalculator, addressConverter: IAddressConverter, publicKeyManager: IPublicKeyManager,
-         factory: IFactory, pluginManager: IPluginManager, dustCalculator: IDustCalculator, changeScriptType: ScriptType, inputSorterFactory: ITransactionDataSorterFactory)
-    {
+    init(
+        unspentOutputSelector: IUnspentOutputSelector,
+        transactionSizeCalculator: ITransactionSizeCalculator,
+        addressConverter: IAddressConverter,
+        publicKeyManager: IPublicKeyManager,
+        factory: IFactory,
+        pluginManager: IPluginManager,
+        dustCalculator: IDustCalculator,
+        changeScriptType: ScriptType,
+        inputSorterFactory: ITransactionDataSorterFactory
+    ) {
         self.unspentOutputSelector = unspentOutputSelector
         self.transactionSizeCalculator = transactionSizeCalculator
         self.addressConverter = addressConverter
@@ -46,10 +56,16 @@ class InputSetter {
     }
 }
 
+// MARK: IInputSetter
+
 extension InputSetter: IInputSetter {
-    @discardableResult func setInputs(to mutableTransaction: MutableTransaction, params: SendParameters) throws -> OutputInfo {
+    @discardableResult
+    func setInputs(to mutableTransaction: MutableTransaction, params: SendParameters) throws -> OutputInfo {
         let unspentOutputInfo: SelectedUnspentOutputInfo
-        if let unspentOutputs = params.unspentOutputs.flatMap({ $0.outputs(from: unspentOutputSelector.all(filters: params.utxoFilters)) }) {
+        if
+            let unspentOutputs = params.unspentOutputs
+                .flatMap({ $0.outputs(from: unspentOutputSelector.all(filters: params.utxoFilters)) })
+        {
             let utxoSelectorParams = UnspentOutputQueue.Parameters(
                 sendParams: params,
                 outputsLimit: nil,
@@ -58,7 +74,12 @@ extension InputSetter: IInputSetter {
                 pluginDataOutputSize: mutableTransaction.pluginDataOutputSize
             )
 
-            let queue = UnspentOutputQueue(parameters: utxoSelectorParams, sizeCalculator: transactionSizeCalculator, dustCalculator: dustCalculator, outputs: unspentOutputs)
+            let queue = UnspentOutputQueue(
+                parameters: utxoSelectorParams,
+                sizeCalculator: transactionSizeCalculator,
+                dustCalculator: dustCalculator,
+                outputs: unspentOutputs
+            )
             unspentOutputInfo = try queue.calculate()
         } else {
             unspentOutputInfo = try unspentOutputSelector.select(
@@ -69,7 +90,8 @@ extension InputSetter: IInputSetter {
             )
         }
 
-        let unspentOutputs = inputSorterFactory.sorter(for: params.sortType).sort(unspentOutputs: unspentOutputInfo.unspentOutputs)
+        let unspentOutputs = inputSorterFactory.sorter(for: params.sortType)
+            .sort(unspentOutputs: unspentOutputInfo.unspentOutputs)
 
         for unspentOutput in unspentOutputs {
             try mutableTransaction.add(inputToSign: input(fromUnspentOutput: unspentOutput, rbfEnabled: params.rbfEnabled))
@@ -83,7 +105,10 @@ extension InputSetter: IInputSetter {
             let changeAddress: Address
 
             if params.changeToFirstInput, let firstOutput = unspentOutputInfo.unspentOutputs.first {
-                changeAddress = try addressConverter.convert(publicKey: firstOutput.publicKey, type: firstOutput.output.scriptType)
+                changeAddress = try addressConverter.convert(
+                    publicKey: firstOutput.publicKey,
+                    type: firstOutput.output.scriptType
+                )
             } else {
                 let changePubKey = try publicKeyManager.changePublicKey()
                 changeAddress = try addressConverter.convert(publicKey: changePubKey, type: changeType)
@@ -98,7 +123,11 @@ extension InputSetter: IInputSetter {
         return OutputInfo(unspentOutputs: unspentOutputs, changeInfo: changeInfo)
     }
 
-    func setInputs(to mutableTransaction: MutableTransaction, fromUnspentOutput unspentOutput: UnspentOutput, params: SendParameters) throws {
+    func setInputs(
+        to mutableTransaction: MutableTransaction,
+        fromUnspentOutput unspentOutput: UnspentOutput,
+        params: SendParameters
+    ) throws {
         guard unspentOutput.output.scriptType == .p2sh else {
             throw UnspentOutputError.notSupportedScriptType
         }
@@ -108,7 +137,12 @@ extension InputSetter: IInputSetter {
         }
 
         // Calculate fee
-        let transactionSize = transactionSizeCalculator.transactionSize(previousOutputs: [unspentOutput.output], outputScriptTypes: [mutableTransaction.recipientAddress.scriptType], memo: mutableTransaction.memo, pluginDataOutputSize: 0)
+        let transactionSize = transactionSizeCalculator.transactionSize(
+            previousOutputs: [unspentOutput.output],
+            outputScriptTypes: [mutableTransaction.recipientAddress.scriptType],
+            memo: mutableTransaction.memo,
+            pluginDataOutputSize: 0
+        )
         let fee = transactionSize * feeRate
 
         guard fee < unspentOutput.output.value else {

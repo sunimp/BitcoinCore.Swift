@@ -1,6 +1,6 @@
-@testable import BitcoinCore
 import Cuckoo
 import XCTest
+@testable import BitcoinCore
 
 class TransactionSizeCalculatorTests: XCTestCase {
     var calculator: TransactionSizeCalculator!
@@ -19,14 +19,56 @@ class TransactionSizeCalculatorTests: XCTestCase {
 
     func testTransactionSize() {
         XCTAssertEqual(calculator.transactionSize(previousOutputs: [], outputScriptTypes: [], memo: nil), 10) // empty legacy tx
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh]), outputScriptTypes: [.p2pkh], memo: nil), 192) // 1-in 1-out standard tx
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]), outputScriptTypes: [.p2pkh], memo: nil), 306) // 2-in 1-out legacy tx
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]), outputScriptTypes: [.p2wpkh], memo: nil), 303) // 2-in 1-out legacy tx with witness output
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]), outputScriptTypes: [.p2pkh, .p2pk], memo: nil), 350) // 2-in 2-out legacy tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh]), outputScriptTypes: [.p2pkh], memo: nil),
+            192
+        ) // 1-in 1-out standard tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]),
+                    outputScriptTypes: [.p2pkh],
+                    memo: nil
+                ),
+            306
+        ) // 2-in 1-out legacy tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]),
+                    outputScriptTypes: [.p2wpkh],
+                    memo: nil
+                ),
+            303
+        ) // 2-in 1-out legacy tx with witness output
+        XCTAssertEqual(
+            calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh, .p2pk]), outputScriptTypes: [
+                .p2pkh,
+                .p2pk,
+            ], memo: nil),
+            350
+        ) // 2-in 2-out legacy tx
 
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkh]), outputScriptTypes: [.p2pkh], memo: nil), 113) // 1-in 1-out witness tx
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkhSh]), outputScriptTypes: [.p2pkh], memo: nil), 136) // 1-in 1-out (sh) witness tx
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkh, .p2pkh, .p2pkh, .p2pkh]), outputScriptTypes: [.p2pkh], memo: nil), 558) // 4-in 1-out witness tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkh]), outputScriptTypes: [.p2pkh], memo: nil),
+            113
+        ) // 1-in 1-out witness tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkhSh]), outputScriptTypes: [.p2pkh], memo: nil),
+            136
+        ) // 1-in 1-out (sh) witness tx
+        XCTAssertEqual(
+            calculator
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2wpkh, .p2pkh, .p2pkh, .p2pkh]),
+                    outputScriptTypes: [.p2pkh],
+                    memo: nil
+                ),
+            558
+        ) // 4-in 1-out witness tx
     }
 
     func testTransactionSizeShInputsStandard() {

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - SelectedUnspentOutputInfo
+
 public struct SelectedUnspentOutputInfo {
     public let unspentOutputs: [UnspentOutput]
     public let recipientValue: Int // amount to set to recipient output
@@ -19,13 +21,15 @@ public struct SelectedUnspentOutputInfo {
     }
 }
 
+// MARK: - UnspentOutputQueue
+
 class UnspentOutputQueue {
     let params: Parameters
     let sizeCalculator: ITransactionSizeCalculator
 
     let recipientOutputDust: Int
 
-    var changeOutputDust: Int = 0
+    var changeOutputDust = 0
     var selectedOutputs = [UnspentOutput]()
     var totalValue = 0
 
@@ -39,14 +43,22 @@ class UnspentOutputQueue {
         return _changeType
     }
 
-    init(parameters: Parameters, sizeCalculator: ITransactionSizeCalculator, dustCalculator: IDustCalculator, outputs: [UnspentOutput] = []) {
+    init(
+        parameters: Parameters,
+        sizeCalculator: ITransactionSizeCalculator,
+        dustCalculator: IDustCalculator,
+        outputs: [UnspentOutput] = []
+    ) {
         params = parameters
         self.sizeCalculator = sizeCalculator
 
-        recipientOutputDust = dustCalculator.dust(type: params.outputScriptType, dustThreshold: parameters.sendParams.dustThreshold)
+        recipientOutputDust = dustCalculator.dust(
+            type: params.outputScriptType,
+            dustThreshold: parameters.sendParams.dustThreshold
+        )
         changeOutputDust = dustCalculator.dust(type: changeType, dustThreshold: parameters.sendParams.dustThreshold)
 
-        outputs.forEach { push(output: $0) }
+        for item in outputs { push(output: item) }
     }
 
     func push(output: UnspentOutput) {
@@ -63,11 +75,11 @@ class UnspentOutputQueue {
         selectedOutputs.removeAll()
         totalValue = 0
 
-        outputs.forEach { push(output: $0) }
+        for item in outputs { push(output: item) }
     }
 
-    // we have the total value of Satoshi outputs as 'totalValue' and the fee required for sending the transaction, alongside the value intended for the recipient
-    // we can calculate the amount the user will receive and the potential amount that can be returned to the sender
+    /// we have the total value of Satoshi outputs as 'totalValue' and the fee required for sending the transaction, alongside the value intended for the recipient
+    /// we can calculate the amount the user will receive and the potential amount that can be returned to the sender
     private func values(value: Int, total: Int, fee: Int) throws -> (receive: Int, remainder: Int) {
         // will receive
         let receiveValue = params.sendParams.senderPay ? value : value - fee
@@ -112,10 +124,18 @@ class UnspentOutputQueue {
 
         // If this value is less than 'dust', then we'll leave it without change (the remainder will go towards the network fee)
         if remainder <= recipientOutputDust {
-            return SelectedUnspentOutputInfo(unspentOutputs: selectedOutputs, recipientValue: sendValues.receive, changeValue: nil)
+            return SelectedUnspentOutputInfo(
+                unspentOutputs: selectedOutputs,
+                recipientValue: sendValues.receive,
+                changeValue: nil
+            )
         }
 
-        return SelectedUnspentOutputInfo(unspentOutputs: selectedOutputs, recipientValue: sendValues.receive, changeValue: remainder)
+        return SelectedUnspentOutputInfo(
+            unspentOutputs: selectedOutputs,
+            recipientValue: sendValues.receive,
+            changeValue: remainder
+        )
     }
 
     struct Parameters {

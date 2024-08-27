@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionCreator
+
 class TransactionCreator {
     enum CreationError: Error {
         case transactionAlreadyExists
@@ -18,7 +20,13 @@ class TransactionCreator {
     private let transactionSigner: TransactionSigner
     private let bloomFilterManager: IBloomFilterManager
 
-    init(transactionBuilder: ITransactionBuilder, transactionProcessor: IPendingTransactionProcessor, transactionSender: ITransactionSender, transactionSigner: TransactionSigner, bloomFilterManager: IBloomFilterManager) {
+    init(
+        transactionBuilder: ITransactionBuilder,
+        transactionProcessor: IPendingTransactionProcessor,
+        transactionSender: ITransactionSender,
+        transactionSigner: TransactionSigner,
+        bloomFilterManager: IBloomFilterManager
+    ) {
         self.transactionBuilder = transactionBuilder
         self.transactionProcessor = transactionProcessor
         self.transactionSender = transactionSender
@@ -38,6 +46,8 @@ class TransactionCreator {
         transactionSender.send(pendingTransaction: transaction)
     }
 }
+
+// MARK: ITransactionCreator
 
 extension TransactionCreator: ITransactionCreator {
     func create(params: SendParameters) throws -> FullTransaction {

@@ -31,11 +31,13 @@ public class SegWitBech32AddressConverter: IAddressConverter {
                 default: break
                 }
                 return SegWitV0Address(type: type, payload: segWitData.program, bech32: address)
+
             case 1:
                 guard segWitData.program.count == 32 else {
                     break
                 }
                 return TaprootAddress(payload: segWitData.program, bech32m: address, version: segWitData.version)
+
             default:
                 break
             }
@@ -48,12 +50,15 @@ public class SegWitBech32AddressConverter: IAddressConverter {
         case .p2wpkh:
             let bech32 = try SegWitBech32.encode(hrp: prefix, version: 0, program: lockingScriptPayload, encoding: .bech32)
             return SegWitV0Address(type: AddressType.pubKeyHash, payload: lockingScriptPayload, bech32: bech32)
+
         case .p2wsh:
             let bech32 = try SegWitBech32.encode(hrp: prefix, version: 0, program: lockingScriptPayload, encoding: .bech32)
             return SegWitV0Address(type: AddressType.scriptHash, payload: lockingScriptPayload, bech32: bech32)
+
         case .p2tr:
             let bech32 = try SegWitBech32.encode(hrp: prefix, version: 1, program: lockingScriptPayload, encoding: .bech32m)
             return TaprootAddress(payload: lockingScriptPayload, bech32m: bech32, version: 1)
+
         default: throw BitcoinCoreErrors.AddressConversion.unknownAddressType
         }
     }

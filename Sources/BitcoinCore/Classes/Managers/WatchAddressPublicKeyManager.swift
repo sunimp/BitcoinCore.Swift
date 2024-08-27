@@ -42,7 +42,7 @@ class WatchAddressPublicKeyManager: IPublicKeyFetcher, IPublicKeyManager, IBloom
         bloomFilterManager?.regenerateBloomFilter()
     }
 
-    func addKeys(keys _: [PublicKey]) {}
+    func addKeys(keys _: [PublicKey]) { }
 
     func gapShifts() -> Bool {
         false

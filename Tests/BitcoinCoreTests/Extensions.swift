@@ -1,6 +1,6 @@
- import XCTest
- import Cuckoo
- @testable import BitcoinCore
+import Cuckoo
+import XCTest
+@testable import BitcoinCore
 //
 // extension XCTestCase {
 //
@@ -163,6 +163,6 @@
 //    }
 // }
 //
- func outputs(withScriptTypes scriptTypes: [ScriptType]) -> [Output] {
+func outputs(withScriptTypes scriptTypes: [ScriptType]) -> [Output] {
     scriptTypes.map { Output(withValue: 0, index: 0, lockingScript: Data(), type: $0) }
- }
+}

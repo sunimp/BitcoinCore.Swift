@@ -48,6 +48,7 @@ enum TransactionInputSerializer {
                     throw SerializationError.noPreviousOutputScript
                 }
                 script = redeemScript
+
             default:
                 script = output.lockingScript
             }

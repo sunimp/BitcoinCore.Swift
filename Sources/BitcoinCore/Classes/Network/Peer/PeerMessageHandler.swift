@@ -9,6 +9,8 @@ import Foundation
 
 import NIO
 
+// MARK: - PeerMessageHandlerDelegate
+
 protocol PeerMessageHandlerDelegate: AnyObject {
     func onChannelActive()
     func onChannelInactive()
@@ -16,6 +18,8 @@ protocol PeerMessageHandlerDelegate: AnyObject {
     func onMessageReceived(message: IMessage)
     func onErrorCaught(error: Error)
 }
+
+// MARK: - PeerMessageHandler
 
 class PeerMessageHandler: ChannelInboundHandler {
     typealias InboundIn = ByteBuffer

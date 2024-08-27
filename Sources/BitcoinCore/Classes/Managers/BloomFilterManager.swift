@@ -7,20 +7,24 @@
 
 import Foundation
 
+// MARK: - BloomFilterManager
+
 class BloomFilterManager {
-    class BloomFilterExpired: Error {}
+    class BloomFilterExpired: Error { }
 
     private var providers = [IBloomFilterProvider]()
 
     private let factory: IFactory
-    weak var delegate: IBloomFilterManagerDelegate?
+    weak var delegate: IBloomFilterManagerDelegate? = nil
 
-    var bloomFilter: BloomFilter?
+    var bloomFilter: BloomFilter? = nil
 
     init(factory: IFactory) {
         self.factory = factory
     }
 }
+
+// MARK: IBloomFilterManager
 
 extension BloomFilterManager: IBloomFilterManager {
     func add(provider: IBloomFilterProvider) {

@@ -9,6 +9,8 @@ import Foundation
 
 import WWCryptoKit
 
+// MARK: - TransactionOutputAddressExtractor
+
 class TransactionOutputAddressExtractor {
     private let storage: IStorage
     private let addressConverter: IAddressConverter
@@ -19,6 +21,8 @@ class TransactionOutputAddressExtractor {
     }
 }
 
+// MARK: ITransactionExtractor
+
 extension TransactionOutputAddressExtractor: ITransactionExtractor {
     public func extract(transaction: FullTransaction) {
         for output in transaction.outputs {
@@ -26,13 +30,13 @@ extension TransactionOutputAddressExtractor: ITransactionExtractor {
                 continue
             }
 
-            let payload: Data
-            switch output.scriptType {
-            case .p2pk:
-                // If the scriptType is P2PK, we generate Address as if it was P2PKH
-                payload = Crypto.ripeMd160Sha256(_payload)
-            default: payload = _payload
-            }
+            let payload: Data =
+                switch output.scriptType {
+                case .p2pk:
+                    // If the scriptType is P2PK, we generate Address as if it was P2PKH
+                    Crypto.ripeMd160Sha256(_payload)
+                default: _payload
+                }
 
             let scriptType = output.scriptType
             if let address = try? addressConverter.convert(lockingScriptPayload: payload, type: scriptType) {

@@ -9,6 +9,8 @@ import Foundation
 
 import WWToolKit
 
+// MARK: - Peer
+
 class Peer {
     enum PeerError: Error {
         case peerBestBlockIsLessThanOne
@@ -18,12 +20,12 @@ class Peer {
         case peerProtocolVersionOutdated
     }
 
-    private var remotePeerValidated: Bool = false
-    private var versionSent: Bool = false
-    private var mempoolSent: Bool = false
-    private var connectStartTime: Double?
+    private var remotePeerValidated = false
+    private var versionSent = false
+    private var mempoolSent = false
+    private var connectStartTime: Double? = nil
 
-    weak var delegate: PeerDelegate?
+    weak var delegate: PeerDelegate? = nil
 
     private let connection: IPeerConnection
     private let connectionTimeoutManager: IConnectionTimeoutManager
@@ -36,7 +38,7 @@ class Peer {
     var announcedLastBlockHeight: Int32 = 0
     var localBestBlockHeight: Int32 = 0
     // TODO: seems like property connected is not needed. It is always true in PeerManager. Need to check it and remove
-    var connected: Bool = false
+    var connected = false
     var connectionTime: Double = 1000
 
     var protocolVersion: Int32 {
@@ -55,7 +57,13 @@ class Peer {
         connection.logName
     }
 
-    init(host _: String, network: INetwork, connection: IPeerConnection, connectionTimeoutManager: IConnectionTimeoutManager, logger: Logger? = nil) {
+    init(
+        host _: String,
+        network: INetwork,
+        connection: IPeerConnection,
+        connectionTimeoutManager: IConnectionTimeoutManager,
+        logger: Logger? = nil
+    ) {
         self.connection = connection
         self.connectionTimeoutManager = connectionTimeoutManager
         self.network = network
@@ -172,6 +180,8 @@ class Peer {
     }
 }
 
+// MARK: IPeer
+
 extension Peer: IPeer {
     func connect() {
         connection.connect()
@@ -218,6 +228,8 @@ extension Peer: IPeer {
     }
 }
 
+// MARK: PeerConnectionDelegate
+
 extension Peer: PeerConnectionDelegate {
     func connectionAlive() {
         connectionTimeoutManager.reset()
@@ -253,6 +265,8 @@ extension Peer: PeerConnectionDelegate {
     }
 }
 
+// MARK: IPeerTaskDelegate
+
 extension Peer: IPeerTaskDelegate {
     func handle(completedTask task: PeerTask) {
         log("Handling completed task: \(type(of: task))")
@@ -276,6 +290,8 @@ extension Peer: IPeerTaskDelegate {
         disconnect(error: error)
     }
 }
+
+// MARK: IPeerTaskRequester
 
 extension Peer: IPeerTaskRequester {
     func send(message: IMessage) {

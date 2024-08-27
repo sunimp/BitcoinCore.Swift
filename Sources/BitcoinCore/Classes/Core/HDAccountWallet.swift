@@ -9,14 +9,23 @@ import Foundation
 
 import HDWalletKit
 
+// MARK: - IHDAccountWallet
+
 protocol IHDAccountWallet {
     func publicKey(index: Int, external: Bool) throws -> PublicKey
     func publicKeys(indices: Range<UInt32>, external: Bool) throws -> [PublicKey]
 }
 
+// MARK: - HDAccountWallet + IHDAccountWallet
+
 extension HDAccountWallet: IHDAccountWallet {
     func publicKey(index: Int, external: Bool) throws -> PublicKey {
-        try PublicKey(withAccount: 0, index: index, external: external, hdPublicKeyData: publicKey(index: index, chain: external ? .external : .internal).raw)
+        try PublicKey(
+            withAccount: 0,
+            index: index,
+            external: external,
+            hdPublicKeyData: publicKey(index: index, chain: external ? .external : .internal).raw
+        )
     }
 
     func publicKeys(indices: Range<UInt32>, external: Bool) throws -> [PublicKey] {
@@ -33,8 +42,16 @@ extension HDAccountWallet: IHDAccountWallet {
     }
 }
 
+// MARK: - HDAccountWallet + IPrivateHDWallet
+
 extension HDAccountWallet: IPrivateHDWallet {
-    func privateKeyData(account _: Int, index: Int, external: Bool) throws -> Data { // todo. Refactor protocol. Because HDWallet and HDAccountWallet use different fields for derive
+    func privateKeyData(
+        account _: Int,
+        index: Int,
+        external: Bool
+    ) throws
+        -> Data
+    { // todo. Refactor protocol. Because HDWallet and HDAccountWallet use different fields for derive
         try privateKey(index: index, chain: external ? .external : .internal).raw
     }
 }

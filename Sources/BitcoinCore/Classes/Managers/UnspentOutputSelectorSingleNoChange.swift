@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - UnspentOutputSelectorSingleNoChange
+
 public class UnspentOutputSelectorSingleNoChange {
     private let calculator: ITransactionSizeCalculator
     private let provider: IUnspentOutputProvider
@@ -19,12 +21,19 @@ public class UnspentOutputSelectorSingleNoChange {
     }
 }
 
+// MARK: IUnspentOutputSelector
+
 extension UnspentOutputSelectorSingleNoChange: IUnspentOutputSelector {
     public func all(filters: UtxoFilters) -> [UnspentOutput] {
         provider.spendableUtxo(filters: filters)
     }
 
-    public func select(params: SendParameters, outputScriptType: ScriptType = .p2pkh, changeType: ScriptType = .p2pkh, pluginDataOutputSize: Int) throws -> SelectedUnspentOutputInfo {
+    public func select(
+        params: SendParameters,
+        outputScriptType: ScriptType = .p2pkh,
+        changeType: ScriptType = .p2pkh,
+        pluginDataOutputSize: Int
+    ) throws -> SelectedUnspentOutputInfo {
         guard let value = params.value else {
             throw BitcoinCoreErrors.TransactionSendError.invalidParameters
         }

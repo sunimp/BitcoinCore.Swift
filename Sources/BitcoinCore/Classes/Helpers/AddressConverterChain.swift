@@ -14,7 +14,7 @@ public class AddressConverterChain: IAddressConverter {
         concreteConverters.insert(addressConverter, at: 0)
     }
 
-    public init() {}
+    public init() { }
 
     public func convert(address: String) throws -> Address {
         var errors = [Error]()

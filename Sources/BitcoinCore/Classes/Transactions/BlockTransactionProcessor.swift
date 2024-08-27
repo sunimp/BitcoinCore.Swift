@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - BlockTransactionProcessor
+
 class BlockTransactionProcessor {
     private let storage: IStorage
     private let extractor: ITransactionExtractor
@@ -15,14 +17,21 @@ class BlockTransactionProcessor {
     private let conflictsResolver: TransactionConflictsResolver
     private let invalidator: TransactionInvalidator
 
-    weak var listener: IBlockchainDataListener?
-    weak var transactionListener: ITransactionListener?
+    weak var listener: IBlockchainDataListener? = nil
+    weak var transactionListener: ITransactionListener? = nil
 
     private let queue: DispatchQueue
 
-    init(storage: IStorage, extractor: ITransactionExtractor, publicKeyManager: IPublicKeyManager, irregularOutputFinder: IIrregularOutputFinder,
-         conflictsResolver: TransactionConflictsResolver, invalidator: TransactionInvalidator, listener: IBlockchainDataListener? = nil, queue: DispatchQueue)
-    {
+    init(
+        storage: IStorage,
+        extractor: ITransactionExtractor,
+        publicKeyManager: IPublicKeyManager,
+        irregularOutputFinder: IIrregularOutputFinder,
+        conflictsResolver: TransactionConflictsResolver,
+        invalidator: TransactionInvalidator,
+        listener: IBlockchainDataListener? = nil,
+        queue: DispatchQueue
+    ) {
         self.storage = storage
         self.extractor = extractor
         self.publicKeyManager = publicKeyManager
@@ -48,6 +57,8 @@ class BlockTransactionProcessor {
         }
     }
 }
+
+// MARK: IBlockTransactionProcessor
 
 extension BlockTransactionProcessor: IBlockTransactionProcessor {
     func processReceived(transactions: [FullTransaction], inBlock block: Block, skipCheckBloomFilter: Bool) throws {

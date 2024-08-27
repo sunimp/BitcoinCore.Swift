@@ -9,6 +9,8 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - MerkleBlockMessage
+
 struct MerkleBlockMessage: IMessage {
     let blockHeader: BlockHeader
 
@@ -25,6 +27,8 @@ struct MerkleBlockMessage: IMessage {
         "\(blockHeader.headerHash.ww.reversedHex)"
     }
 }
+
+// MARK: Equatable
 
 extension MerkleBlockMessage: Equatable {
     static func == (lhs: MerkleBlockMessage, rhs: MerkleBlockMessage) -> Bool {

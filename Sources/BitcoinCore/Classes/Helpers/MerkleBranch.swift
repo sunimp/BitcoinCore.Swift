@@ -11,7 +11,7 @@ public class MerkleBranch: IMerkleBranch {
     static let bitMask: [UInt8] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80]
 
     private let hasher: IHasher
-    private var txCount: Int = 0
+    private var txCount = 0
     private var hashes = [Data]()
     private var flags = [UInt8]()
 
@@ -22,7 +22,11 @@ public class MerkleBranch: IMerkleBranch {
         self.hasher = hasher
     }
 
-    public func calculateMerkleRoot(txCount: Int, hashes: [Data], flags: [UInt8]) throws -> (merkleRoot: Data, matchedHashes: [Data]) {
+    public func calculateMerkleRoot(
+        txCount: Int,
+        hashes: [Data],
+        flags: [UInt8]
+    ) throws -> (merkleRoot: Data, matchedHashes: [Data]) {
         self.txCount = txCount
         self.hashes = hashes
         self.flags = flags
@@ -83,7 +87,7 @@ public class MerkleBranch: IMerkleBranch {
         return hasher.hash(data: left + right)
     }
 
-    // Checks if the given bit is set in data, using little endian
+    /// Checks if the given bit is set in data, using little endian
     private func checkBitLE(data: [UInt8], index: Int) -> Bool {
         (data[Int(index >> 3)] & MerkleBranch.bitMask[Int(7 & index)]) != 0
     }

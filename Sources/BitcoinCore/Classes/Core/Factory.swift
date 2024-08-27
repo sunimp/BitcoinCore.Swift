@@ -7,8 +7,8 @@
 
 import Foundation
 
-import WWToolKit
 import NIO
+import WWToolKit
 
 class Factory: IFactory {
     private let network: INetwork
@@ -43,7 +43,15 @@ class Factory: IFactory {
     }
 
     func output(withIndex index: Int, address: Address, value: Int, publicKey: PublicKey?) -> Output {
-        Output(withValue: value, index: index, lockingScript: address.lockingScript, type: address.scriptType, address: address.stringValue, lockingScriptPayload: address.lockingScriptPayload, publicKey: publicKey)
+        Output(
+            withValue: value,
+            index: index,
+            lockingScript: address.lockingScript,
+            type: address.scriptType,
+            address: address.stringValue,
+            lockingScriptPayload: address.lockingScriptPayload,
+            publicKey: publicKey
+        )
     }
 
     func nullDataOutput(data: Data) -> Output {
@@ -51,9 +59,22 @@ class Factory: IFactory {
     }
 
     func peer(withHost host: String, eventLoopGroup: MultiThreadedEventLoopGroup, logger: Logger? = nil) -> IPeer {
-        let connection = PeerConnection(host: host, port: network.port, networkMessageParser: networkMessageParser, networkMessageSerializer: networkMessageSerializer, eventLoopGroup: eventLoopGroup, logger: logger)
+        let connection = PeerConnection(
+            host: host,
+            port: network.port,
+            networkMessageParser: networkMessageParser,
+            networkMessageSerializer: networkMessageSerializer,
+            eventLoopGroup: eventLoopGroup,
+            logger: logger
+        )
 
-        return Peer(host: host, network: network, connection: connection, connectionTimeoutManager: ConnectionTimeoutManager(), logger: logger)
+        return Peer(
+            host: host,
+            network: network,
+            connection: connection,
+            connectionTimeoutManager: ConnectionTimeoutManager(),
+            logger: logger
+        )
     }
 
     func blockHash(withHeaderHash headerHash: Data, height: Int, order: Int = 0) -> BlockHash {

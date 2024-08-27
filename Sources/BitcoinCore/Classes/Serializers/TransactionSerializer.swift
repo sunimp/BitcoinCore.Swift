@@ -34,7 +34,13 @@ public enum TransactionSerializer {
         return data
     }
 
-    public static func serializedForSignature(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], inputIndex: Int, forked: Bool = false) throws -> Data {
+    public static func serializedForSignature(
+        transaction: Transaction,
+        inputsToSign: [InputToSign],
+        outputs: [Output],
+        inputIndex: Int,
+        forked: Bool = false
+    ) throws -> Data {
         var data = Data()
 
         if forked { // use bip143 for new transaction digest algorithm
@@ -63,8 +69,10 @@ public enum TransactionSerializer {
                 let scriptLength = VarInt(script.count)
                 data += scriptLength.serialized()
                 data += script
+
             default:
-                data += OpCode.push(OpCode.p2pkhStart + OpCode.push(inputToSign.previousOutputPublicKey.hashP2pkh) + OpCode.p2pkhFinish)
+                data += OpCode
+                    .push(OpCode.p2pkhStart + OpCode.push(inputToSign.previousOutputPublicKey.hashP2pkh) + OpCode.p2pkhFinish)
             }
 
             data += inputToSign.previousOutput.value
@@ -76,7 +84,10 @@ public enum TransactionSerializer {
             data += UInt32(transaction.version)
             data += VarInt(inputsToSign.count).serialized()
             data += try inputsToSign.enumerated().flatMap { index, input in
-                try TransactionInputSerializer.serializedForSignature(inputToSign: input, forCurrentInputSignature: inputIndex == index)
+                try TransactionInputSerializer.serializedForSignature(
+                    inputToSign: input,
+                    forCurrentInputSignature: inputIndex == index
+                )
             }
             data += VarInt(outputs.count).serialized()
             data += outputs.flatMap { TransactionOutputSerializer.serialize(output: $0) }
@@ -87,7 +98,12 @@ public enum TransactionSerializer {
         return data
     }
 
-    public static func serializedForTaprootSignature(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], inputIndex: Int) throws -> Data {
+    public static func serializedForTaprootSignature(
+        transaction: Transaction,
+        inputsToSign: [InputToSign],
+        outputs: [Output],
+        inputIndex: Int
+    ) throws -> Data {
         var data = Data()
 
         data += UInt8(0)

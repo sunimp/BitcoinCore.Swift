@@ -19,9 +19,9 @@ public class Block: Record {
 
     public var headerHash: Data
     public var height: Int
-    var stale: Bool = false
-    var hasTransactions: Bool = false
-    var partial: Bool = false
+    var stale = false
+    var hasTransactions = false
+    var partial = false
 
     public init(withHeader header: BlockHeader, height: Int) {
         version = header.version

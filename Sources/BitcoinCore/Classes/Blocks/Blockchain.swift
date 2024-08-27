@@ -9,12 +9,14 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - Blockchain
+
 class Blockchain {
     private let storage: IStorage
-    private var blockValidator: IBlockValidator?
+    private var blockValidator: IBlockValidator? = nil
     private let factory: IFactory
-    weak var listener: IBlockchainDataListener?
-    private var previousBlock: Block?
+    weak var listener: IBlockchainDataListener? = nil
+    private var previousBlock: Block? = nil
 
     init(storage: IStorage, blockValidator: IBlockValidator?, factory: IFactory, listener: IBlockchainDataListener? = nil) {
         self.storage = storage
@@ -24,14 +26,17 @@ class Blockchain {
     }
 }
 
+// MARK: IBlockchain
+
 extension Blockchain: IBlockchain {
     func connect(merkleBlock: MerkleBlock) throws -> Block {
         if let existingBlock = storage.block(byHash: merkleBlock.headerHash) {
             return existingBlock
         }
 
-        guard let previousBlock = previousBlock ?? storage.block(byHash: merkleBlock.header.previousBlockHeaderHash),
-              previousBlock.headerHash == merkleBlock.header.previousBlockHeaderHash
+        guard
+            let previousBlock = previousBlock ?? storage.block(byHash: merkleBlock.header.previousBlockHeaderHash),
+            previousBlock.headerHash == merkleBlock.header.previousBlockHeaderHash
         else {
             throw BitcoinCoreErrors.BlockValidation.noPreviousBlock
         }

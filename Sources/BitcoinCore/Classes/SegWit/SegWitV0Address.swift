@@ -14,8 +14,8 @@ public class SegWitV0Address: Address, Equatable {
 
     public var scriptType: ScriptType {
         switch type {
-        case .pubKeyHash: return .p2wpkh
-        case .scriptHash: return .p2wsh
+        case .pubKeyHash: .p2wpkh
+        case .scriptHash: .p2wsh
         }
     }
 

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - ReplacementTransactionBuilder
+
 class ReplacementTransactionBuilder {
     private let storage: IStorage
     private let sizeCalculator: ITransactionSizeCalculator
@@ -17,10 +19,16 @@ class ReplacementTransactionBuilder {
     private let unspentOutputProvider: IUnspentOutputProvider
     private let conflictsResolver: TransactionConflictsResolver
 
-    init(storage: IStorage, sizeCalculator: ITransactionSizeCalculator, dustCalculator: IDustCalculator, factory: IFactory,
-         metadataExtractor: TransactionMetadataExtractor, pluginManager: IPluginManager, unspentOutputProvider: IUnspentOutputProvider,
-         transactionConflictsResolver: TransactionConflictsResolver)
-    {
+    init(
+        storage: IStorage,
+        sizeCalculator: ITransactionSizeCalculator,
+        dustCalculator: IDustCalculator,
+        factory: IFactory,
+        metadataExtractor: TransactionMetadataExtractor,
+        pluginManager: IPluginManager,
+        unspentOutputProvider: IUnspentOutputProvider,
+        transactionConflictsResolver: TransactionConflictsResolver
+    ) {
         self.storage = storage
         self.sizeCalculator = sizeCalculator
         self.dustCalculator = dustCalculator
@@ -31,7 +39,13 @@ class ReplacementTransactionBuilder {
         conflictsResolver = transactionConflictsResolver
     }
 
-    private func replacementTransaction(minFee: Int, minFeeRate: Int, utxo: [Output], fixedOutputs: [Output], outputs: [Output]) throws -> (outputs: [Output], fee: Int)? {
+    private func replacementTransaction(
+        minFee: Int,
+        minFeeRate: Int,
+        utxo: [Output],
+        fixedOutputs: [Output],
+        outputs: [Output]
+    ) throws -> (outputs: [Output], fee: Int)? {
         var minFee = minFee
         var outputs = outputs
 
@@ -53,7 +67,7 @@ class ReplacementTransactionBuilder {
             return (outputs: outputs, fee: fee)
         }
 
-        guard outputs.count > 0 else {
+        guard !outputs.isEmpty else {
             return nil
         }
 
@@ -68,10 +82,11 @@ class ReplacementTransactionBuilder {
     }
 
     private func unspentOutput(from inputWithPreviousOutput: InputWithPreviousOutput) throws -> UnspentOutput {
-        guard let previousOutput = inputWithPreviousOutput.previousOutput,
-              let path = inputWithPreviousOutput.previousOutput?.publicKeyPath,
-              let publicKey = storage.publicKey(byPath: path),
-              let transaction = storage.transaction(byHash: previousOutput.transactionHash)
+        guard
+            let previousOutput = inputWithPreviousOutput.previousOutput,
+            let path = inputWithPreviousOutput.previousOutput?.publicKeyPath,
+            let publicKey = storage.publicKey(byPath: path),
+            let transaction = storage.transaction(byHash: previousOutput.transactionHash)
         else {
             throw ReplacementTransactionBuildError.invalidTransaction
         }
@@ -82,14 +97,18 @@ class ReplacementTransactionBuilder {
     private func incrementedSequence(of inputWithPreviousOutput: InputWithPreviousOutput) -> Int {
         let input = inputWithPreviousOutput.input
 
-        if inputWithPreviousOutput.previousOutput?.pluginId != nil {
+        if inputWithPreviousOutput.previousOutput?.pluginID != nil {
             return pluginManager.incrementedSequence(of: inputWithPreviousOutput)
         }
 
         return min(input.sequence + 1, 0xFFFF_FFFF)
     }
 
-    private func setInputs(to mutableTransaction: MutableTransaction, originalInputs: [InputWithPreviousOutput], additionalInputs: [UnspentOutput]) throws {
+    private func setInputs(
+        to mutableTransaction: MutableTransaction,
+        originalInputs: [InputWithPreviousOutput],
+        additionalInputs: [UnspentOutput]
+    ) throws {
         mutableTransaction.inputsToSign = additionalInputs.map { utxo in
             factory.inputToSign(withPreviousOutput: utxo, script: Data(), sequence: 0x0)
         }
@@ -116,10 +135,15 @@ class ReplacementTransactionBuilder {
         mutableTransaction.outputs = sorted
     }
 
-    private func speedUpReplacement(originalFullInfo: FullTransactionForInfo, minFee: Int, originalFeeRate: Int, fixedUtxo: [Output]) throws -> MutableTransaction? {
+    private func speedUpReplacement(
+        originalFullInfo: FullTransactionForInfo,
+        minFee: Int,
+        originalFeeRate: Int,
+        fixedUtxo: [Output]
+    ) throws -> MutableTransaction? {
         // If an output has a pluginId, it most probably has a timelocked value and it shouldn't be altered.
-        var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginId != nil }
-        let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginId == nil }
+        var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginID != nil }
+        let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginID == nil }
         let myChangeOutputs = myOutputs.filter(\.changeOutput).sorted { a, b in a.value < b.value }
         let myExternalOutputs = myOutputs.filter { !$0.changeOutput }.sorted { a, b in a.value < b.value }
 
@@ -128,8 +152,9 @@ class ReplacementTransactionBuilder {
             fixedOutputs.append(sortedOutputs.removeLast())
         }
 
-        let unusedUtxo = unspentOutputProvider.confirmedSpendableUtxo(filters: UtxoFilters()).sorted(by: { a, b in a.output.value < b.output.value })
-        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)?
+        let unusedUtxo = unspentOutputProvider.confirmedSpendableUtxo(filters: UtxoFilters())
+            .sorted(by: { a, b in a.output.value < b.output.value })
+        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)? = nil
 
         var utxoCount = 0
         repeat {
@@ -138,11 +163,13 @@ class ReplacementTransactionBuilder {
                 let utxo = Array(unusedUtxo.prefix(utxoCount))
                 let outputs = Array(sortedOutputs.suffix(outputsCount))
 
-                if let replacement = try replacementTransaction(
-                    minFee: minFee, minFeeRate: originalFeeRate,
-                    utxo: fixedUtxo + utxo.map(\.output),
-                    fixedOutputs: fixedOutputs, outputs: outputs
-                ) {
+                if
+                    let replacement = try replacementTransaction(
+                        minFee: minFee, minFeeRate: originalFeeRate,
+                        utxo: fixedUtxo + utxo.map(\.output),
+                        fixedOutputs: fixedOutputs, outputs: outputs
+                    )
+                {
                     if let _optimalReplacement = optimalReplacement {
                         if _optimalReplacement.fee > replacement.fee {
                             optimalReplacement = (inputs: utxo, outputs: replacement.outputs, fee: replacement.fee)
@@ -156,26 +183,38 @@ class ReplacementTransactionBuilder {
             } while outputsCount >= 0
 
             utxoCount += 1
-        } while utxoCount <= unusedUtxo.count
-
+        } while
+            utxoCount <= unusedUtxo.count
+            
         guard let optimalReplacement else {
             return nil
         }
 
         let mutableTransaction = MutableTransaction(outgoing: true)
 
-        try setInputs(to: mutableTransaction, originalInputs: originalFullInfo.inputsWithPreviousOutputs, additionalInputs: optimalReplacement.inputs)
+        try setInputs(
+            to: mutableTransaction,
+            originalInputs: originalFullInfo.inputsWithPreviousOutputs,
+            additionalInputs: optimalReplacement.inputs
+        )
         setOutputs(to: mutableTransaction, outputs: fixedOutputs + optimalReplacement.outputs)
 
         return mutableTransaction
     }
 
-    private func cancelReplacement(originalFullInfo: FullTransactionForInfo, minFee: Int, originalFeeRate: Int, fixedUtxo: [Output], userAddress: Address, publicKey: PublicKey) throws -> MutableTransaction? {
+    private func cancelReplacement(
+        originalFullInfo: FullTransactionForInfo,
+        minFee: Int,
+        originalFeeRate: Int,
+        fixedUtxo: [Output],
+        userAddress: Address,
+        publicKey: PublicKey
+    ) throws -> MutableTransaction? {
         let unusedUtxo = unspentOutputProvider
             .confirmedSpendableUtxo(filters: UtxoFilters())
             .sorted(by: { a, b in a.output.value < b.output.value })
         let originalInputsValue = fixedUtxo.map(\.value).reduce(0, +)
-        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)?
+        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)? = nil
 
         var utxoCount = 0
         repeat {
@@ -185,13 +224,20 @@ class ReplacementTransactionBuilder {
             }
 
             let utxo = Array(unusedUtxo.prefix(utxoCount))
-            let outputs = [factory.output(withIndex: 0, address: userAddress, value: originalInputsValue - minFee, publicKey: publicKey)]
+            let outputs = [factory.output(
+                withIndex: 0,
+                address: userAddress,
+                value: originalInputsValue - minFee,
+                publicKey: publicKey
+            )]
 
-            if let replacement = try replacementTransaction(
-                minFee: minFee, minFeeRate: originalFeeRate,
-                utxo: fixedUtxo + utxo.map(\.output),
-                fixedOutputs: [], outputs: outputs
-            ) {
+            if
+                let replacement = try replacementTransaction(
+                    minFee: minFee, minFeeRate: originalFeeRate,
+                    utxo: fixedUtxo + utxo.map(\.output),
+                    fixedOutputs: [], outputs: outputs
+                )
+            {
                 if let _optimalReplacement = optimalReplacement {
                     if _optimalReplacement.fee > replacement.fee {
                         optimalReplacement = (inputs: utxo, outputs: replacement.outputs, fee: replacement.fee)
@@ -202,26 +248,36 @@ class ReplacementTransactionBuilder {
             }
 
             utxoCount += 1
-        } while utxoCount <= unusedUtxo.count
-
+        } while
+            utxoCount <= unusedUtxo.count
+            
         guard let optimalReplacement else {
             return nil
         }
 
         let mutableTransaction = MutableTransaction(outgoing: true)
 
-        try setInputs(to: mutableTransaction, originalInputs: originalFullInfo.inputsWithPreviousOutputs, additionalInputs: optimalReplacement.inputs)
+        try setInputs(
+            to: mutableTransaction,
+            originalInputs: originalFullInfo.inputsWithPreviousOutputs,
+            additionalInputs: optimalReplacement.inputs
+        )
         setOutputs(to: mutableTransaction, outputs: optimalReplacement.outputs)
 
         return mutableTransaction
     }
 
-    func replacementTransaction(transactionHash: String, minFee: Int, type: ReplacementType) throws -> (MutableTransaction, FullTransactionForInfo, [String]) {
-        guard let transactionHash = transactionHash.ww.reversedHexData,
-              let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
-              originalFullInfo.transactionWithBlock.blockHeight == nil,
-              let originalFee = originalFullInfo.metaData.fee,
-              originalFullInfo.metaData.type != .incoming
+    func replacementTransaction(
+        transactionHash: String,
+        minFee: Int,
+        type: ReplacementType
+    ) throws -> (MutableTransaction, FullTransactionForInfo, [String]) {
+        guard
+            let transactionHash = transactionHash.ww.reversedHexData,
+            let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
+            originalFullInfo.transactionWithBlock.blockHeight == nil,
+            let originalFee = originalFullInfo.metaData.fee,
+            originalFullInfo.metaData.type != .incoming
         else {
             throw ReplacementTransactionBuildError.invalidTransaction
         }
@@ -244,8 +300,9 @@ class ReplacementTransactionBuilder {
         let descendantTransactions = storage.descendantTransactionsFullInfo(of: transactionHash)
         let absoluteFee = descendantTransactions.map { $0.metaData.fee ?? 0 }.reduce(0, +)
 
-        guard descendantTransactions.allSatisfy({ $0.transactionWithBlock.transaction.conflictingTxHash == nil }),
-              !conflictsResolver.isTransactionReplaced(transaction: originalFullInfo.fullTransaction)
+        guard
+            descendantTransactions.allSatisfy({ $0.transactionWithBlock.transaction.conflictingTxHash == nil }),
+            !conflictsResolver.isTransactionReplaced(transaction: originalFullInfo.fullTransaction)
         else {
             throw ReplacementTransactionBuildError.alreadyReplaced
         }
@@ -254,12 +311,25 @@ class ReplacementTransactionBuilder {
             throw ReplacementTransactionBuildError.feeTooLow
         }
 
-        var mutableTransaction: MutableTransaction?
+        var mutableTransaction: MutableTransaction? = nil
         switch type {
         case .speedUp:
-            mutableTransaction = try speedUpReplacement(originalFullInfo: originalFullInfo, minFee: minFee, originalFeeRate: originalFeeRate, fixedUtxo: fixedUtxo)
-        case let .cancel(userAddress, publicKey):
-            mutableTransaction = try cancelReplacement(originalFullInfo: originalFullInfo, minFee: minFee, originalFeeRate: originalFeeRate, fixedUtxo: fixedUtxo, userAddress: userAddress, publicKey: publicKey)
+            mutableTransaction = try speedUpReplacement(
+                originalFullInfo: originalFullInfo,
+                minFee: minFee,
+                originalFeeRate: originalFeeRate,
+                fixedUtxo: fixedUtxo
+            )
+
+        case .cancel(let userAddress, let publicKey):
+            mutableTransaction = try cancelReplacement(
+                originalFullInfo: originalFullInfo,
+                minFee: minFee,
+                originalFeeRate: originalFeeRate,
+                fixedUtxo: fixedUtxo,
+                userAddress: userAddress,
+                publicKey: publicKey
+            )
         }
 
         guard let mutableTransaction else {
@@ -287,12 +357,16 @@ class ReplacementTransactionBuilder {
         )
     }
 
-    func replacementInfo(transactionHash: String, type: ReplacementType) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
-        guard let transactionHash = transactionHash.ww.reversedHexData,
-              let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
-              originalFullInfo.transactionWithBlock.blockHeight == nil,
-              originalFullInfo.metaData.type != .incoming,
-              let originalFee = originalFullInfo.metaData.fee
+    func replacementInfo(
+        transactionHash: String,
+        type: ReplacementType
+    ) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
+        guard
+            let transactionHash = transactionHash.ww.reversedHexData,
+            let originalFullInfo = storage.transactionFullInfo(byHash: transactionHash),
+            originalFullInfo.transactionWithBlock.blockHeight == nil,
+            originalFullInfo.metaData.type != .incoming,
+            let originalFee = originalFullInfo.metaData.fee
         else {
             return nil
         }
@@ -305,8 +379,9 @@ class ReplacementTransactionBuilder {
         let descendantTransactions = storage.descendantTransactionsFullInfo(of: transactionHash)
         let absoluteFee = descendantTransactions.map { $0.metaData.fee ?? 0 }.reduce(0, +)
 
-        guard descendantTransactions.allSatisfy({ $0.transactionWithBlock.transaction.conflictingTxHash == nil }),
-              !conflictsResolver.isTransactionReplaced(transaction: originalFullInfo.fullTransaction)
+        guard
+            descendantTransactions.allSatisfy({ $0.transactionWithBlock.transaction.conflictingTxHash == nil }),
+            !conflictsResolver.isTransactionReplaced(transaction: originalFullInfo.fullTransaction)
         else {
             return nil
         }
@@ -316,8 +391,8 @@ class ReplacementTransactionBuilder {
 
         switch type {
         case .speedUp:
-            var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginId != nil }
-            let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginId == nil }
+            var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginID != nil }
+            let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginID == nil }
             let myChangeOutputs = myOutputs.filter(\.changeOutput).sorted { a, b in a.value < b.value }
             let myExternalOutputs = myOutputs.filter { !$0.changeOutput }.sorted { a, b in a.value < b.value }
 
@@ -328,7 +403,8 @@ class ReplacementTransactionBuilder {
 
             originalSize = (try? sizeCalculator.transactionSize(previousOutputs: fixedUtxo, outputs: fixedOutputs)) ?? 0
             removableOutputsValue = sortedOutputs.map(\.value).reduce(0, +)
-        case let .cancel(userAddress, _):
+
+        case .cancel(let userAddress, _):
             let dustValue = dustCalculator.dust(type: userAddress.scriptType, dustThreshold: nil)
             let fixedOutputs = [factory.output(withIndex: 0, address: userAddress, value: dustValue, publicKey: nil)]
             originalSize = (try? sizeCalculator.transactionSize(previousOutputs: fixedUtxo, outputs: fixedOutputs)) ?? 0
@@ -349,6 +425,8 @@ class ReplacementTransactionBuilder {
         )
     }
 }
+
+// MARK: - ReplacementTransactionBuildError
 
 public enum ReplacementTransactionBuildError: Error {
     case invalidTransaction

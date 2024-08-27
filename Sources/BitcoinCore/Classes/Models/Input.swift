@@ -9,6 +9,8 @@ import Foundation
 
 import GRDB
 
+// MARK: - Input
+
 public class Input: Record {
     public var previousOutputTxHash: Data
     var previousOutputIndex: Int
@@ -73,6 +75,8 @@ extension Input {
         sequence < 0xFFFF_FFFE
     }
 }
+
+// MARK: - SerializationError
 
 enum SerializationError: Error {
     case noPreviousOutput

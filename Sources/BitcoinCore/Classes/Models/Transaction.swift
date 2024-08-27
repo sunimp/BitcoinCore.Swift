@@ -9,7 +9,11 @@ import Foundation
 
 import GRDB
 
+// MARK: - TransactionStatus
+
 public enum TransactionStatus: Int, DatabaseValueConvertible, Codable { case new, relayed, invalid }
+
+// MARK: - Transaction
 
 public class Transaction: Record {
     public var uid: String
@@ -19,10 +23,10 @@ public class Transaction: Record {
     public var timestamp: Int
     public var order: Int
     public var blockHash: Data? = nil
-    public var isMine: Bool = false
-    public var isOutgoing: Bool = false
+    public var isMine = false
+    public var isOutgoing = false
     public var status: TransactionStatus = .relayed
-    public var segWit: Bool = false
+    public var segWit = false
     public var conflictingTxHash: Data? = nil
     public var transactionInfoJson: Data = .init()
     public var rawTransaction: String? = nil

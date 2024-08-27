@@ -9,6 +9,8 @@ import Foundation
 
 import ObjectMapper
 
+// MARK: - BlockchairResponse
+
 enum BlockchairResponse {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,6 +32,8 @@ enum BlockchairResponse {
         return dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(value)))
     })
 }
+
+// MARK: - BlockchairTransactionsReponse
 
 struct BlockchairTransactionsReponse: ImmutableMappable {
     let data: ResponseData
@@ -67,13 +71,13 @@ struct BlockchairTransactionsReponse: ImmutableMappable {
     }
 
     struct Transaction: ImmutableMappable, Hashable {
-        let blockId: Int?
+        let blockID: Int?
         let hash: String
         let balanceChange: Int
         let address: String
 
         init(map: Map) throws {
-            blockId = try map.value("block_id")
+            blockID = try map.value("block_id")
             hash = try map.value("hash")
             balanceChange = try map.value("balance_change")
             address = try map.value("address")
@@ -92,6 +96,8 @@ struct BlockchairTransactionsReponse: ImmutableMappable {
         }
     }
 }
+
+// MARK: - BlockchairStatsReponse
 
 struct BlockchairStatsReponse: ImmutableMappable {
     let data: ResponseData
@@ -112,6 +118,8 @@ struct BlockchairStatsReponse: ImmutableMappable {
         }
     }
 }
+
+// MARK: - BlockchairBlocksResponse
 
 struct BlockchairBlocksResponse: ImmutableMappable {
     let data: [String: BlockResponseMap]
@@ -136,6 +144,8 @@ struct BlockchairBlocksResponse: ImmutableMappable {
         }
     }
 }
+
+// MARK: - BlockchairBroadcastResponse
 
 struct BlockchairBroadcastResponse: ImmutableMappable {
     let data: [String: String]?

@@ -43,18 +43,22 @@ public class ByteStream {
         case 0 ... 252:
             length = UInt64(len)
             offset += 1
+
         case 0xFD:
             offset += 1
             length = UInt64(data[offset ..< (offset + 2)].ww.to(type: UInt16.self))
             offset += 2
+
         case 0xFE:
             offset += 1
             length = UInt64(data[offset ..< (offset + 4)].ww.to(type: UInt32.self))
             offset += 4
+
         case 0xFF:
             offset += 1
             length = UInt64(data[offset ..< (offset + 8)].ww.to(type: UInt64.self))
             offset += 8
+
         default:
             offset += 1
             length = UInt64(data[offset ..< (offset + 8)].ww.to(type: UInt64.self))

@@ -7,19 +7,28 @@
 
 import Foundation
 
+// MARK: - TransactionBuilder
+
 class TransactionBuilder {
     private let recipientSetter: IRecipientSetter
     private let inputSetter: IInputSetter
     private let lockTimeSetter: ILockTimeSetter
     private let outputSetter: IOutputSetter
 
-    init(recipientSetter: IRecipientSetter, inputSetter: IInputSetter, lockTimeSetter: ILockTimeSetter, outputSetter: IOutputSetter) {
+    init(
+        recipientSetter: IRecipientSetter,
+        inputSetter: IInputSetter,
+        lockTimeSetter: ILockTimeSetter,
+        outputSetter: IOutputSetter
+    ) {
         self.recipientSetter = recipientSetter
         self.inputSetter = inputSetter
         self.lockTimeSetter = lockTimeSetter
         self.outputSetter = outputSetter
     }
 }
+
+// MARK: ITransactionBuilder
 
 extension TransactionBuilder: ITransactionBuilder {
     func buildTransaction(params: SendParameters) throws -> MutableTransaction {

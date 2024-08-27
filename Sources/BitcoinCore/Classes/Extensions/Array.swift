@@ -9,7 +9,7 @@ import Foundation
 
 import GRDB
 
-extension Array where Element == FullTransaction {
+extension [FullTransaction] {
     
     func inTopologicalOrder() -> [FullTransaction] {
         var ordered = [FullTransaction]()
@@ -36,8 +36,9 @@ extension Array where Element == FullTransaction {
 
         for candidateTransactionIndex in 0 ..< count {
             for input in self[transactionIndex].inputs {
-                if input.previousOutputTxHash == self[candidateTransactionIndex].header.dataHash,
-                   self[candidateTransactionIndex].outputs.count > input.previousOutputIndex
+                if
+                    input.previousOutputTxHash == self[candidateTransactionIndex].header.dataHash,
+                    self[candidateTransactionIndex].outputs.count > input.previousOutputIndex
                 {
                     visit(transactionWithIndex: candidateTransactionIndex, picked: &picked, visited: &visited)
                 }
@@ -55,11 +56,15 @@ extension Array where Element: Hashable {
     }
 }
 
+// MARK: - SQLExpressible + SQLExpressible
+
 extension [Data]: SQLExpressible {
     public var sqlExpression: SQLExpression {
         databaseValue.sqlExpression
     }
 }
+
+// MARK: - DatabaseValueConvertible + DatabaseValueConvertible, StatementBinding
 
 extension [Data]: DatabaseValueConvertible, StatementBinding {
     public var databaseValue: DatabaseValue {
@@ -67,7 +72,7 @@ extension [Data]: DatabaseValueConvertible, StatementBinding {
     }
 
     public static func fromDatabaseValue(_ dbValue: DatabaseValue) -> [Element]? {
-        if case let DatabaseValue.Storage.blob(value) = dbValue.storage {
+        if case DatabaseValue.Storage.blob(let value) = dbValue.storage {
             return DataListSerializer.deserialize(data: value)
         }
 

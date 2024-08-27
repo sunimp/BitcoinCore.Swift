@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - RecipientSetter
+
 class RecipientSetter {
     private let addressConverter: IAddressConverter
     private let pluginManager: IPluginManager
@@ -16,6 +18,8 @@ class RecipientSetter {
         self.pluginManager = pluginManager
     }
 }
+
+// MARK: IRecipientSetter
 
 extension RecipientSetter: IRecipientSetter {
     func setRecipient(to mutableTransaction: MutableTransaction, params: SendParameters, skipChecks: Bool = false) throws {
@@ -27,6 +31,10 @@ extension RecipientSetter: IRecipientSetter {
         mutableTransaction.recipientValue = value
         mutableTransaction.memo = params.memo
 
-        try pluginManager.processOutputs(mutableTransaction: mutableTransaction, pluginData: params.pluginData, skipChecks: skipChecks)
+        try pluginManager.processOutputs(
+            mutableTransaction: mutableTransaction,
+            pluginData: params.pluginData,
+            skipChecks: skipChecks
+        )
     }
 }

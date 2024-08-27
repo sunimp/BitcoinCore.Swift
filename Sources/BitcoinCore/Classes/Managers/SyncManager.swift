@@ -5,14 +5,16 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 import WWToolKit
 
+// MARK: - SyncManager
+
 class SyncManager {
     private var cancellables = Set<AnyCancellable>()
-    weak var delegate: ISyncManagerDelegate?
+    weak var delegate: ISyncManagerDelegate? = nil
 
     private let reachabilityManager: ReachabilityManager
     private let apiSyncer: IApiSyncer
@@ -22,8 +24,8 @@ class SyncManager {
 
     private var initialBestBlockHeight: Int32
     private var currentBestBlockHeight: Int32
-    private var foundTransactionsCount: Int = 0
-    private var forceAddedBlocksTotal: Int = 0
+    private var foundTransactionsCount = 0
+    private var forceAddedBlocksTotal = 0
 
     private(set) var syncState: BitcoinCore.KitState = .notSynced(error: BitcoinCore.StateError.notStarted) {
         didSet {
@@ -34,7 +36,7 @@ class SyncManager {
     }
 
     private var syncIdle: Bool {
-        guard case let .notSynced(error: error) = syncState else {
+        guard case .notSynced(error: let error) = syncState else {
             return false
         }
 
@@ -47,12 +49,19 @@ class SyncManager {
 
     private var peerGroupRunning: Bool {
         switch syncState {
-        case .syncing, .synced: return true
-        default: return false
+        case .syncing, .synced: true
+        default: false
         }
     }
 
-    init(reachabilityManager: ReachabilityManager, apiSyncer: IApiSyncer, peerGroup: IPeerGroup, storage: IStorage, syncMode: BitcoinCore.SyncMode, bestBlockHeight: Int32) {
+    init(
+        reachabilityManager: ReachabilityManager,
+        apiSyncer: IApiSyncer,
+        peerGroup: IPeerGroup,
+        storage: IStorage,
+        syncMode: BitcoinCore.SyncMode,
+        bestBlockHeight: Int32
+    ) {
         self.reachabilityManager = reachabilityManager
         self.apiSyncer = apiSyncer
         self.peerGroup = peerGroup
@@ -132,6 +141,8 @@ class SyncManager {
     }
 }
 
+// MARK: ISyncManager
+
 extension SyncManager: ISyncManager {
     func start() {
         if case .blockchair = syncMode {
@@ -166,6 +177,8 @@ extension SyncManager: ISyncManager {
     }
 }
 
+// MARK: IApiSyncerListener
+
 extension SyncManager: IApiSyncerListener {
     func onSyncSuccess() {
         forceAddedBlocksTotal = storage.apiBlockHashesCount
@@ -192,6 +205,8 @@ extension SyncManager: IApiSyncerListener {
         syncState = .apiSyncing(transactions: foundTransactionsCount)
     }
 }
+
+// MARK: IBlockSyncListener
 
 extension SyncManager: IBlockSyncListener {
     func blocksSyncFinished() {

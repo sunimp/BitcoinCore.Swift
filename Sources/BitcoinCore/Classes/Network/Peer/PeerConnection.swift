@@ -8,9 +8,11 @@
 import Foundation
 
 import HDWalletKit
-import WWToolKit
 import NIO
 import NIOFoundationCompat
+import WWToolKit
+
+// MARK: - PeerConnection
 
 class PeerConnection: NSObject {
     enum PeerConnectionError: Error {
@@ -29,7 +31,7 @@ class PeerConnection: NSObject {
     private let group: MultiThreadedEventLoopGroup
     private var channel: Channel?
 
-    private var waitingForDisconnect: Bool = false
+    private var waitingForDisconnect = false
     private let interval = TimeAmount.seconds(1)
 
     var logName: String {
@@ -45,9 +47,14 @@ class PeerConnection: NSObject {
             }
     }
 
-    init(host: String, port: Int, networkMessageParser: INetworkMessageParser, networkMessageSerializer: INetworkMessageSerializer,
-         eventLoopGroup: MultiThreadedEventLoopGroup, logger: Logger? = nil)
-    {
+    init(
+        host: String,
+        port: Int,
+        networkMessageParser: INetworkMessageParser,
+        networkMessageSerializer: INetworkMessageSerializer,
+        eventLoopGroup: MultiThreadedEventLoopGroup,
+        logger: Logger? = nil
+    ) {
         self.host = host
         self.port = port
         self.networkMessageParser = networkMessageParser
@@ -89,6 +96,8 @@ class PeerConnection: NSObject {
     }
 }
 
+// MARK: IPeerConnection
+
 extension PeerConnection: IPeerConnection {
     func connect() {
         let connectFuture = bootstrap.connect(host: host, port: port)
@@ -125,10 +134,15 @@ extension PeerConnection: IPeerConnection {
 
             _ = channel.writeAndFlush(buffer)
         } catch {
-            log("Connection can't send message \(message) with error \(error)", level: .error) // todo catch error when try send message not registered in serializers
+            log(
+                "Connection can't send message \(message) with error \(error)",
+                level: .error
+            ) // todo catch error when try send message not registered in serializers
         }
     }
 }
+
+// MARK: PeerMessageHandlerDelegate
 
 extension PeerConnection: PeerMessageHandlerDelegate {
     func onChannelActive() {
@@ -155,6 +169,8 @@ extension PeerConnection: PeerMessageHandlerDelegate {
         disconnect(error: error)
     }
 }
+
+// MARK: - PeerConnectionDelegate
 
 protocol PeerConnectionDelegate: AnyObject {
     func connectionAlive()

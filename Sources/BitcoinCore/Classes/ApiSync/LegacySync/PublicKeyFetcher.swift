@@ -9,6 +9,8 @@ import Foundation
 
 import HDWalletKit
 
+// MARK: - PublicKeyFetcher
+
 class PublicKeyFetcher {
     private let hdAccountWallet: HDAccountWallet
 
@@ -17,11 +19,15 @@ class PublicKeyFetcher {
     }
 }
 
+// MARK: IPublicKeyFetcher
+
 extension PublicKeyFetcher: IPublicKeyFetcher {
     func publicKeys(indices: Range<UInt32>, external: Bool) throws -> [PublicKey] {
         try hdAccountWallet.publicKeys(indices: indices, external: external)
     }
 }
+
+// MARK: - WatchPublicKeyFetcher
 
 class WatchPublicKeyFetcher {
     private let hdWatchAccountWallet: HDWatchAccountWallet
@@ -31,20 +37,26 @@ class WatchPublicKeyFetcher {
     }
 }
 
+// MARK: IPublicKeyFetcher
+
 extension WatchPublicKeyFetcher: IPublicKeyFetcher {
     func publicKeys(indices: Range<UInt32>, external: Bool) throws -> [PublicKey] {
         try hdWatchAccountWallet.publicKeys(indices: indices, external: external)
     }
 }
 
+// MARK: - MultiAccountPublicKeyFetcher
+
 class MultiAccountPublicKeyFetcher {
     private let hdWallet: HDWallet
-    private(set) var currentAccount: Int = 0
+    private(set) var currentAccount = 0
 
     init(hdWallet: HDWallet) {
         self.hdWallet = hdWallet
     }
 }
+
+// MARK: IPublicKeyFetcher, IMultiAccountPublicKeyFetcher
 
 extension MultiAccountPublicKeyFetcher: IPublicKeyFetcher, IMultiAccountPublicKeyFetcher {
     func publicKeys(indices: Range<UInt32>, external: Bool) throws -> [PublicKey] {

@@ -8,17 +8,19 @@
 import Foundation
 
 import Alamofire
-import WWToolKit
 import ObjectMapper
+import WWToolKit
+
+// MARK: - HsBlockHashFetcher
 
 public class HsBlockHashFetcher: IBlockHashFetcher {
     private static let paginationLimit = 100
 
-    private let hsUrl: String
+    private let hsURL: String
     private let networkManager: NetworkManager
 
-    public init(hsUrl: String, logger: Logger? = nil) {
-        self.hsUrl = hsUrl
+    public init(hsURL: String, logger: Logger? = nil) {
+        self.hsURL = hsURL
         networkManager = NetworkManager(logger: logger)
     }
 
@@ -27,7 +29,11 @@ public class HsBlockHashFetcher: IBlockHashFetcher {
             "numbers": heights.map { String($0) }.joined(separator: ","),
         ]
 
-        let blockResponses: [BlockResponse] = try await networkManager.fetch(url: "\(hsUrl)/hashes", method: .get, parameters: parameters)
+        let blockResponses: [BlockResponse] = try await networkManager.fetch(
+            url: "\(hsURL)/hashes",
+            method: .get,
+            parameters: parameters
+        )
         var hashes = [Int: String]()
 
         for response in blockResponses {
@@ -37,6 +43,8 @@ public class HsBlockHashFetcher: IBlockHashFetcher {
         return hashes
     }
 }
+
+// MARK: - BlockResponse
 
 struct BlockResponse: ImmutableMappable {
     let height: Int

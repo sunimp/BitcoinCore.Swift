@@ -11,11 +11,13 @@
 
 import Foundation
 
+// MARK: - Bech32
+
 /// Bech32 checksum implementation
 public class Bech32 {
     private let gen: [UInt32] = [0x3B6A_57B2, 0x2650_8E6D, 0x1EA1_19FA, 0x3D42_33DD, 0x2A14_62B3]
     /// Bech32 checksum delimiter
-    private let checksumMarker: String = "1"
+    private let checksumMarker = "1"
     /// Bech32 character set for encoding
     private let encCharset: Data = "qpzry9x8gf2tvdw0s3jn54khce6mua7l".data(using: .utf8)!
     /// Bech32 character set for decoding
@@ -30,7 +32,7 @@ public class Bech32 {
         1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, -1, -1, -1, -1, -1,
     ]
 
-    public init() {}
+    public init() { }
 
     /// Find the polynomial with value coefficients mod the generator as 30-bit.
     private func polymod(_ values: Data) -> UInt32 {
@@ -139,8 +141,9 @@ public class Bech32 {
             values[i] = UInt8(decInt)
         }
         let hrp = String(str[..<pos]).lowercased()
-        guard let (check, encoding) = extractChecksumWithEncoding(hrp: hrp, checksum: values),
-              check == encoding.checksumXorConstant
+        guard
+            let (check, encoding) = extractChecksumWithEncoding(hrp: hrp, checksum: values),
+            check == encoding.checksumXorConstant
         else {
             throw DecodingError.checksumMismatch
         }
@@ -148,8 +151,8 @@ public class Bech32 {
     }
 }
 
-public extension Bech32 {
-    enum DecodingError: LocalizedError {
+extension Bech32 {
+    public enum DecodingError: LocalizedError {
         case nonUTF8String
         case nonPrintableCharacter
         case invalidCase
@@ -164,43 +167,43 @@ public extension Bech32 {
         public var errorDescription: String? {
             switch self {
             case .checksumMismatch:
-                return "Checksum doesn't match"
+                "Checksum doesn't match"
             case .incorrectChecksumSize:
-                return "Checksum size too low"
+                "Checksum size too low"
             case .incorrectHrpSize:
-                return "Human-readable-part is too small or empty"
+                "Human-readable-part is too small or empty"
             case .invalidCase:
-                return "String contains mixed case characters"
+                "String contains mixed case characters"
             case .invalidCharacter:
-                return "Invalid character met on decoding"
+                "Invalid character met on decoding"
             case .noChecksumMarker:
-                return "Checksum delimiter not found"
+                "Checksum delimiter not found"
             case .nonPrintableCharacter:
-                return "Non printable character in input string"
+                "Non printable character in input string"
             case .nonUTF8String:
-                return "String cannot be decoded by utf8 decoder"
+                "String cannot be decoded by utf8 decoder"
             case .stringLengthExceeded:
-                return "Input string is too long"
+                "Input string is too long"
             }
         }
     }
 
-    enum Encoding {
+    public enum Encoding {
         case bech32
         case bech32m
 
         var checksumXorConstant: UInt32 {
             switch self {
-            case .bech32: return 1
-            case .bech32m: return 0x2BC8_30A3
+            case .bech32: 1
+            case .bech32m: 0x2BC8_30A3
             }
         }
 
         static func fromCheck(_ check: UInt32) -> Encoding? {
             switch check {
-            case Encoding.bech32.checksumXorConstant: return .bech32
-            case Encoding.bech32m.checksumXorConstant: return .bech32m
-            default: return nil
+            case Encoding.bech32.checksumXorConstant: .bech32
+            case Encoding.bech32m.checksumXorConstant: .bech32m
+            default: nil
             }
         }
     }

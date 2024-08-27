@@ -5,11 +5,13 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
-import WWToolKit
 import NIO
+import WWToolKit
+
+// MARK: - PeerGroupEvent
 
 public enum PeerGroupEvent {
     case onStart
@@ -21,6 +23,8 @@ public enum PeerGroupEvent {
     case onPeerReady(peer: IPeer)
     case onPeerBusy(peer: IPeer)
 }
+
+// MARK: - PeerGroup
 
 class PeerGroup {
     private static let acceptableBlockHeightDifference = 50000
@@ -34,28 +38,36 @@ class PeerGroup {
 
     private let localDownloadedBestBlockHeight: Int32
     private let peerCountToHold: Int // number of peers held
-    private var peerCountToConnect: Int? // number of peers to connect to
+    private var peerCountToConnect: Int? = nil // number of peers to connect to
     private var peerCountConnected = 0 // number of peers connected to
 
-    private(set) var started: Bool = false
+    private(set) var started = false
 
     private let peersQueue: DispatchQueue
     private let inventoryQueue: DispatchQueue
-    private var eventLoopGroup: MultiThreadedEventLoopGroup?
+    private var eventLoopGroup: MultiThreadedEventLoopGroup? = nil
 
     private let logger: Logger?
 
-    weak var inventoryItemsHandler: IInventoryItemsHandler?
-    weak var peerTaskHandler: IPeerTaskHandler?
+    weak var inventoryItemsHandler: IInventoryItemsHandler? = nil
+    weak var peerTaskHandler: IPeerTaskHandler? = nil
 
     private let subject = PassthroughSubject<PeerGroupEvent, Never>()
 
-    init(factory: IFactory, reachabilityManager: ReachabilityManager,
-         peerAddressManager: IPeerAddressManager, peerCount: Int = 10, localDownloadedBestBlockHeight: Int32,
-         peerManager: IPeerManager, peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.peers", qos: .background),
-         inventoryQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.inventory", qos: .background),
-         logger: Logger? = nil)
-    {
+    init(
+        factory: IFactory,
+        reachabilityManager: ReachabilityManager,
+        peerAddressManager: IPeerAddressManager,
+        peerCount: Int = 10,
+        localDownloadedBestBlockHeight: Int32,
+        peerManager: IPeerManager,
+        peersQueue: DispatchQueue = DispatchQueue(
+            label: "com.sunimp.bitcoin-core.peer-group.peers",
+            qos: .background
+        ),
+        inventoryQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.inventory", qos: .background),
+        logger: Logger? = nil
+    ) {
         self.factory = factory
 
         self.reachabilityManager = reachabilityManager
@@ -119,6 +131,8 @@ class PeerGroup {
     }
 }
 
+// MARK: IPeerGroup
+
 extension PeerGroup: IPeerGroup {
     func start() {
         guard !started else {
@@ -155,6 +169,8 @@ extension PeerGroup: IPeerGroup {
         peer.ready
     }
 }
+
+// MARK: PeerDelegate
 
 extension PeerGroup: PeerDelegate {
     func peerReady(_ peer: IPeer) {
@@ -199,7 +215,10 @@ extension PeerGroup: PeerDelegate {
         }
 
         if let error {
-            logger?.warning("Peer \(peer.logName)(\(peer.host)) disconnected. Network reachable: \(reachabilityManager.isReachable). Error: \(error)")
+            logger?
+                .warning(
+                    "Peer \(peer.logName)(\(peer.host)) disconnected. Network reachable: \(reachabilityManager.isReachable). Error: \(error)"
+                )
         }
 
         if reachabilityManager.isReachable, error != nil {
@@ -224,14 +243,18 @@ extension PeerGroup: PeerDelegate {
                 .map(\.address)
 
             peerAddressManager.add(ips: addresses)
+
         case let inventoryMessage as InventoryMessage:
             inventoryQueue.async {
                 self.inventoryItemsHandler?.handleInventoryItems(peer: peer, inventoryItems: inventoryMessage.inventoryItems)
             }
+
         default: ()
         }
     }
 }
+
+// MARK: IPeerAddressManagerDelegate
 
 extension PeerGroup: IPeerAddressManagerDelegate {
     func newIpsAdded() {

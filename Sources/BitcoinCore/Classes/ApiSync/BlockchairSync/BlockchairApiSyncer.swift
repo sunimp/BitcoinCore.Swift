@@ -5,17 +5,19 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
+import ObjectMapper
 import WWExtensions
 import WWToolKit
-import ObjectMapper
+
+// MARK: - BlockchairApiSyncer
 
 class BlockchairApiSyncer {
-    weak var listener: IApiSyncerListener?
-    private var task: AnyTask?
-    private var syncing: Bool = false
+    weak var listener: IApiSyncerListener? = nil
+    private var task: AnyTask? = nil
+    private var syncing = false
 
     private let storage: IStorage
     private let gapLimit: Int
@@ -26,11 +28,17 @@ class BlockchairApiSyncer {
     private let blockchain: Blockchain
     private let apiSyncStateManager: ApiSyncStateManager
 
-    init(storage: IStorage, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter,
-         transactionProvider: IApiTransactionProvider, lastBlockProvider: BlockchairLastBlockProvider,
-         publicKeyManager: IPublicKeyManager, blockchain: Blockchain,
-         apiSyncStateManager: ApiSyncStateManager, logger _: Logger? = nil)
-    {
+    init(
+        storage: IStorage,
+        gapLimit: Int,
+        restoreKeyConverter: IRestoreKeyConverter,
+        transactionProvider: IApiTransactionProvider,
+        lastBlockProvider: BlockchairLastBlockProvider,
+        publicKeyManager: IPublicKeyManager,
+        blockchain: Blockchain,
+        apiSyncStateManager: ApiSyncStateManager,
+        logger _: Logger? = nil
+    ) {
         self.storage = storage
         self.gapLimit = gapLimit
         self.restoreKeyConverter = restoreKeyConverter
@@ -122,6 +130,8 @@ class BlockchairApiSyncer {
         listener?.onSyncFailed(error: error)
     }
 }
+
+// MARK: IApiSyncer
 
 extension BlockchairApiSyncer: IApiSyncer {
     var willSync: Bool {

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - WatchedTransactionManager
+
 class WatchedTransactionManager {
     struct P2ShOutputFilter {
         let hash: Data
@@ -22,7 +24,7 @@ class WatchedTransactionManager {
     private var p2ShOutputFilters = [P2ShOutputFilter]()
     private var outpointFilters = [OutpointFilter]()
     private let queue: DispatchQueue
-    weak var bloomFilterManager: IBloomFilterManager?
+    weak var bloomFilterManager: IBloomFilterManager? = nil
 
     init(queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.watched-transactions-manager", qos: .background)) {
         self.queue = queue
@@ -49,17 +51,21 @@ class WatchedTransactionManager {
     }
 }
 
+// MARK: IWatchedTransactionManager
+
 extension WatchedTransactionManager: IWatchedTransactionManager {
     func add(transactionFilter: BitcoinCore.TransactionFilter, delegatedTo delegate: IWatchedTransactionDelegate) {
         switch transactionFilter {
-        case let .p2shOutput(scriptHash):
+        case .p2shOutput(let scriptHash):
             p2ShOutputFilters.append(P2ShOutputFilter(hash: scriptHash, delegate: delegate))
-        case let .outpoint(transactionHash, outputIndex):
+        case .outpoint(let transactionHash, let outputIndex):
             outpointFilters.append(OutpointFilter(transactionHash: transactionHash, outputIndex: outputIndex, delegate: delegate))
         }
         bloomFilterManager?.regenerateBloomFilter()
     }
 }
+
+// MARK: ITransactionListener
 
 extension WatchedTransactionManager: ITransactionListener {
     func onReceive(transaction: FullTransaction) {
@@ -68,6 +74,8 @@ extension WatchedTransactionManager: ITransactionListener {
         }
     }
 }
+
+// MARK: IBloomFilterProvider
 
 extension WatchedTransactionManager: IBloomFilterProvider {
     func filterElements() -> [Data] {

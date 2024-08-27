@@ -9,12 +9,14 @@ import Foundation
 
 import HDWalletKit
 
+// MARK: - AccountPublicKeyManager
+
 class AccountPublicKeyManager {
     private let restoreKeyConverter: IRestoreKeyConverter
     private let storage: IStorage
     private let hdWallet: IHDAccountWallet
     private let gapLimit: Int
-    weak var bloomFilterManager: IBloomFilterManager?
+    weak var bloomFilterManager: IBloomFilterManager? = nil
 
     init(storage: IStorage, hdWallet: IHDAccountWallet, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter) {
         self.storage = storage
@@ -41,18 +43,22 @@ class AccountPublicKeyManager {
     }
 
     private func gapKeysCount(publicKeyResults publicKeysWithUsedStates: [PublicKeyWithUsedState]) -> Int {
-        if let lastUsedKey = publicKeysWithUsedStates.filter(\.used).sorted(by: { $0.publicKey.index < $1.publicKey.index }).last {
-            return publicKeysWithUsedStates.filter { $0.publicKey.index > lastUsedKey.publicKey.index }.count
+        if
+            let lastUsedKey = publicKeysWithUsedStates.filter(\.used).sorted(by: { $0.publicKey.index < $1.publicKey.index })
+                .last
+        {
+            publicKeysWithUsedStates.filter { $0.publicKey.index > lastUsedKey.publicKey.index }.count
         } else {
-            return publicKeysWithUsedStates.count
+            publicKeysWithUsedStates.count
         }
     }
 
     private func publicKey(external: Bool) throws -> PublicKey {
-        guard let unusedKey = storage.publicKeysWithUsedState()
-            .filter({ $0.publicKey.external == external && !$0.used })
-            .sorted(by: { $0.publicKey.index < $1.publicKey.index })
-            .first
+        guard
+            let unusedKey = storage.publicKeysWithUsedState()
+                .filter({ $0.publicKey.external == external && !$0.used })
+                .sorted(by: { $0.publicKey.index < $1.publicKey.index })
+                .first
         else {
             throw PublicKeyManager.PublicKeyManagerError.noUnusedPublicKey
         }
@@ -60,6 +66,8 @@ class AccountPublicKeyManager {
         return unusedKey.publicKey
     }
 }
+
+// MARK: IPublicKeyManager
 
 extension AccountPublicKeyManager: IPublicKeyManager {
     func usedPublicKeys(change: Bool) -> [PublicKey] {
@@ -120,6 +128,8 @@ extension AccountPublicKeyManager: IPublicKeyManager {
     }
 }
 
+// MARK: IBloomFilterProvider
+
 extension AccountPublicKeyManager: IBloomFilterProvider {
     func filterElements() -> [Data] {
         var elements = [Data]()
@@ -133,8 +143,18 @@ extension AccountPublicKeyManager: IBloomFilterProvider {
 }
 
 extension AccountPublicKeyManager {
-    public static func instance(storage: IStorage, hdWallet: IHDAccountWallet, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter) -> AccountPublicKeyManager {
-        let addressManager = AccountPublicKeyManager(storage: storage, hdWallet: hdWallet, gapLimit: gapLimit, restoreKeyConverter: restoreKeyConverter)
+    public static func instance(
+        storage: IStorage,
+        hdWallet: IHDAccountWallet,
+        gapLimit: Int,
+        restoreKeyConverter: IRestoreKeyConverter
+    ) -> AccountPublicKeyManager {
+        let addressManager = AccountPublicKeyManager(
+            storage: storage,
+            hdWallet: hdWallet,
+            gapLimit: gapLimit,
+            restoreKeyConverter: restoreKeyConverter
+        )
         try? addressManager.fillGap()
         return addressManager
     }

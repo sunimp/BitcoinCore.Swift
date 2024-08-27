@@ -9,6 +9,8 @@ import Foundation
 
 import HDWalletKit
 
+// MARK: - ReadOnlyWallet
+
 class ReadOnlyWallet {
     enum ReadOnlyWalletError: Error {
         case noKeyForGivenAccount
@@ -24,6 +26,8 @@ class ReadOnlyWallet {
     }
 }
 
+// MARK: IHDWallet
+
 extension ReadOnlyWallet: IHDWallet {
     func publicKey(account: Int, index: Int, external: Bool) throws -> PublicKey {
         try publicKeys(account: account, indices: UInt32(index) ..< UInt32(index + 1), external: external).first!
@@ -34,7 +38,11 @@ extension ReadOnlyWallet: IHDWallet {
             throw ReadOnlyWalletError.noKeyForGivenAccount
         }
 
-        let hdPublicKeys: [HDPublicKey] = try ReadOnlyHDWallet.publicKeys(extendedPublicKey: key, indices: indices, chain: external ? .external : .internal)
+        let hdPublicKeys: [HDPublicKey] = try ReadOnlyHDWallet.publicKeys(
+            extendedPublicKey: key,
+            indices: indices,
+            chain: external ? .external : .internal
+        )
 
         guard hdPublicKeys.count == indices.count else {
             throw ReadOnlyWalletError.publicKeysDerivationFailed

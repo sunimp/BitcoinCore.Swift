@@ -9,6 +9,8 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - OutputSetter
+
 class OutputSetter {
     private let outputSorterFactory: ITransactionDataSorterFactory
     private let factory: IFactory
@@ -18,6 +20,8 @@ class OutputSetter {
         self.factory = factory
     }
 }
+
+// MARK: IOutputSetter
 
 extension OutputSetter: IOutputSetter {
     func setOutputs(to transaction: MutableTransaction, sortType: TransactionDataSortType) {

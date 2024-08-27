@@ -5,8 +5,10 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
+
+// MARK: - MempoolTransactions
 
 class MempoolTransactions {
     private var cancellables = Set<AnyCancellable>()
@@ -15,9 +17,11 @@ class MempoolTransactions {
     private var requestedTransactions = [String: [Data]]()
     private let peersQueue: DispatchQueue
 
-    init(transactionSyncer: ITransactionSyncer, transactionSender: ITransactionSender?,
-         peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.mempool-transactions", qos: .userInitiated))
-    {
+    init(
+        transactionSyncer: ITransactionSyncer,
+        transactionSender: ITransactionSender?,
+        peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.mempool-transactions", qos: .userInitiated)
+    ) {
         self.transactionSyncer = transactionSyncer
         self.transactionSender = transactionSender
         self.peersQueue = peersQueue
@@ -57,13 +61,15 @@ class MempoolTransactions {
         publisher
             .sink { [weak self] event in
                 switch event {
-                case let .onPeerDisconnect(peer, error): self?.onPeerDisconnect(peer: peer, error: error)
+                case .onPeerDisconnect(let peer, let error): self?.onPeerDisconnect(peer: peer, error: error)
                 default: ()
                 }
             }
             .store(in: &cancellables)
     }
 }
+
+// MARK: IPeerTaskHandler
 
 extension MempoolTransactions: IPeerTaskHandler {
     func handleCompletedTask(peer: IPeer, task: PeerTask) -> Bool {
@@ -79,12 +85,17 @@ extension MempoolTransactions: IPeerTaskHandler {
     }
 }
 
+// MARK: IInventoryItemsHandler
+
 extension MempoolTransactions: IInventoryItemsHandler {
     func handleInventoryItems(peer: IPeer, inventoryItems: [InventoryItem]) {
         var transactionHashes = [Data]()
 
         for item in inventoryItems {
-            if case .transaction = item.objectType, !isTransactionRequested(hash: item.hash), transactionSyncer.shouldRequestTransaction(hash: item.hash) {
+            if
+                case .transaction = item.objectType, !isTransactionRequested(hash: item.hash),
+                transactionSyncer.shouldRequestTransaction(hash: item.hash)
+            {
                 transactionHashes.append(item.hash)
             }
         }

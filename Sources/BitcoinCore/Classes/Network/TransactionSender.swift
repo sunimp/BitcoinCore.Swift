@@ -5,11 +5,13 @@
 //  Created by Sun on 2024/8/21.
 //
 
+import Combine
 import Foundation
 import QuartzCore
-import Combine
 
 import WWToolKit
+
+// MARK: - TransactionSender
 
 class TransactionSender {
     static let minConnectedPeersCount = 2
@@ -28,10 +30,18 @@ class TransactionSender {
     private let maxRetriesCount: Int
     private let retriesPeriod: Double // seconds
 
-    init(transactionSyncer: ITransactionSyncer, initialBlockDownload: IInitialDownload, peerManager: IPeerManager, storage: IStorage, timer: ITransactionSendTimer,
-         logger: Logger? = nil, queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.transaction-sender", qos: .background),
-         sendType: BitcoinCore.SendType, maxRetriesCount: Int = 3, retriesPeriod: Double = 60)
-    {
+    init(
+        transactionSyncer: ITransactionSyncer,
+        initialBlockDownload: IInitialDownload,
+        peerManager: IPeerManager,
+        storage: IStorage,
+        timer: ITransactionSendTimer,
+        logger: Logger? = nil,
+        queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.transaction-sender", qos: .background),
+        sendType: BitcoinCore.SendType,
+        maxRetriesCount: Int = 3,
+        retriesPeriod: Double = 60
+    ) {
         self.transactionSyncer = transactionSyncer
         self.initialBlockDownload = initialBlockDownload
         self.peerManager = peerManager
@@ -72,16 +82,17 @@ class TransactionSender {
     private func transactionsToSend(from transactions: [FullTransaction]) -> [FullTransaction] {
         transactions.filter { transaction in
             if let sentTransaction = storage.sentTransaction(byHash: transaction.header.dataHash) {
-                return sentTransaction.lastSendTime < CACurrentMediaTime() - self.retriesPeriod
+                sentTransaction.lastSendTime < CACurrentMediaTime() - self.retriesPeriod
             } else {
-                return true
+                true
             }
         }
     }
 
     private func transactionSendSuccess(sentTransaction transaction: FullTransaction) {
-        guard let sentTransaction = storage.sentTransaction(byHash: transaction.header.dataHash),
-              !sentTransaction.sendSuccess
+        guard
+            let sentTransaction = storage.sentTransaction(byHash: transaction.header.dataHash),
+            !sentTransaction.sendSuccess
         else {
             return
         }
@@ -141,7 +152,7 @@ class TransactionSender {
         switch sendType {
         case .p2p:
             p2pSend(transactions: transactions)
-        case let .api(blockchairApi):
+        case .api(let blockchairApi):
             apiSend(transactions: transactions, blockchairApi: blockchairApi)
         }
     }
@@ -163,6 +174,8 @@ class TransactionSender {
         send(transactions: transactions)
     }
 }
+
+// MARK: ITransactionSender
 
 extension TransactionSender: ITransactionSender {
     func verifyCanSend() throws {
@@ -195,12 +208,15 @@ extension TransactionSender: ITransactionSender {
                     self?.queue.async {
                         self?.sendPendingTransactions()
                     }
+
                 default: ()
                 }
             }
             .store(in: &cancellables)
     }
 }
+
+// MARK: ITransactionSendTimerDelegate
 
 extension TransactionSender: ITransactionSendTimerDelegate {
     func timePassed() {
@@ -209,6 +225,8 @@ extension TransactionSender: ITransactionSendTimerDelegate {
         }
     }
 }
+
+// MARK: IPeerTaskHandler
 
 extension TransactionSender: IPeerTaskHandler {
     func handleCompletedTask(peer _: IPeer, task: PeerTask) -> Bool {

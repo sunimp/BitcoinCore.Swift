@@ -10,7 +10,7 @@ import Foundation
 public class MerkleBlock {
     let header: BlockHeader
     let transactionHashes: [Data]
-    var height: Int?
+    var height: Int? = nil
     var transactions: [FullTransaction]
 
     lazy var headerHash: Data = self.header.headerHash

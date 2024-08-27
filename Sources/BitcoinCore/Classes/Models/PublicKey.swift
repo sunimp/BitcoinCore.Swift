@@ -10,6 +10,8 @@ import Foundation
 import GRDB
 import WWCryptoKit
 
+// MARK: - PublicKey
+
 public class PublicKey: Record {
     public enum InitError: Error {
         case invalid
@@ -90,6 +92,8 @@ public class PublicKey: Record {
         container[Columns.convertedForP2tr] = convertedForP2tr
     }
 }
+
+// MARK: Hashable
 
 extension PublicKey: Hashable {
     public static func == (lhs: PublicKey, rhs: PublicKey) -> Bool {

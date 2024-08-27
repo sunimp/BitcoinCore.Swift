@@ -51,7 +51,10 @@ public class PaymentAddressParser: IPaymentAddressParser {
             return BitcoinPaymentData(address: address)
         }
         address = versionSeparatedParts.removeFirst()
-        if let firstPart = versionSeparatedParts.first?.lowercased(), firstPart.range(of: PaymentAddressParser.parameterVersion) != nil {
+        if
+            let firstPart = versionSeparatedParts.first?.lowercased(),
+            firstPart.range(of: PaymentAddressParser.parameterVersion) != nil
+        {
             parametersParts.append(firstPart)
 
             versionSeparatedParts.removeFirst(1)
@@ -75,6 +78,13 @@ public class PaymentAddressParser: IPaymentAddressParser {
             }
         }
 
-        return BitcoinPaymentData(address: address, version: version, amount: amount, label: label, message: message, parameters: parameters.isEmpty ? nil : parameters)
+        return BitcoinPaymentData(
+            address: address,
+            version: version,
+            amount: amount,
+            label: label,
+            message: message,
+            parameters: parameters.isEmpty ? nil : parameters
+        )
     }
 }

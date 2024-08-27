@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - BloomFilter
+
 public struct BloomFilter {
     let nHashFuncs: UInt32
     let nTweak: UInt32
@@ -49,6 +51,8 @@ public struct BloomFilter {
     }
 }
 
+// MARK: CustomDebugStringConvertible
+
 extension BloomFilter: CustomDebugStringConvertible {
     public var debugDescription: String {
         filter.compactMap { bits(fromByte: $0).map(\.description).joined() }.joined()
@@ -59,8 +63,8 @@ extension BloomFilter: CustomDebugStringConvertible {
 
         var description: String {
             switch self {
-            case .one: return "1"
-            case .zero: return "0"
+            case .one: "1"
+            case .zero: "0"
             }
         }
     }

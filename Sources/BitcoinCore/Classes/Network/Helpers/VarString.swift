@@ -9,6 +9,8 @@ import Foundation
 
 import WWExtensions
 
+// MARK: - VarString
+
 /// Variable length string can be stored using a variable length integer followed by the string itself.
 public struct VarString {
     public typealias StringLiteralType = String
@@ -27,6 +29,8 @@ public struct VarString {
         return data
     }
 }
+
+// MARK: CustomStringConvertible
 
 extension VarString: CustomStringConvertible {
     public var description: String {

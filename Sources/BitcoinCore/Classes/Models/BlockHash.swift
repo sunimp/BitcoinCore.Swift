@@ -10,6 +10,8 @@ import Foundation
 import GRDB
 import WWExtensions
 
+// MARK: - BlockHash
+
 public class BlockHash: Record {
     let headerHash: Data
     let height: Int
@@ -60,11 +62,15 @@ public class BlockHash: Record {
     }
 }
 
+// MARK: Equatable
+
 extension BlockHash: Equatable {
     public static func == (lhs: BlockHash, rhs: BlockHash) -> Bool {
         lhs.headerHash == rhs.headerHash
     }
 }
+
+// MARK: Hashable
 
 extension BlockHash: Hashable {
     public var hashValue: Int {

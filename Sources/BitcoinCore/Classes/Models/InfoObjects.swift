@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionInfo
+
 open class TransactionInfo: ITransactionInfo, Codable {
     public let uid: String
     public let transactionHash: String
@@ -27,9 +29,21 @@ open class TransactionInfo: ITransactionInfo, Codable {
         rbfEnabled && blockHeight == nil && conflictingHash == nil
     }
 
-    public required init(uid: String, transactionHash: String, transactionIndex: Int, inputs: [TransactionInputInfo], outputs: [TransactionOutputInfo],
-                         amount: Int, type: TransactionType, fee: Int?, blockHeight: Int?, timestamp: Int, status: TransactionStatus, conflictingHash: String?, rbfEnabled: Bool)
-    {
+    public required init(
+        uid: String,
+        transactionHash: String,
+        transactionIndex: Int,
+        inputs: [TransactionInputInfo],
+        outputs: [TransactionOutputInfo],
+        amount: Int,
+        type: TransactionType,
+        fee: Int?,
+        blockHeight: Int?,
+        timestamp: Int,
+        status: TransactionStatus,
+        conflictingHash: String?,
+        rbfEnabled: Bool
+    ) {
         self.uid = uid
         self.transactionHash = transactionHash
         self.transactionIndex = transactionIndex
@@ -46,6 +60,8 @@ open class TransactionInfo: ITransactionInfo, Codable {
     }
 }
 
+// MARK: - TransactionInputInfo
+
 public class TransactionInputInfo: Codable {
     public let mine: Bool
     public let address: String?
@@ -58,19 +74,21 @@ public class TransactionInputInfo: Codable {
     }
 }
 
+// MARK: - TransactionOutputInfo
+
 public class TransactionOutputInfo: Codable {
     public let mine: Bool
     public let changeOutput: Bool
     public let value: Int
     public let address: String?
     public var memo: String?
-    public var pluginId: UInt8? = nil
+    public var pluginID: UInt8? = nil
     public var pluginData: IPluginOutputData? = nil
 
     var pluginDataString: String? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case mine, changeOutput, value, address, pluginId, pluginDataString
+        case mine, changeOutput, value, address, pluginID, pluginDataString
     }
 
     public init(mine: Bool, changeOutput: Bool, value: Int, address: String?) {
@@ -81,11 +99,15 @@ public class TransactionOutputInfo: Codable {
     }
 }
 
+// MARK: - BlockInfo
+
 public struct BlockInfo {
     public let headerHash: String
     public let height: Int
     public let timestamp: Int?
 }
+
+// MARK: - BalanceInfo
 
 public struct BalanceInfo: Equatable {
     public let spendable: Int
@@ -93,7 +115,8 @@ public struct BalanceInfo: Equatable {
     public let unspendableNotRelayed: Int
 
     public static func == (lhs: BalanceInfo, rhs: BalanceInfo) -> Bool {
-        lhs.spendable == rhs.spendable && lhs.unspendableTimeLocked == rhs.unspendableTimeLocked && lhs.unspendableNotRelayed == rhs.unspendableNotRelayed
+        lhs.spendable == rhs.spendable && lhs.unspendableTimeLocked == rhs.unspendableTimeLocked && lhs
+            .unspendableNotRelayed == rhs.unspendableNotRelayed
     }
 
     public var unspendable: Int {

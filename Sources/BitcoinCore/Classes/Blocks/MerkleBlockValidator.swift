@@ -27,7 +27,8 @@ class MerkleBlockValidator: IMerkleBlockValidator {
         }
 
         // check for excessively high numbers of transactions
-        guard message.totalTransactions <= maxBlockSize / 60 else { // 60 is the lower bound for the size of a serialized CTransaction
+        guard message.totalTransactions <= maxBlockSize / 60
+        else { // 60 is the lower bound for the size of a serialized CTransaction
             throw BitcoinCoreErrors.MerkleBlockValidation.tooManyTransactions
         }
 
@@ -43,12 +44,20 @@ class MerkleBlockValidator: IMerkleBlockValidator {
         guard let merkleBranch else {
             throw BitcoinCoreErrors.MerkleBlockValidation.noMerkleBranch
         }
-        let merkleRootData = try merkleBranch.calculateMerkleRoot(txCount: Int(message.totalTransactions), hashes: message.hashes, flags: message.flags)
+        let merkleRootData = try merkleBranch.calculateMerkleRoot(
+            txCount: Int(message.totalTransactions),
+            hashes: message.hashes,
+            flags: message.flags
+        )
 
         guard merkleRootData.merkleRoot == message.blockHeader.merkleRoot else {
             throw BitcoinCoreErrors.MerkleBlockValidation.wrongMerkleRoot
         }
 
-        return MerkleBlock(header: message.blockHeader, transactionHashes: merkleRootData.matchedHashes, transactions: [FullTransaction]())
+        return MerkleBlock(
+            header: message.blockHeader,
+            transactionHashes: merkleRootData.matchedHashes,
+            transactions: [FullTransaction]()
+        )
     }
 }

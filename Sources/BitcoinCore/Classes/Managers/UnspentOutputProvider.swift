@@ -7,12 +7,14 @@
 
 import Foundation
 
+// MARK: - UnspentOutputProvider
+
 class UnspentOutputProvider {
     let storage: IStorage
     let pluginManager: IPluginManager
     let confirmationsThreshold: Int
 
-    // Confirmed incoming and all outgoing unspent outputs
+    /// Confirmed incoming and all outgoing unspent outputs
     private var allUtxo: [UnspentOutput] {
         let lastBlockHeight = storage.lastBlock?.height ?? 0
 
@@ -49,6 +51,8 @@ class UnspentOutputProvider {
     }
 }
 
+// MARK: IUnspentOutputProvider
+
 extension UnspentOutputProvider: IUnspentOutputProvider {
     func spendableUtxo(filters: UtxoFilters) -> [UnspentOutput] {
         allUtxo.filter { utxo in
@@ -60,8 +64,9 @@ extension UnspentOutputProvider: IUnspentOutputProvider {
                 return false
             }
 
-            if let outputsCount = filters.maxOutputsCountForInputs,
-               storage.outputsCount(transactionHash: utxo.transaction.dataHash) > outputsCount
+            if
+                let outputsCount = filters.maxOutputsCountForInputs,
+                storage.outputsCount(transactionHash: utxo.transaction.dataHash) > outputsCount
             {
                 return false
             }
@@ -70,7 +75,7 @@ extension UnspentOutputProvider: IUnspentOutputProvider {
         }
     }
 
-    // Only confirmed spendable outputs
+    /// Only confirmed spendable outputs
     func confirmedSpendableUtxo(filters: UtxoFilters) -> [UnspentOutput] {
         let lastBlockHeight = storage.lastBlock?.height ?? 0
 
@@ -85,12 +90,18 @@ extension UnspentOutputProvider: IUnspentOutputProvider {
     }
 }
 
+// MARK: IBalanceProvider
+
 extension UnspentOutputProvider: IBalanceProvider {
     var balanceInfo: BalanceInfo {
         let spendable = spendableUtxo(filters: UtxoFilters()).map(\.output.value).reduce(0, +)
         let unspendableTimeLocked = unspendableTimeLockedUtxo.map(\.output.value).reduce(0, +)
         let unspendableNotRelayed = unspendableNotRelayedUtxo.map(\.output.value).reduce(0, +)
 
-        return BalanceInfo(spendable: spendable, unspendableTimeLocked: unspendableTimeLocked, unspendableNotRelayed: unspendableNotRelayed)
+        return BalanceInfo(
+            spendable: spendable,
+            unspendableTimeLocked: unspendableTimeLocked,
+            unspendableNotRelayed: unspendableNotRelayed
+        )
     }
 }

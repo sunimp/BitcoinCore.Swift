@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionMetadataExtractor
+
 class TransactionMetadataExtractor {
     private let myOutputsCache: IOutputsCache
     private let storage: IOutputStorage
@@ -16,6 +18,8 @@ class TransactionMetadataExtractor {
         self.storage = storage
     }
 }
+
+// MARK: ITransactionExtractor
 
 extension TransactionMetadataExtractor: ITransactionExtractor {
     func extract(transaction: FullTransaction) {

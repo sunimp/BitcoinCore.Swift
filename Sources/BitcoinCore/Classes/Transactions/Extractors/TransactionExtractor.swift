@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionExtractor
+
 class TransactionExtractor {
     private let outputScriptTypeParser: ITransactionExtractor
     private let publicKeySetter: ITransactionExtractor
@@ -15,7 +17,14 @@ class TransactionExtractor {
     private let metaDataExtractor: ITransactionExtractor
     private let pluginManager: IPluginManager
 
-    init(outputScriptTypeParser: ITransactionExtractor, publicKeySetter: ITransactionExtractor, inputExtractor: ITransactionExtractor, metaDataExtractor: ITransactionExtractor, outputAddressExtractor: ITransactionExtractor, pluginManager: IPluginManager) {
+    init(
+        outputScriptTypeParser: ITransactionExtractor,
+        publicKeySetter: ITransactionExtractor,
+        inputExtractor: ITransactionExtractor,
+        metaDataExtractor: ITransactionExtractor,
+        outputAddressExtractor: ITransactionExtractor,
+        pluginManager: IPluginManager
+    ) {
         self.outputScriptTypeParser = outputScriptTypeParser
         self.publicKeySetter = publicKeySetter
         self.inputExtractor = inputExtractor
@@ -24,6 +33,8 @@ class TransactionExtractor {
         self.pluginManager = pluginManager
     }
 }
+
+// MARK: ITransactionExtractor
 
 extension TransactionExtractor: ITransactionExtractor {
     func extract(transaction: FullTransaction) {

@@ -10,6 +10,8 @@ import Foundation
 import WWCryptoKit
 import WWExtensions
 
+// MARK: - NetworkMessageParser
+
 class NetworkMessageParser: INetworkMessageParser {
     private let magic: UInt32
     private var messageParsers = [String: IMessageParser]()
@@ -49,6 +51,8 @@ class NetworkMessageParser: INetworkMessageParser {
     }
 }
 
+// MARK: - AddressMessageParser
+
 class AddressMessageParser: IMessageParser {
     var id: String { "addr" }
 
@@ -66,6 +70,8 @@ class AddressMessageParser: IMessageParser {
         return AddressMessage(addresses: addressList)
     }
 }
+
+// MARK: - GetDataMessageParser
 
 class GetDataMessageParser: IMessageParser {
     var id: String { "getdata" }
@@ -86,6 +92,8 @@ class GetDataMessageParser: IMessageParser {
         return GetDataMessage(inventoryItems: inventoryItems)
     }
 }
+
+// MARK: - InventoryMessageParser
 
 class InventoryMessageParser: IMessageParser {
     var id: String { "inv" }
@@ -112,6 +120,8 @@ class InventoryMessageParser: IMessageParser {
     }
 }
 
+// MARK: - PingMessageParser
+
 class PingMessageParser: IMessageParser {
     var id: String { "ping" }
 
@@ -120,6 +130,8 @@ class PingMessageParser: IMessageParser {
         return PingMessage(nonce: byteStream.read(UInt64.self))
     }
 }
+
+// MARK: - PongMessageParser
 
 class PongMessageParser: IMessageParser {
     var id: String { "pong" }
@@ -130,6 +142,8 @@ class PongMessageParser: IMessageParser {
     }
 }
 
+// MARK: - VerackMessageParser
+
 class VerackMessageParser: IMessageParser {
     var id: String { "verack" }
 
@@ -137,6 +151,8 @@ class VerackMessageParser: IMessageParser {
         VerackMessage()
     }
 }
+
+// MARK: - VersionMessageParser
 
 class VersionMessageParser: IMessageParser {
     var id: String { "version" }
@@ -149,7 +165,17 @@ class VersionMessageParser: IMessageParser {
         let timestamp = byteStream.read(Int64.self)
         let yourAddress = NetworkAddress(byteStream: byteStream)
         if byteStream.availableBytes == 0 {
-            return VersionMessage(version: version, services: services, timestamp: timestamp, yourAddress: yourAddress, myAddress: nil, nonce: nil, userAgent: nil, startHeight: nil, relay: nil)
+            return VersionMessage(
+                version: version,
+                services: services,
+                timestamp: timestamp,
+                yourAddress: yourAddress,
+                myAddress: nil,
+                nonce: nil,
+                userAgent: nil,
+                startHeight: nil,
+                relay: nil
+            )
         }
         let myAddress = NetworkAddress(byteStream: byteStream)
         let nonce = byteStream.read(UInt64.self)
@@ -157,9 +183,21 @@ class VersionMessageParser: IMessageParser {
         let startHeight = byteStream.read(Int32.self)
         let relay: Bool? = byteStream.availableBytes == 0 ? nil : byteStream.read(Bool.self)
 
-        return VersionMessage(version: version, services: services, timestamp: timestamp, yourAddress: yourAddress, myAddress: myAddress, nonce: nonce, userAgent: userAgent, startHeight: startHeight, relay: relay)
+        return VersionMessage(
+            version: version,
+            services: services,
+            timestamp: timestamp,
+            yourAddress: yourAddress,
+            myAddress: myAddress,
+            nonce: nonce,
+            userAgent: userAgent,
+            startHeight: startHeight,
+            relay: relay
+        )
     }
 }
+
+// MARK: - MemPoolMessageParser
 
 class MemPoolMessageParser: IMessageParser {
     var id: String { "mempool" }
@@ -168,6 +206,8 @@ class MemPoolMessageParser: IMessageParser {
         MemPoolMessage()
     }
 }
+
+// MARK: - MerkleBlockMessageParser
 
 class MerkleBlockMessageParser: IMessageParser {
     var id: String { "merkleblock" }
@@ -198,9 +238,18 @@ class MerkleBlockMessageParser: IMessageParser {
             flags.append(byteStream.read(UInt8.self))
         }
 
-        return MerkleBlockMessage(blockHeader: blockHeader, totalTransactions: totalTransactions, numberOfHashes: numberOfHashes, hashes: hashes, numberOfFlags: numberOfFlags, flags: flags)
+        return MerkleBlockMessage(
+            blockHeader: blockHeader,
+            totalTransactions: totalTransactions,
+            numberOfHashes: numberOfHashes,
+            hashes: hashes,
+            numberOfFlags: numberOfFlags,
+            flags: flags
+        )
     }
 }
+
+// MARK: - TransactionMessageParser
 
 class TransactionMessageParser: IMessageParser {
     var id: String { "tx" }
@@ -209,6 +258,8 @@ class TransactionMessageParser: IMessageParser {
         TransactionMessage(transaction: TransactionSerializer.deserialize(data: data), size: data.count)
     }
 }
+
+// MARK: - RejectMessageParser
 
 class RejectMessageParser: IMessageParser {
     var id: String { "reject" }
@@ -228,6 +279,8 @@ class RejectMessageParser: IMessageParser {
         return RejectMessage(message: message, ccode: ccode, reason: reason, data: data)
     }
 }
+
+// MARK: - UnknownMessageParser
 
 class UnknownMessageParser: IMessageParser {
     var id: String { "unknown" }

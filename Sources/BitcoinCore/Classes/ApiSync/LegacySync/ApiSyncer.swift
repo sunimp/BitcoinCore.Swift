@@ -11,13 +11,17 @@ import HDWalletKit
 import WWExtensions
 import WWToolKit
 
+// MARK: - IMultiAccountPublicKeyFetcher
+
 protocol IMultiAccountPublicKeyFetcher {
     var currentAccount: Int { get }
     func increaseAccount()
 }
 
+// MARK: - ApiSyncer
+
 class ApiSyncer {
-    weak var listener: IApiSyncerListener?
+    weak var listener: IApiSyncerListener? = nil
 
     private var tasks = Set<AnyTask>()
 
@@ -29,7 +33,14 @@ class ApiSyncer {
 
     private let logger: Logger?
 
-    init(storage: IStorage, blockDiscovery: BlockDiscoveryBatch, publicKeyManager: IPublicKeyManager, multiAccountPublicKeyFetcher: IMultiAccountPublicKeyFetcher?, apiSyncStateManager: ApiSyncStateManager, logger: Logger? = nil) {
+    init(
+        storage: IStorage,
+        blockDiscovery: BlockDiscoveryBatch,
+        publicKeyManager: IPublicKeyManager,
+        multiAccountPublicKeyFetcher: IMultiAccountPublicKeyFetcher?,
+        apiSyncStateManager: ApiSyncStateManager,
+        logger: Logger? = nil
+    ) {
         self.storage = storage
         self.blockDiscovery = blockDiscovery
         self.publicKeyManager = publicKeyManager
@@ -90,6 +101,8 @@ class ApiSyncer {
         listener?.onSyncFailed(error: error)
     }
 }
+
+// MARK: IApiSyncer
 
 extension ApiSyncer: IApiSyncer {
     var willSync: Bool {

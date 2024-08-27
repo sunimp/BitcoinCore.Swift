@@ -5,8 +5,8 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class BloomFilterLoader: IBloomFilterManagerDelegate {
     private var cancellables = Set<AnyCancellable>()
@@ -34,7 +34,7 @@ class BloomFilterLoader: IBloomFilterManagerDelegate {
         publisher
             .sink { [weak self] event in
                 switch event {
-                case let .onPeerConnect(peer): self?.onPeerConnect(peer: peer)
+                case .onPeerConnect(let peer): self?.onPeerConnect(peer: peer)
                 default: ()
                 }
             }

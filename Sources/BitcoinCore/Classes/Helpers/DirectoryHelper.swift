@@ -26,9 +26,9 @@ public enum DirectoryHelper {
 
     public static func removeAll(inDirectory directoryName: String, except excludedFiles: [String]) throws {
         let fileManager = FileManager.default
-        let fileUrls = try fileManager.contentsOfDirectory(at: directoryURL(for: directoryName), includingPropertiesForKeys: nil)
+        let fileURLs = try fileManager.contentsOfDirectory(at: directoryURL(for: directoryName), includingPropertiesForKeys: nil)
 
-        for filename in fileUrls {
+        for filename in fileURLs {
             if !excludedFiles.contains(where: { filename.lastPathComponent.contains($0) }) {
                 try fileManager.removeItem(at: filename)
             }

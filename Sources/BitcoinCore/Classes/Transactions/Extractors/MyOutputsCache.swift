@@ -7,9 +7,13 @@
 
 import Foundation
 
+// MARK: - MyOutputsCache
+
 class MyOutputsCache {
     private var outputs = [Data: [Int: Int]]() // [TxHash: [OutputIndex: OutputValue]]
 }
+
+// MARK: IOutputsCache
 
 extension MyOutputsCache: IOutputsCache {
     func add(outputs: [Output]) {

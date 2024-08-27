@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionFeeCalculator
+
 class TransactionFeeCalculator {
     private let recipientSetter: IRecipientSetter
     private let inputSetter: IInputSetter
@@ -18,6 +20,8 @@ class TransactionFeeCalculator {
         self.changeScriptType = changeScriptType
     }
 }
+
+// MARK: ITransactionFeeCalculator
 
 extension TransactionFeeCalculator: ITransactionFeeCalculator {
     func sendInfo(params: SendParameters) throws -> BitcoinSendInfo {

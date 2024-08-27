@@ -8,8 +8,10 @@
 import Foundation
 
 import Alamofire
-import WWToolKit
 import ObjectMapper
+import WWToolKit
+
+// MARK: - BCoinApi
 
 public class BCoinApi {
     private let url: String
@@ -21,6 +23,8 @@ public class BCoinApi {
     }
 }
 
+// MARK: IApiTransactionProvider
+
 extension BCoinApi: IApiTransactionProvider {
     public func transactions(addresses: [String], stopHeight _: Int?) async throws -> [ApiTransactionItem] {
         let parameters: Parameters = [
@@ -28,7 +32,12 @@ extension BCoinApi: IApiTransactionProvider {
         ]
         let path = "/tx/address"
 
-        let bcoinItems: [BCoinTransactionItem] = try await networkManager.fetch(url: url + path, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+        let bcoinItems: [BCoinTransactionItem] = try await networkManager.fetch(
+            url: url + path,
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default
+        )
         return bcoinItems.compactMap { item -> ApiTransactionItem? in
             guard let blockHash = item.blockHash, let blockHeight = item.blockHeight else {
                 return nil
@@ -43,6 +52,8 @@ extension BCoinApi: IApiTransactionProvider {
         }
     }
 }
+
+// MARK: - BCoinTransactionItem
 
 open class BCoinTransactionItem: ImmutableMappable {
     public let blockHash: String?
@@ -65,6 +76,8 @@ open class BCoinTransactionItem: ImmutableMappable {
         lhs.blockHash == rhs.blockHash && lhs.blockHeight == rhs.blockHeight
     }
 }
+
+// MARK: - BCoinTransactionOutputItem
 
 open class BCoinTransactionOutputItem: ImmutableMappable {
     public let script: String

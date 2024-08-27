@@ -7,15 +7,19 @@
 
 import Foundation
 
+// MARK: - PendingOutpointsProvider
+
 class PendingOutpointsProvider {
     private let storage: IStorage
 
-    weak var bloomFilterManager: IBloomFilterManager?
+    weak var bloomFilterManager: IBloomFilterManager? = nil
 
     init(storage: IStorage) {
         self.storage = storage
     }
 }
+
+// MARK: IBloomFilterProvider
 
 extension PendingOutpointsProvider: IBloomFilterProvider {
     func filterElements() -> [Data] {

@@ -7,17 +7,21 @@
 
 import Foundation
 
+// MARK: - TransactionSendTimer
+
 class TransactionSendTimer {
     let interval: TimeInterval
 
-    weak var delegate: ITransactionSendTimerDelegate?
-    var runLoop: RunLoop?
-    var timer: Timer?
+    weak var delegate: ITransactionSendTimerDelegate? = nil
+    var runLoop: RunLoop? = nil
+    var timer: Timer? = nil
 
     init(interval: TimeInterval) {
         self.interval = interval
     }
 }
+
+// MARK: ITransactionSendTimer
 
 extension TransactionSendTimer: ITransactionSendTimer {
     func startIfNotRunning() {
@@ -28,7 +32,11 @@ extension TransactionSendTimer: ITransactionSendTimer {
         DispatchQueue.global(qos: .background).async {
             self.runLoop = .current
 
-            let timer = Timer(timeInterval: self.interval, repeats: true, block: { [weak self] _ in self?.delegate?.timePassed() })
+            let timer = Timer(
+                timeInterval: self.interval,
+                repeats: true,
+                block: { [weak self] _ in self?.delegate?.timePassed() }
+            )
             self.timer = timer
 
             RunLoop.current.add(timer, forMode: .common)

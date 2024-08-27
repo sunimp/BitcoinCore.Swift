@@ -10,9 +10,22 @@ import Foundation
 import GRDB
 
 public class InvalidTransaction: Transaction {
-    init(uid: String, dataHash: Data, version: Int, lockTime: Int, timestamp: Int, order: Int, blockHash: Data?, isMine: Bool, isOutgoing: Bool, status: TransactionStatus,
-         segWit: Bool, conflictingTxHash: Data?, transactionInfoJson: Data, rawTransaction: String)
-    {
+    init(
+        uid: String,
+        dataHash: Data,
+        version: Int,
+        lockTime: Int,
+        timestamp: Int,
+        order: Int,
+        blockHash: Data?,
+        isMine: Bool,
+        isOutgoing: Bool,
+        status: TransactionStatus,
+        segWit: Bool,
+        conflictingTxHash: Data?,
+        transactionInfoJson: Data,
+        rawTransaction: String
+    ) {
         super.init()
 
         self.uid = uid

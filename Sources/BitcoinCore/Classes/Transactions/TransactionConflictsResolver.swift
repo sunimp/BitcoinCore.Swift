@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionConflictsResolver
+
 class TransactionConflictsResolver {
     private let storage: IStorage
 
@@ -17,9 +19,12 @@ class TransactionConflictsResolver {
     private func conflictingTransactions(for transaction: FullTransaction) -> [Transaction] {
         let storageTransactionHashes = transaction.inputs
             .map { input in
-                storage.inputsUsing(previousOutputTxHash: input.previousOutputTxHash, previousOutputIndex: input.previousOutputIndex)
-                    .filter { $0.transactionHash != transaction.header.dataHash }
-                    .map(\.transactionHash)
+                storage.inputsUsing(
+                    previousOutputTxHash: input.previousOutputTxHash,
+                    previousOutputIndex: input.previousOutputIndex
+                )
+                .filter { $0.transactionHash != transaction.header.dataHash }
+                .map(\.transactionHash)
             }
             .flatMap { $0 }
 
@@ -32,10 +37,12 @@ class TransactionConflictsResolver {
 
     private func existingHasHigherSequence(mempoolTransaction: FullTransaction, existingTransaction: FullTransaction) -> Bool {
         for existingInput in existingTransaction.inputs {
-            if let mempoolInput = mempoolTransaction.inputs.first(where: {
-                $0.previousOutputTxHash == existingInput.previousOutputTxHash &&
-                    $0.previousOutputIndex == existingInput.previousOutputIndex
-            }) {
+            if
+                let mempoolInput = mempoolTransaction.inputs.first(where: {
+                    $0.previousOutputTxHash == existingInput.previousOutputTxHash &&
+                        $0.previousOutputIndex == existingInput.previousOutputIndex
+                })
+            {
                 if existingInput.sequence > mempoolInput.sequence {
                     return true
                 }
@@ -46,8 +53,10 @@ class TransactionConflictsResolver {
     }
 }
 
+// MARK: ITransactionConflictsResolver
+
 extension TransactionConflictsResolver: ITransactionConflictsResolver {
-    // Only pending transactions may be conflicting with a transaction in block. No need to check that
+    /// Only pending transactions may be conflicting with a transaction in block. No need to check that
     func transactionsConflicting(withInblockTransaction transaction: FullTransaction) -> [Transaction] {
         conflictingTransactions(for: transaction)
     }
@@ -75,7 +84,7 @@ extension TransactionConflictsResolver: ITransactionConflictsResolver {
             .map(\.header)
     }
 
-    // Checks if the transactions has a conflicting input with higher sequence
+    /// Checks if the transactions has a conflicting input with higher sequence
     func isTransactionReplaced(transaction: FullTransaction) -> Bool {
         let conflictingTransactions = conflictingTransactions(for: transaction)
 
@@ -98,10 +107,17 @@ extension TransactionConflictsResolver: ITransactionConflictsResolver {
         let conflictingTransactionHashes = storage
             .inputs(byHashes: pendingTxHashes)
             .filter { input in
-                transaction.inputs.contains { $0.previousOutputIndex == input.previousOutputIndex && $0.previousOutputTxHash == input.previousOutputTxHash }
+                transaction.inputs
+                    .contains {
+                        $0.previousOutputIndex == input.previousOutputIndex && $0.previousOutputTxHash == input
+                            .previousOutputTxHash
+                    }
             }
             .map(\.transactionHash)
-        if conflictingTransactionHashes.isEmpty { // handle if transaction has conflicting inputs, otherwise it's false-positive tx
+        if
+            conflictingTransactionHashes
+                .isEmpty
+        { // handle if transaction has conflicting inputs, otherwise it's false-positive tx
             return []
         }
 

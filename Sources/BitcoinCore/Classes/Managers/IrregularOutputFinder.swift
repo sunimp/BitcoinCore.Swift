@@ -7,10 +7,12 @@
 
 import Foundation
 
+// MARK: - IrregularOutputFinder
+
 class IrregularOutputFinder {
     private let irregularScriptTypes: [ScriptType]
     private let storage: IStorage
-    weak var bloomFilterManager: IBloomFilterManager?
+    weak var bloomFilterManager: IBloomFilterManager? = nil
 
     init(storage: IStorage, additionalScripts: [ScriptType]) {
         self.storage = storage
@@ -33,6 +35,8 @@ class IrregularOutputFinder {
     }
 }
 
+// MARK: IIrregularOutputFinder
+
 extension IrregularOutputFinder: IIrregularOutputFinder {
     func hasIrregularOutput(outputs: [Output]) -> Bool {
         for output in outputs {
@@ -44,6 +48,8 @@ extension IrregularOutputFinder: IIrregularOutputFinder {
         return false
     }
 }
+
+// MARK: IBloomFilterProvider
 
 extension IrregularOutputFinder: IBloomFilterProvider {
     func filterElements() -> [Data] {
@@ -58,7 +64,8 @@ extension IrregularOutputFinder: IBloomFilterProvider {
         }
 
         for outputWithPublicKey in outputs {
-            let outpoint = outputWithPublicKey.output.transactionHash + byteArrayLittleEndian(int: outputWithPublicKey.output.index)
+            let outpoint = outputWithPublicKey.output
+                .transactionHash + byteArrayLittleEndian(int: outputWithPublicKey.output.index)
             elements.append(outpoint)
         }
 

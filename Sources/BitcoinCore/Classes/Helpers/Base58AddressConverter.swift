@@ -56,9 +56,11 @@ public class Base58AddressConverter: IAddressConverter {
         case .p2pkh, .p2pk:
             version = addressVersion
             addressType = AddressType.pubKeyHash
+
         case .p2sh, .p2wpkhSh:
             version = addressScriptVersion
             addressType = AddressType.scriptHash
+
         default: throw BitcoinCoreErrors.AddressConversion.unknownAddressType
         }
 

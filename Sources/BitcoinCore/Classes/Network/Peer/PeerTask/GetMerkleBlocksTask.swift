@@ -28,10 +28,15 @@ class GetMerkleBlocksTask: PeerTask {
     private var merkleBlockValidator: IMerkleBlockValidator
     private weak var merkleBlockHandler: IMerkleBlockHandler?
 
-    init(blockHashes: [BlockHash], merkleBlockValidator: IMerkleBlockValidator, merkleBlockHandler: IMerkleBlockHandler,
-         minMerkleBlocksCount: Double, minTransactionsCount: Double, minTransactionsSize: Double,
-         dateGenerator: @escaping () -> Date = Date.init)
-    {
+    init(
+        blockHashes: [BlockHash],
+        merkleBlockValidator: IMerkleBlockValidator,
+        merkleBlockHandler: IMerkleBlockHandler,
+        minMerkleBlocksCount: Double,
+        minTransactionsCount: Double,
+        minTransactionsSize: Double,
+        dateGenerator: @escaping () -> Date = Date.init
+    ) {
         self.blockHashes = blockHashes
         self.merkleBlockValidator = merkleBlockValidator
         self.merkleBlockHandler = merkleBlockHandler
@@ -95,11 +100,15 @@ class GetMerkleBlocksTask: PeerTask {
         let minTransactionsCount = Int((minTransactionsCount * totalWaitingTime).rounded())
         let minTransactionsSize = Int((minTransactionsSize * totalWaitingTime).rounded())
 
-        if merkleBlocksCount < minMerkleBlocksCount, transactionsCount < minTransactionsCount, transactionsSize < minTransactionsSize {
+        if
+            merkleBlocksCount < minMerkleBlocksCount, transactionsCount < minTransactionsCount,
+            transactionsSize < minTransactionsSize
+        {
             warningsCount += 1
             if warningsCount >= 10 {
                 delegate?.handle(failedTask: self, error: TooSlowPeer(
-                    minMerkleBlocks: minMerkleBlocksCount, minTransactionsCount: minTransactionsCount, minTransactionsSize: minTransactionsSize,
+                    minMerkleBlocks: minMerkleBlocksCount, minTransactionsCount: minTransactionsCount,
+                    minTransactionsSize: minTransactionsSize,
                     merkleBlocks: merkleBlocksCount, transactionsCount: transactionsCount, transactionsSize: transactionsSize
                 ))
                 return

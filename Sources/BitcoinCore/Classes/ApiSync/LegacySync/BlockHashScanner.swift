@@ -7,8 +7,10 @@
 
 import Foundation
 
+// MARK: - BlockHashScanner
+
 class BlockHashScanner {
-    weak var listener: IApiSyncerListener?
+    weak var listener: IApiSyncerListener? = nil
 
     private let restoreKeyConverter: IRestoreKeyConverter
     private let provider: IApiTransactionProvider
@@ -46,9 +48,15 @@ class BlockHashScanner {
             BlockHash(headerHashReversedHex: $0.blockHash, height: $0.blockHeight, sequence: 0)
         }
 
-        return BlockHashesResponse(blockHashes: blockHashes, externalLastUsedIndex: externalLastUsedIndex, internalLastUsedIndex: internalLastUsedIndex)
+        return BlockHashesResponse(
+            blockHashes: blockHashes,
+            externalLastUsedIndex: externalLastUsedIndex,
+            internalLastUsedIndex: internalLastUsedIndex
+        )
     }
 }
+
+// MARK: - BlockHashesResponse
 
 struct BlockHashesResponse {
     let blockHashes: [BlockHash]

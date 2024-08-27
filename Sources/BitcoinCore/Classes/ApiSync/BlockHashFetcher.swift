@@ -25,11 +25,11 @@ public class BlockHashFetcher: IBlockHashFetcher {
 
         var blockHashes = [Int: String]()
 
-        if beforeCheckpoint.count > 0 {
+        if !beforeCheckpoint.isEmpty {
             blockHashes = try await hsFetcher.fetch(heights: beforeCheckpoint)
         }
 
-        if afterCheckpoint.count > 0 {
+        if !afterCheckpoint.isEmpty {
             try await blockHashes.merge(blockchairFetcher.fetch(heights: afterCheckpoint), uniquingKeysWith: { a, _ in a })
         }
 

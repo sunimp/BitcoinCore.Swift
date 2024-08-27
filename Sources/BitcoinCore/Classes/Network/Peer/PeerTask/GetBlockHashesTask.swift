@@ -23,7 +23,8 @@ class GetBlockHashesTask: PeerTask {
             resolvedExpectedHashesMinCount = maxExpectedBlockHashesCount
         }
 
-        var resolvedAllowedIdleTime = Double(resolvedExpectedHashesMinCount) * maxAllowedIdleTime / Double(maxExpectedBlockHashesCount)
+        var resolvedAllowedIdleTime = Double(resolvedExpectedHashesMinCount) * maxAllowedIdleTime /
+            Double(maxExpectedBlockHashesCount)
         if resolvedAllowedIdleTime < minAllowedIdleTime {
             resolvedAllowedIdleTime = minAllowedIdleTime
         }
@@ -40,7 +41,10 @@ class GetBlockHashesTask: PeerTask {
 
     override func start() {
         if let requester {
-            requester.send(message: GetBlocksMessage(protocolVersion: requester.protocolVersion, headerHashes: blockLocatorHashes))
+            requester.send(message: GetBlocksMessage(
+                protocolVersion: requester.protocolVersion,
+                headerHashes: blockLocatorHashes
+            ))
         }
 
         super.start()

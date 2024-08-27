@@ -7,7 +7,11 @@
 
 import Foundation
 
+// MARK: - AddressType
+
 public enum AddressType: UInt8 { case pubKeyHash = 0, scriptHash = 8 }
+
+// MARK: - Address
 
 public protocol Address: AnyObject {
     var scriptType: ScriptType { get }
@@ -16,6 +20,8 @@ public protocol Address: AnyObject {
     var lockingScript: Data { get }
 }
 
+// MARK: - LegacyAddress
+
 public class LegacyAddress: Address, Equatable {
     public let type: AddressType
     public let lockingScriptPayload: Data
@@ -23,15 +29,15 @@ public class LegacyAddress: Address, Equatable {
 
     public var scriptType: ScriptType {
         switch type {
-        case .pubKeyHash: return .p2pkh
-        case .scriptHash: return .p2sh
+        case .pubKeyHash: .p2pkh
+        case .scriptHash: .p2sh
         }
     }
 
     public var lockingScript: Data {
         switch type {
-        case .pubKeyHash: return OpCode.p2pkhStart + OpCode.push(lockingScriptPayload) + OpCode.p2pkhFinish
-        case .scriptHash: return OpCode.p2shStart + OpCode.push(lockingScriptPayload) + OpCode.p2shFinish
+        case .pubKeyHash: OpCode.p2pkhStart + OpCode.push(lockingScriptPayload) + OpCode.p2pkhFinish
+        case .scriptHash: OpCode.p2shStart + OpCode.push(lockingScriptPayload) + OpCode.p2shFinish
         }
     }
 

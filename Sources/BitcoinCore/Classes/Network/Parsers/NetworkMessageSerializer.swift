@@ -10,6 +10,8 @@ import Foundation
 import WWCryptoKit
 import WWExtensions
 
+// MARK: - NetworkMessageSerializer
+
 class NetworkMessageSerializer: INetworkMessageSerializer {
     let magic: UInt32
     var messageSerializers = [IMessageSerializer]()
@@ -53,6 +55,8 @@ class NetworkMessageSerializer: INetworkMessageSerializer {
     }
 }
 
+// MARK: - GetDataMessageSerializer
+
 class GetDataMessageSerializer: IMessageSerializer {
     var id: String { "getdata" }
 
@@ -71,6 +75,8 @@ class GetDataMessageSerializer: IMessageSerializer {
         return data
     }
 }
+
+// MARK: - GetBlocksMessageSerializer
 
 class GetBlocksMessageSerializer: IMessageSerializer {
     var id: String { "getblocks" }
@@ -91,6 +97,8 @@ class GetBlocksMessageSerializer: IMessageSerializer {
     }
 }
 
+// MARK: - InventoryMessageSerializer
+
 class InventoryMessageSerializer: IMessageSerializer {
     var id: String { "inv" }
 
@@ -108,6 +116,8 @@ class InventoryMessageSerializer: IMessageSerializer {
     }
 }
 
+// MARK: - PingMessageSerializer
+
 class PingMessageSerializer: IMessageSerializer {
     var id: String { "ping" }
 
@@ -122,6 +132,8 @@ class PingMessageSerializer: IMessageSerializer {
     }
 }
 
+// MARK: - PongMessageSerializer
+
 class PongMessageSerializer: IMessageSerializer {
     var id: String { "pong" }
 
@@ -135,6 +147,8 @@ class PongMessageSerializer: IMessageSerializer {
         return data
     }
 }
+
+// MARK: - VersionMessageSerializer
 
 class VersionMessageSerializer: IMessageSerializer {
     var id: String { "version" }
@@ -158,6 +172,8 @@ class VersionMessageSerializer: IMessageSerializer {
     }
 }
 
+// MARK: - VerackMessageSerializer
+
 class VerackMessageSerializer: IMessageSerializer {
     var id: String { "verack" }
 
@@ -169,6 +185,8 @@ class VerackMessageSerializer: IMessageSerializer {
         return Data()
     }
 }
+
+// MARK: - MempoolMessageSerializer
 
 class MempoolMessageSerializer: IMessageSerializer {
     var id: String { "mempool" }
@@ -182,6 +200,8 @@ class MempoolMessageSerializer: IMessageSerializer {
     }
 }
 
+// MARK: - TransactionMessageSerializer
+
 class TransactionMessageSerializer: IMessageSerializer {
     var id: String { "tx" }
 
@@ -193,6 +213,8 @@ class TransactionMessageSerializer: IMessageSerializer {
         return TransactionSerializer.serialize(transaction: message.transaction)
     }
 }
+
+// MARK: - FilterLoadMessageSerializer
 
 class FilterLoadMessageSerializer: IMessageSerializer {
     var id: String { "filterload" }

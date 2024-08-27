@@ -9,8 +9,10 @@ import Foundation
 
 import WWToolKit
 
+// MARK: - PeerAddressManager
+
 class PeerAddressManager {
-    weak var delegate: IPeerAddressManagerDelegate?
+    weak var delegate: IPeerAddressManagerDelegate? = nil
 
     private let storage: IStorage
     private let dnsSeeds: [String]
@@ -19,7 +21,13 @@ class PeerAddressManager {
     private let logger: Logger?
     private let queue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-address-manager", qos: .background)
 
-    init(storage: IStorage, dnsSeeds: [String], peerDiscovery: IPeerDiscovery, state: PeerAddressManagerState = PeerAddressManagerState(), logger: Logger? = nil) {
+    init(
+        storage: IStorage,
+        dnsSeeds: [String],
+        peerDiscovery: IPeerDiscovery,
+        state: PeerAddressManagerState = PeerAddressManagerState(),
+        logger: Logger? = nil
+    ) {
         self.storage = storage
         self.dnsSeeds = dnsSeeds
         self.peerDiscovery = peerDiscovery
@@ -27,6 +35,8 @@ class PeerAddressManager {
         self.logger = logger
     }
 }
+
+// MARK: IPeerAddressManager
 
 extension PeerAddressManager: IPeerAddressManager {
     var ip: String? {

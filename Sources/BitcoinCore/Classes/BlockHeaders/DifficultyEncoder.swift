@@ -10,20 +10,18 @@ import Foundation
 import BigInt
 
 public class DifficultyEncoder: IDifficultyEncoder {
-    /**
-         * <p>The "compact" format is a representation of a whole number N using an unsigned 32 bit number similar to a
-         * floating point format. The most significant 8 bits are the unsigned exponent of base 256. This exponent can
-         * be thought of as "number of bytes of N". The lower 23 bits are the mantissa. Bit number 24 (0x800000) represents
-         * the sign of N. Therefore, N = (-1^sign) * mantissa * 256^(exponent-3).</p>
-         *6297032256704216602113604774641040999057504088462746055606272
-         * <p>Satoshi's original implementation used BN_bn2mpi() and BN_mpi2bn(). MPI uses the most significant bit of the
-         * first byte as sign. Thus 0x1234560000 is compact 0x05123456 and 0xc0de000000 is compact 0x0600c0de. Compact
-         * 0x05c0de00 would be -0x40de000000.</p>
-         *
-         * <p>Bitcoin only uses this "compact" format for encoding difficulty targets, which are unsigned 256bit quantities.
-         * Thus, all the complexities of the sign bit and using base 256 are probably an implementation accident.</p>
-     */
-    public init() {}
+    ///    * <p>The "compact" format is a representation of a whole number N using an unsigned 32 bit number similar to a
+    ///    * floating point format. The most significant 8 bits are the unsigned exponent of base 256. This exponent can
+    ///    * be thought of as "number of bytes of N". The lower 23 bits are the mantissa. Bit number 24 (0x800000) represents
+    ///    * the sign of N. Therefore, N = (-1^sign) * mantissa * 256^(exponent-3).</p>
+    ///    *6297032256704216602113604774641040999057504088462746055606272
+    ///    * <p>Satoshi's original implementation used BN_bn2mpi() and BN_mpi2bn(). MPI uses the most significant bit of the
+    ///    * first byte as sign. Thus 0x1234560000 is compact 0x05123456 and 0xc0de000000 is compact 0x0600c0de. Compact
+    ///    * 0x05c0de00 would be -0x40de000000.</p>
+    ///    *
+    ///    * <p>Bitcoin only uses this "compact" format for encoding difficulty targets, which are unsigned 256bit quantities.
+    ///    * Thus, all the complexities of the sign bit and using base 256 are probably an implementation accident.</p>
+    public init() { }
 
     public func compactFrom(hash: Data) -> Int {
         var hashSize = hash.count - 1
@@ -35,8 +33,11 @@ public class DifficultyEncoder: IDifficultyEncoder {
 
         var firstSignificant = 0
 
-        let isBigFirstSignificant = hash[hashSize - 1] > 0x7F // if first byte > 0x7f we need add 0x00 as first byte and increase hashSize
-        let ignoreByte = hashSize == hash.count && isBigFirstSignificant // if difficulty very simple and last byte > 0x7f we must make length = 33 and add 0x00)
+        let isBigFirstSignificant = hash[hashSize - 1] >
+            0x7F // if first byte > 0x7f we need add 0x00 as first byte and increase hashSize
+        let ignoreByte = hashSize == hash
+            .count &&
+            isBigFirstSignificant // if difficulty very simple and last byte > 0x7f we must make length = 33 and add 0x00)
 
         if isBigFirstSignificant {
             hashSize += 1

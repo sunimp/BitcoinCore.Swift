@@ -10,19 +10,21 @@ import Foundation
 import GRDB
 import WWExtensions
 
+// MARK: - ScriptType
+
 public enum ScriptType: Int, DatabaseValueConvertible {
     case unknown, p2pkh, p2pk, p2multi, p2sh, p2wsh, p2wpkh, p2wpkhSh, p2tr, nullData
 
     var size: Int {
         switch self {
-        case .p2pk: return 35
-        case .p2pkh: return 25
-        case .p2sh: return 23
-        case .p2wsh: return 34
-        case .p2wpkh: return 22
-        case .p2wpkhSh: return 23
-        case .p2tr: return 34
-        default: return 0
+        case .p2pk: 35
+        case .p2pkh: 25
+        case .p2sh: 23
+        case .p2wsh: 34
+        case .p2wpkh: 22
+        case .p2wpkhSh: 23
+        case .p2tr: 34
+        default: 0
         }
     }
 
@@ -31,20 +33,22 @@ public enum ScriptType: Int, DatabaseValueConvertible {
     }
 }
 
+// MARK: - Output
+
 public class Output: Record {
     public var value: Int
     public var lockingScript: Data
     public var index: Int
     public var transactionHash: Data
     var publicKeyPath: String? = nil
-    private(set) var changeOutput: Bool = false
+    private(set) var changeOutput = false
     public var scriptType: ScriptType = .unknown
     public var redeemScript: Data? = nil
     public var lockingScriptPayload: Data? = nil
     var address: String? = nil
-    var failedToSpend: Bool = false
+    var failedToSpend = false
 
-    public var pluginId: UInt8? = nil
+    public var pluginID: UInt8? = nil
     public var pluginData: String? = nil
     public var signatureScriptFunction: (([Data]) -> Data)? = nil
 
@@ -65,14 +69,24 @@ public class Output: Record {
         lockingScriptPayload = original.lockingScriptPayload
         address = original.address
         failedToSpend = original.failedToSpend
-        pluginId = original.pluginId
+        pluginID = original.pluginID
         pluginData = original.pluginData
         signatureScriptFunction = original.signatureScriptFunction
 
         super.init()
     }
 
-    public init(withValue value: Int, index: Int, lockingScript script: Data, transactionHash: Data = Data(), type: ScriptType = .unknown, redeemScript: Data? = nil, address: String? = nil, lockingScriptPayload: Data? = nil, publicKey: PublicKey? = nil) {
+    public init(
+        withValue value: Int,
+        index: Int,
+        lockingScript script: Data,
+        transactionHash: Data = Data(),
+        type: ScriptType = .unknown,
+        redeemScript: Data? = nil,
+        address: String? = nil,
+        lockingScriptPayload: Data? = nil,
+        publicKey: PublicKey? = nil
+    ) {
         self.value = value
         lockingScript = script
         self.index = index
@@ -104,7 +118,7 @@ public class Output: Record {
         case redeemScript
         case keyHash
         case address
-        case pluginId
+        case pluginID
         case pluginData
         case failedToSpend
     }
@@ -120,7 +134,7 @@ public class Output: Record {
         redeemScript = row[Columns.redeemScript]
         lockingScriptPayload = row[Columns.keyHash]
         address = row[Columns.address]
-        pluginId = row[Columns.pluginId]
+        pluginID = row[Columns.pluginID]
         pluginData = row[Columns.pluginData]
         failedToSpend = row[Columns.failedToSpend]
 
@@ -138,7 +152,7 @@ public class Output: Record {
         container[Columns.redeemScript] = redeemScript
         container[Columns.keyHash] = lockingScriptPayload
         container[Columns.address] = address
-        container[Columns.pluginId] = pluginId
+        container[Columns.pluginID] = pluginID
         container[Columns.pluginData] = pluginData
         container[Columns.failedToSpend] = failedToSpend
     }
@@ -146,7 +160,7 @@ public class Output: Record {
 
 extension Output {
     var memo: String? {
-        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginId == nil else {
+        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginID == nil else {
             return nil
         }
 

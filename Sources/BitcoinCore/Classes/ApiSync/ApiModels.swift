@@ -9,6 +9,8 @@ import Foundation
 
 import ObjectMapper
 
+// MARK: - ApiTransactionItem
+
 public struct ApiTransactionItem {
     public let blockHash: String
     public let blockHeight: Int
@@ -21,6 +23,8 @@ public struct ApiTransactionItem {
     }
 }
 
+// MARK: - ApiAddressItem
+
 public struct ApiAddressItem {
     public let script: String
     public let address: String?
@@ -30,6 +34,8 @@ public struct ApiAddressItem {
         self.address = address
     }
 }
+
+// MARK: - ApiBlockHeaderItem
 
 public struct ApiBlockHeaderItem {
     let hash: Data

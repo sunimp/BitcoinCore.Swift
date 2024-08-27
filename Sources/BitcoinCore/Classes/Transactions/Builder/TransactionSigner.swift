@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - TransactionSigner
+
 class TransactionSigner {
     enum SignError: Error {
         case notSupportedScriptType
@@ -41,13 +43,16 @@ class TransactionSigner {
         switch previousOutput.scriptType {
         case .p2pkh:
             inputToSign.input.signatureScript = signatureScript(from: sigScriptData)
+
         case .p2wpkh:
             mutableTransaction.transaction.segWit = true
             inputToSign.input.witnessData = sigScriptData
+
         case .p2wpkhSh:
             mutableTransaction.transaction.segWit = true
             inputToSign.input.witnessData = sigScriptData
             inputToSign.input.signatureScript = OpCode.push(OpCode.segWitOutputScript(publicKey.hashP2pkh, versionByte: 0))
+
         case .p2sh:
             guard let redeemScript = previousOutput.redeemScript else {
                 throw SignError.noRedeemScript
@@ -61,6 +66,7 @@ class TransactionSigner {
                 sigScriptData.append(redeemScript)
                 inputToSign.input.signatureScript = signatureScript(from: sigScriptData)
             }
+
         default: throw SignError.notSupportedScriptType
         }
     }
@@ -84,6 +90,8 @@ class TransactionSigner {
         inputToSign.input.witnessData = witnessData
     }
 }
+
+// MARK: ITransactionSigner
 
 extension TransactionSigner: ITransactionSigner {
     func sign(mutableTransaction: MutableTransaction) throws {

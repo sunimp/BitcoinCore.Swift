@@ -9,8 +9,10 @@ import Foundation
 
 import WWToolKit
 
+// MARK: - BlockSyncer
+
 class BlockSyncer {
-    weak var listener: IBlockSyncListener?
+    weak var listener: IBlockSyncListener? = nil
     private let storage: IStorage
 
     private let checkpoint: Checkpoint
@@ -24,9 +26,17 @@ class BlockSyncer {
 
     private let logger: Logger?
 
-    init(storage: IStorage, checkpoint: Checkpoint, factory: IFactory, transactionProcessor: IBlockTransactionProcessor,
-         blockchain: IBlockchain, publicKeyManager: IPublicKeyManager, hashCheckpointThreshold: Int, logger: Logger?, state: BlockSyncerState)
-    {
+    init(
+        storage: IStorage,
+        checkpoint: Checkpoint,
+        factory: IFactory,
+        transactionProcessor: IBlockTransactionProcessor,
+        blockchain: IBlockchain,
+        publicKeyManager: IPublicKeyManager,
+        hashCheckpointThreshold: Int,
+        logger: Logger?,
+        state: BlockSyncerState
+    ) {
         self.storage = storage
         self.checkpoint = checkpoint
         self.factory = factory
@@ -49,14 +59,14 @@ class BlockSyncer {
         return localDownloadedBestBlockHeight + Int32(blockchainHashes.count - existingHashesCount)
     }
 
-    // We need to clear block hashes when sync peer is disconnected
+    /// We need to clear block hashes when sync peer is disconnected
     private func clearBlockHashes() {
         storage.deleteBlockchainBlockHashes()
     }
 
     private func clearPartialBlocks() throws {
         var excludedHashes = [checkpoint.block.headerHash]
-        checkpoint.additionalBlocks.forEach { excludedHashes.append($0.headerHash) }
+        for additionalBlock in checkpoint.additionalBlocks { excludedHashes.append(additionalBlock.headerHash) }
 
         let blockHashes = storage.blockHashHeaderHashes(except: excludedHashes)
         let blocksToDelete = storage.blocks(byHexes: blockHashes)
@@ -71,6 +81,8 @@ class BlockSyncer {
     }
 }
 
+// MARK: IBlockSyncer
+
 extension BlockSyncer: IBlockSyncer {
     func prepareForDownload() {
         do {
@@ -84,7 +96,7 @@ extension BlockSyncer: IBlockSyncer {
         }
     }
 
-    func downloadStarted() {}
+    func downloadStarted() { }
 
     func downloadIterationCompleted() {
         if state.iterationHasPartialBlocks {
@@ -142,16 +154,19 @@ extension BlockSyncer: IBlockSyncer {
     }
 
     func handle(merkleBlock: MerkleBlock, maxBlockHeight: Int32) throws {
-        var block: Block!
-
+        let block: Block =
         if let height = merkleBlock.height {
-            block = try blockchain.forceAdd(merkleBlock: merkleBlock, height: height)
+            try blockchain.forceAdd(merkleBlock: merkleBlock, height: height)
         } else {
-            block = try blockchain.connect(merkleBlock: merkleBlock)
+            try blockchain.connect(merkleBlock: merkleBlock)
         }
 
         do {
-            try transactionProcessor.processReceived(transactions: merkleBlock.transactions, inBlock: block, skipCheckBloomFilter: state.iterationHasPartialBlocks)
+            try transactionProcessor.processReceived(
+                transactions: merkleBlock.transactions,
+                inBlock: block,
+                skipCheckBloomFilter: state.iterationHasPartialBlocks
+            )
         } catch _ as BloomFilterManager.BloomFilterExpired {
             state.iteration(hasPartialBlocks: true)
         }
@@ -171,12 +186,28 @@ extension BlockSyncer: IBlockSyncer {
 }
 
 extension BlockSyncer {
-    public static func instance(storage: IStorage, checkpoint: Checkpoint, factory: IFactory,
-                                transactionProcessor: IBlockTransactionProcessor, blockchain: IBlockchain, publicKeyManager: IPublicKeyManager,
-                                hashCheckpointThreshold: Int = 100, logger: Logger? = nil, state: BlockSyncerState = BlockSyncerState()) -> BlockSyncer
-    {
-        let syncer = BlockSyncer(storage: storage, checkpoint: checkpoint, factory: factory, transactionProcessor: transactionProcessor,
-                                 blockchain: blockchain, publicKeyManager: publicKeyManager, hashCheckpointThreshold: hashCheckpointThreshold, logger: logger, state: state)
+    public static func instance(
+        storage: IStorage,
+        checkpoint: Checkpoint,
+        factory: IFactory,
+        transactionProcessor: IBlockTransactionProcessor,
+        blockchain: IBlockchain,
+        publicKeyManager: IPublicKeyManager,
+        hashCheckpointThreshold: Int = 100,
+        logger: Logger? = nil,
+        state: BlockSyncerState = BlockSyncerState()
+    ) -> BlockSyncer {
+        let syncer = BlockSyncer(
+            storage: storage,
+            checkpoint: checkpoint,
+            factory: factory,
+            transactionProcessor: transactionProcessor,
+            blockchain: blockchain,
+            publicKeyManager: publicKeyManager,
+            hashCheckpointThreshold: hashCheckpointThreshold,
+            logger: logger,
+            state: state
+        )
 
         return syncer
     }

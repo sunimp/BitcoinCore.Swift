@@ -9,6 +9,8 @@ import Foundation
 
 import GRDB
 
+// MARK: - GrdbStorage
+
 open class GrdbStorage {
     public var dbPool: DatabasePool
 
@@ -72,9 +74,21 @@ open class GrdbStorage {
                 t.primaryKey([PublicKey.Columns.path.name], onConflict: .replace)
             }
 
-            try db.create(index: "by\(PublicKey.Columns.raw.name)", on: PublicKey.databaseTableName, columns: [PublicKey.Columns.raw.name])
-            try db.create(index: "by\(PublicKey.Columns.keyHash.name)", on: PublicKey.databaseTableName, columns: [PublicKey.Columns.keyHash.name])
-            try db.create(index: "by\(PublicKey.Columns.scriptHashForP2WPKH.name)", on: PublicKey.databaseTableName, columns: [PublicKey.Columns.scriptHashForP2WPKH.name])
+            try db.create(
+                index: "by\(PublicKey.Columns.raw.name)",
+                on: PublicKey.databaseTableName,
+                columns: [PublicKey.Columns.raw.name]
+            )
+            try db.create(
+                index: "by\(PublicKey.Columns.keyHash.name)",
+                on: PublicKey.databaseTableName,
+                columns: [PublicKey.Columns.keyHash.name]
+            )
+            try db.create(
+                index: "by\(PublicKey.Columns.scriptHashForP2WPKH.name)",
+                on: PublicKey.databaseTableName,
+                columns: [PublicKey.Columns.scriptHashForP2WPKH.name]
+            )
         }
 
         migrator.registerMigration("createBlocks") { db in
@@ -92,7 +106,11 @@ open class GrdbStorage {
                 t.primaryKey([Block.Columns.headerHash.name], onConflict: .abort)
             }
 
-            try db.create(index: "by\(Block.Columns.height.name)", on: Block.databaseTableName, columns: [Block.Columns.height.name])
+            try db.create(
+                index: "by\(Block.Columns.height.name)",
+                on: Block.databaseTableName,
+                columns: [Block.Columns.height.name]
+            )
         }
 
         migrator.registerMigration("createTransactions") { db in
@@ -110,7 +128,13 @@ open class GrdbStorage {
                 t.column(Transaction.Columns.segWit.name, .boolean)
 
                 t.primaryKey([Transaction.Columns.dataHash.name], onConflict: .replace)
-                t.foreignKey([Transaction.Columns.blockHash.name], references: Block.databaseTableName, columns: [Block.Columns.headerHash.name], onDelete: .cascade, onUpdate: .cascade)
+                t.foreignKey(
+                    [Transaction.Columns.blockHash.name],
+                    references: Block.databaseTableName,
+                    columns: [Block.Columns.headerHash.name],
+                    onDelete: .cascade,
+                    onUpdate: .cascade
+                )
             }
         }
 
@@ -125,8 +149,18 @@ open class GrdbStorage {
                 t.column(Input.Columns.address.name, .text)
                 t.column(Input.Columns.witnessData.name, .blob)
 
-                t.primaryKey([Input.Columns.previousOutputTxHash.name, Input.Columns.previousOutputIndex.name], onConflict: .abort)
-                t.foreignKey([Input.Columns.transactionHash.name], references: Transaction.databaseTableName, columns: [Transaction.Columns.dataHash.name], onDelete: .cascade, onUpdate: .cascade, deferred: true)
+                t.primaryKey(
+                    [Input.Columns.previousOutputTxHash.name, Input.Columns.previousOutputIndex.name],
+                    onConflict: .abort
+                )
+                t.foreignKey(
+                    [Input.Columns.transactionHash.name],
+                    references: Transaction.databaseTableName,
+                    columns: [Transaction.Columns.dataHash.name],
+                    onDelete: .cascade,
+                    onUpdate: .cascade,
+                    deferred: true
+                )
             }
         }
 
@@ -143,8 +177,21 @@ open class GrdbStorage {
                 t.column(Output.Columns.address.name, .text)
 
                 t.primaryKey([Output.Columns.transactionHash.name, Output.Columns.index.name], onConflict: .abort)
-                t.foreignKey([Output.Columns.transactionHash.name], references: Transaction.databaseTableName, columns: [Transaction.Columns.dataHash.name], onDelete: .cascade, onUpdate: .cascade, deferred: true)
-                t.foreignKey([Output.Columns.publicKeyPath.name], references: PublicKey.databaseTableName, columns: [PublicKey.Columns.path.name], onDelete: .setNull, onUpdate: .setNull)
+                t.foreignKey(
+                    [Output.Columns.transactionHash.name],
+                    references: Transaction.databaseTableName,
+                    columns: [Transaction.Columns.dataHash.name],
+                    onDelete: .cascade,
+                    onUpdate: .cascade,
+                    deferred: true
+                )
+                t.foreignKey(
+                    [Output.Columns.publicKeyPath.name],
+                    references: PublicKey.databaseTableName,
+                    columns: [PublicKey.Columns.path.name],
+                    onDelete: .setNull,
+                    onUpdate: .setNull
+                )
             }
         }
 
@@ -163,7 +210,10 @@ open class GrdbStorage {
         }
 
         migrator.registerMigration("setCorrectTimestampForCheckpointBlock578592") { db in
-            try db.execute(sql: "UPDATE \(Block.databaseTableName) SET \(Block.Columns.timestamp.name) = 1559256184 WHERE \(Block.Columns.height.name) == 578592 AND \(Block.Columns.timestamp.name) == 1559277784")
+            try db
+                .execute(
+                    sql: "UPDATE \(Block.databaseTableName) SET \(Block.Columns.timestamp.name) = 1559256184 WHERE \(Block.Columns.height.name) == 578592 AND \(Block.Columns.timestamp.name) == 1559277784"
+                )
         }
 
         migrator.registerMigration("addRedeemScriptToOutput") { db in
@@ -174,7 +224,7 @@ open class GrdbStorage {
 
         migrator.registerMigration("addPluginInfoToOutput") { db in
             try db.alter(table: Output.databaseTableName) { t in
-                t.add(column: Output.Columns.pluginId.name, .integer)
+                t.add(column: Output.Columns.pluginID.name, .integer)
                 t.add(column: Output.Columns.pluginData.name, .text)
             }
         }
@@ -291,7 +341,12 @@ open class GrdbStorage {
 
             let publicKeys = try PublicKey.fetchAll(db)
             for pk in publicKeys {
-                let updatedPK = try PublicKey(withAccount: pk.account, index: pk.index, external: pk.external, hdPublicKeyData: pk.raw)
+                let updatedPK = try PublicKey(
+                    withAccount: pk.account,
+                    index: pk.index,
+                    external: pk.external,
+                    hdPublicKeyData: pk.raw
+                )
                 try updatedPK.update(db)
             }
         }
@@ -308,8 +363,10 @@ open class GrdbStorage {
         migrator.registerMigration("setScriptTypeForP2WPKHSH") { db in
             let outputs = try Output.fetchAll(db)
             for output in outputs {
-                if output.scriptType == .p2sh,
-                   let publicKey = try PublicKey.filter(PublicKey.Columns.scriptHashForP2WPKH == output.lockingScriptPayload).fetchOne(db)
+                if
+                    output.scriptType == .p2sh,
+                    let publicKey = try PublicKey.filter(PublicKey.Columns.scriptHashForP2WPKH == output.lockingScriptPayload)
+                        .fetchOne(db)
                 {
                     output.set(publicKey: publicKey)
                     output.scriptType = .p2wpkhSh
@@ -323,9 +380,22 @@ open class GrdbStorage {
                 t.column(BlockHashPublicKey.Columns.blockHash.name, .text).notNull()
                 t.column(BlockHashPublicKey.Columns.publicKeyPath.name, .integer).notNull()
 
-                t.primaryKey([BlockHashPublicKey.Columns.blockHash.name, BlockHashPublicKey.Columns.publicKeyPath.name], onConflict: .ignore)
-                t.foreignKey([BlockHashPublicKey.Columns.blockHash.name], references: BlockHash.databaseTableName, columns: [BlockHash.Columns.headerHash.name], onDelete: .cascade)
-                t.foreignKey([BlockHashPublicKey.Columns.publicKeyPath.name], references: PublicKey.databaseTableName, columns: [PublicKey.Columns.path.name], onDelete: .cascade)
+                t.primaryKey(
+                    [BlockHashPublicKey.Columns.blockHash.name, BlockHashPublicKey.Columns.publicKeyPath.name],
+                    onConflict: .ignore
+                )
+                t.foreignKey(
+                    [BlockHashPublicKey.Columns.blockHash.name],
+                    references: BlockHash.databaseTableName,
+                    columns: [BlockHash.Columns.headerHash.name],
+                    onDelete: .cascade
+                )
+                t.foreignKey(
+                    [BlockHashPublicKey.Columns.publicKeyPath.name],
+                    references: PublicKey.databaseTableName,
+                    columns: [PublicKey.Columns.path.name],
+                    onDelete: .cascade
+                )
             }
         }
 
@@ -343,8 +413,22 @@ open class GrdbStorage {
                 t.column(Input.Columns.address.name, .text)
                 t.column(Input.Columns.witnessData.name, .blob)
 
-                t.primaryKey([Input.Columns.previousOutputTxHash.name, Input.Columns.previousOutputIndex.name, Input.Columns.sequence.name], onConflict: .abort)
-                t.foreignKey([Input.Columns.transactionHash.name], references: Transaction.databaseTableName, columns: [Transaction.Columns.dataHash.name], onDelete: .cascade, onUpdate: .cascade, deferred: true)
+                t.primaryKey(
+                    [
+                        Input.Columns.previousOutputTxHash.name,
+                        Input.Columns.previousOutputIndex.name,
+                        Input.Columns.sequence.name,
+                    ],
+                    onConflict: .abort
+                )
+                t.foreignKey(
+                    [Input.Columns.transactionHash.name],
+                    references: Transaction.databaseTableName,
+                    columns: [Transaction.Columns.dataHash.name],
+                    onDelete: .cascade,
+                    onUpdate: .cascade,
+                    deferred: true
+                )
             }
 
             for input in inputs {
@@ -430,18 +514,23 @@ open class GrdbStorage {
         ])
 
         let sql = """
-        SELECT outputs.*, publicKeys.*, inputs.*, blocks.height AS blockHeight
-        FROM outputs 
-        INNER JOIN publicKeys ON outputs.publicKeyPath = publicKeys.path
-        LEFT JOIN inputs ON inputs.previousOutputTxHash = outputs.transactionHash AND inputs.previousOutputIndex = outputs."index"
-        LEFT JOIN transactions ON inputs.transactionHash = transactions.dataHash
-        LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
-        """
+            SELECT outputs.*, publicKeys.*, inputs.*, blocks.height AS blockHeight
+            FROM outputs 
+            INNER JOIN publicKeys ON outputs.publicKeyPath = publicKeys.path
+            LEFT JOIN inputs ON inputs.previousOutputTxHash = outputs.transactionHash AND inputs.previousOutputIndex = outputs."index"
+            LEFT JOIN transactions ON inputs.transactionHash = transactions.dataHash
+            LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
+            """
         let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
 
         var outputs = [OutputWithPublicKey]()
         while let row = try rows.next() {
-            outputs.append(OutputWithPublicKey(output: row["output"], publicKey: row["publicKey"], spendingInput: row["input"], spendingBlockHeight: row["blockHeight"]))
+            outputs.append(OutputWithPublicKey(
+                output: row["output"],
+                publicKey: row["publicKey"],
+                spendingInput: row["input"],
+                spendingBlockHeight: row["blockHeight"]
+            ))
         }
 
         return outputs
@@ -474,11 +563,11 @@ open class GrdbStorage {
         ])
 
         let sql = """
-        SELECT inputs.*, outputs.*
-        FROM inputs
-        LEFT JOIN outputs ON inputs.previousOutputTxHash = outputs.transactionHash AND inputs.previousOutputIndex = outputs."index"
-        WHERE inputs.transactionHash IN (\(transactionHashes.map { "x'" + $0.ww.hex + "'" }.joined(separator: ",")))
-        """
+            SELECT inputs.*, outputs.*
+            FROM inputs
+            LEFT JOIN outputs ON inputs.previousOutputTxHash = outputs.transactionHash AND inputs.previousOutputIndex = outputs."index"
+            WHERE inputs.transactionHash IN (\(transactionHashes.map { "x'" + $0.ww.hex + "'" }.joined(separator: ",")))
+            """
         let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
 
         while let row = try rows.next() {
@@ -488,6 +577,8 @@ open class GrdbStorage {
         return inputs
     }
 }
+
+// MARK: IStorage
 
 extension GrdbStorage: IStorage {
     // BlockchainState
@@ -598,7 +689,11 @@ extension GrdbStorage: IStorage {
         try! dbPool.read { db in
             let hashesExpression = excludedHashes.map { _ in "?" }.joined(separator: ",")
             let hashesArgs = StatementArguments(excludedHashes)
-            let rows = try Row.fetchCursor(db, sql: "SELECT headerHash from blockHashes WHERE headerHash NOT IN (\(hashesExpression))", arguments: hashesArgs)
+            let rows = try Row.fetchCursor(
+                db,
+                sql: "SELECT headerHash from blockHashes WHERE headerHash NOT IN (\(hashesExpression))",
+                arguments: hashesArgs
+            )
             var hexes = [Data]()
 
             while let row = try rows.next() {
@@ -693,7 +788,11 @@ extension GrdbStorage: IStorage {
 
     public func blocks(from startHeight: Int, to endHeight: Int, ascending: Bool) -> [Block] {
         try! dbPool.read { db in
-            try Block.filter(Block.Columns.height >= startHeight).filter(Block.Columns.height <= endHeight).order(ascending ? Block.Columns.height.asc : Block.Columns.height.desc).fetchAll(db)
+            try Block.filter(Block.Columns.height >= startHeight).filter(Block.Columns.height <= endHeight).order(
+                ascending
+                    ? Block.Columns.height.asc
+                    : Block.Columns.height.desc
+            ).fetchAll(db)
         }
     }
 
@@ -777,7 +876,8 @@ extension GrdbStorage: IStorage {
         try! dbPool.read { db in
             var timestamps = [Int]()
 
-            let sql = "SELECT blocks.timestamp FROM blocks WHERE blocks.height >= \(startHeight) AND blocks.height <= \(endHeight) ORDER BY blocks.timestamp ASC"
+            let sql =
+                "SELECT blocks.timestamp FROM blocks WHERE blocks.height >= \(startHeight) AND blocks.height <= \(endHeight) ORDER BY blocks.timestamp ASC"
             let rows = try Row.fetchCursor(db, sql: sql)
 
             while let row = try rows.next() {
@@ -790,7 +890,7 @@ extension GrdbStorage: IStorage {
         }
     }
 
-    // Transaction
+    /// Transaction
     public var downloadedTransactionsBestBlockHeight: Int {
         try! dbPool.read { db in
             let maxDownloadedHeight = try Block
@@ -832,10 +932,10 @@ extension GrdbStorage: IStorage {
             ])
 
             let sql = """
-            SELECT transactions.* 
-            FROM (SELECT * FROM invalid_transactions UNION ALL SELECT transactions.* FROM transactions) AS transactions
-            WHERE transactions.uid = ? 
-            """
+                SELECT transactions.* 
+                FROM (SELECT * FROM invalid_transactions UNION ALL SELECT transactions.* FROM transactions) AS transactions
+                WHERE transactions.uid = ? 
+                """
 
             let rows = try Row.fetchCursor(db, sql: sql, arguments: [uid], adapter: adapter)
 
@@ -887,7 +987,11 @@ extension GrdbStorage: IStorage {
 
         try! dbPool.read { db in
             for transactionHashChunks in hashes.chunked(into: 999) {
-                try transactions.append(contentsOf: Transaction.filter(transactionHashChunks.contains(Transaction.Columns.dataHash)).fetchAll(db))
+                try transactions
+                    .append(
+                        contentsOf: Transaction.filter(transactionHashChunks.contains(Transaction.Columns.dataHash))
+                            .fetchAll(db)
+                    )
             }
         }
 
@@ -902,9 +1006,18 @@ extension GrdbStorage: IStorage {
 
         try! dbPool.read { db in
             for transactionHashChunks in hashes.chunked(into: 999) {
-                try inputs.append(contentsOf: Input.filter(transactionHashChunks.contains(Input.Columns.transactionHash)).fetchAll(db))
-                try outputs.append(contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash)).fetchAll(db))
-                try metadata.append(contentsOf: TransactionMetadata.filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db))
+                try inputs
+                    .append(contentsOf: Input.filter(transactionHashChunks.contains(Input.Columns.transactionHash)).fetchAll(db))
+                try outputs
+                    .append(
+                        contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash))
+                            .fetchAll(db)
+                    )
+                try metadata
+                    .append(
+                        contentsOf: TransactionMetadata
+                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db)
+                    )
             }
         }
 
@@ -1001,7 +1114,8 @@ extension GrdbStorage: IStorage {
     }
 
     public func fullInfo(forTransactions transactionsWithBlocks: [TransactionWithBlock]) -> [FullTransactionForInfo] {
-        let transactionHashes: [Data] = transactionsWithBlocks.filter { $0.transaction.status != .invalid }.map(\.transaction.dataHash)
+        let transactionHashes: [Data] = transactionsWithBlocks.filter { $0.transaction.status != .invalid }
+            .map(\.transaction.dataHash)
         var inputs = [InputWithPreviousOutput]()
         var outputs = [Output]()
         var metadata = [TransactionMetadata]()
@@ -1009,12 +1123,23 @@ extension GrdbStorage: IStorage {
         try! dbPool.read { db in
             for transactionHashChunks in transactionHashes.chunked(into: 999) {
                 try inputs.append(contentsOf: inputsWithPreviousOutputs(transactionHashes: transactionHashChunks, db: db))
-                try outputs.append(contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash)).fetchAll(db))
-                try metadata.append(contentsOf: TransactionMetadata.filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db))
+                try outputs
+                    .append(
+                        contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash))
+                            .fetchAll(db)
+                    )
+                try metadata
+                    .append(
+                        contentsOf: TransactionMetadata
+                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db)
+                    )
             }
         }
 
-        let inputsByTransaction: [Data: [InputWithPreviousOutput]] = Dictionary(grouping: inputs, by: { $0.input.transactionHash })
+        let inputsByTransaction: [Data: [InputWithPreviousOutput]] = Dictionary(
+            grouping: inputs,
+            by: { $0.input.transactionHash }
+        )
         let outputsByTransaction: [Data: [Output]] = Dictionary(grouping: outputs, by: { $0.transactionHash })
         let metadataByTransaction: [Data: [TransactionMetadata]] = Dictionary(grouping: metadata, by: { $0.transactionHash })
         var results = [FullTransactionForInfo]()
@@ -1024,7 +1149,8 @@ extension GrdbStorage: IStorage {
                 transactionWithBlock: transactionWithBlock,
                 inputsWithPreviousOutputs: inputsByTransaction[transactionWithBlock.transaction.dataHash] ?? [],
                 outputs: outputsByTransaction[transactionWithBlock.transaction.dataHash] ?? [],
-                metaData: metadataByTransaction[transactionWithBlock.transaction.dataHash]?.first ?? TransactionMetadata(transactionHash: transactionWithBlock.transaction.dataHash)
+                metaData: metadataByTransaction[transactionWithBlock.transaction.dataHash]?
+                    .first ?? TransactionMetadata(transactionHash: transactionWithBlock.transaction.dataHash)
             )
 
             results.append(fullTransaction)
@@ -1044,11 +1170,11 @@ extension GrdbStorage: IStorage {
             ])
 
             let sql = """
-            SELECT transactions.*, blocks.height as blockHeight
-            FROM transactions
-            LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
-            WHERE transactions.dataHash = \("x'" + hash.ww.hex + "'")                    
-            """
+                SELECT transactions.*, blocks.height as blockHeight
+                FROM transactions
+                LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
+                WHERE transactions.dataHash = \("x'" + hash.ww.hex + "'")                    
+                """
 
             let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
 
@@ -1063,7 +1189,12 @@ extension GrdbStorage: IStorage {
         return fullInfo(forTransactions: [transactionWithBlock]).first
     }
 
-    public func validOrInvalidTransactionsFullInfo(fromTimestamp: Int?, fromOrder: Int?, type: TransactionFilterType?, limit: Int?) -> [FullTransactionForInfo] {
+    public func validOrInvalidTransactionsFullInfo(
+        fromTimestamp: Int?,
+        fromOrder: Int?,
+        type: TransactionFilterType?,
+        limit: Int?
+    ) -> [FullTransactionForInfo] {
         var transactions = [TransactionWithBlock]()
 
         try! dbPool.read { db in
@@ -1074,16 +1205,19 @@ extension GrdbStorage: IStorage {
             ])
 
             var sql = """
-            SELECT transactions.*, blocks.height as blockHeight
-            FROM (SELECT * FROM invalid_transactions UNION ALL SELECT transactions.* FROM transactions) AS transactions
-            LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
-            LEFT JOIN transaction_metadata ON transactions.dataHash = transaction_metadata.transactionHash
-            """
+                SELECT transactions.*, blocks.height as blockHeight
+                FROM (SELECT * FROM invalid_transactions UNION ALL SELECT transactions.* FROM transactions) AS transactions
+                LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
+                LEFT JOIN transaction_metadata ON transactions.dataHash = transaction_metadata.transactionHash
+                """
 
             var whereConditions = [String]()
 
             if let fromTimestamp, let fromOrder {
-                whereConditions.append("(transactions.timestamp < \(fromTimestamp) OR (transactions.timestamp == \(fromTimestamp) AND transactions.\"order\" < \(fromOrder)))")
+                whereConditions
+                    .append(
+                        "(transactions.timestamp < \(fromTimestamp) OR (transactions.timestamp == \(fromTimestamp) AND transactions.\"order\" < \(fromOrder)))"
+                    )
             }
 
             if let filterType = type {
@@ -1091,7 +1225,7 @@ extension GrdbStorage: IStorage {
                 whereConditions.append("(\(filters))")
             }
 
-            if whereConditions.count > 0 {
+            if !whereConditions.isEmpty {
                 sql += " WHERE \(whereConditions.joined(separator: " AND "))"
             }
 
@@ -1175,21 +1309,31 @@ extension GrdbStorage: IStorage {
             ])
 
             let sql = """
-            SELECT outputs.*, publicKeys.*, transactions.*, blocks.height AS blockHeight
-            FROM outputs 
-            INNER JOIN publicKeys ON outputs.publicKeyPath = publicKeys.path
-            INNER JOIN transactions ON outputs.transactionHash = transactions.dataHash
-            LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
-            WHERE outputs.scriptType != \(ScriptType.unknown.rawValue) AND transactions.conflictingTxHash IS NULL
-            """
+                SELECT outputs.*, publicKeys.*, transactions.*, blocks.height AS blockHeight
+                FROM outputs 
+                INNER JOIN publicKeys ON outputs.publicKeyPath = publicKeys.path
+                INNER JOIN transactions ON outputs.transactionHash = transactions.dataHash
+                LEFT JOIN blocks ON transactions.blockHash = blocks.headerHash
+                WHERE outputs.scriptType != \(ScriptType.unknown.rawValue) AND transactions.conflictingTxHash IS NULL
+                """
             let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
 
             var outputs = [UnspentOutput]()
             while let row = try rows.next() {
                 let output: Output = row["output"]
 
-                if !inputs.contains(where: { $0.previousOutputTxHash == output.transactionHash && $0.previousOutputIndex == output.index }) {
-                    outputs.append(UnspentOutput(output: output, publicKey: row["publicKey"], transaction: row["transaction"], blockHeight: row["blockHeight"]))
+                if
+                    !inputs
+                        .contains(where: {
+                            $0.previousOutputTxHash == output.transactionHash && $0.previousOutputIndex == output.index
+                        })
+                {
+                    outputs.append(UnspentOutput(
+                        output: output,
+                        publicKey: row["publicKey"],
+                        transaction: row["transaction"],
+                        blockHeight: row["blockHeight"]
+                    ))
                 }
             }
 
@@ -1235,7 +1379,7 @@ extension GrdbStorage: IStorage {
         }
     }
 
-    // SentTransaction
+    /// SentTransaction
     public func sentTransaction(byHash hash: Data) -> SentTransaction? {
         try! dbPool.read { db in
             try SentTransaction.filter(SentTransaction.Columns.dataHash == hash).fetchOne(db)
@@ -1260,7 +1404,7 @@ extension GrdbStorage: IStorage {
         }
     }
 
-    // PublicKeys
+    /// PublicKeys
     public func publicKeys() -> [PublicKey] {
         try! dbPool.read { db in
             try PublicKey.fetchAll(db)
@@ -1308,17 +1452,20 @@ extension GrdbStorage: IStorage {
             ])
 
             let sql = """
-            SELECT publicKeys.*, outputs.transactionHash AS outputTxHash, blockHashPublicKeys.blockHash AS blockHash
-            FROM publicKeys
-            LEFT JOIN outputs ON publicKeys.path = outputs.publicKeyPath
-            LEFT JOIN blockHashPublicKeys ON publicKeys.path = blockHashPublicKeys.publicKeyPath
-            GROUP BY publicKeys.path
-            """
+                SELECT publicKeys.*, outputs.transactionHash AS outputTxHash, blockHashPublicKeys.blockHash AS blockHash
+                FROM publicKeys
+                LEFT JOIN outputs ON publicKeys.path = outputs.publicKeyPath
+                LEFT JOIN blockHashPublicKeys ON publicKeys.path = blockHashPublicKeys.publicKeyPath
+                GROUP BY publicKeys.path
+                """
 
             let rows = try Row.fetchCursor(db, sql: sql, adapter: adapter)
             var publicKeys = [PublicKeyWithUsedState]()
             while let row = try rows.next() {
-                publicKeys.append(PublicKeyWithUsedState(publicKey: row["publicKey"], used: row["outputTxHash"] != nil || row["blockHash"] != nil))
+                publicKeys.append(PublicKeyWithUsedState(
+                    publicKey: row["publicKey"],
+                    used: row["outputTxHash"] != nil || row["blockHash"] != nil
+                ))
             }
 
             return publicKeys

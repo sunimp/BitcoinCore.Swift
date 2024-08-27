@@ -12,7 +12,11 @@ public class BiApiBlockProvider: IApiTransactionProvider {
     private let syncProvider: IApiTransactionProvider
     private let apiSyncStateManager: ApiSyncStateManager
 
-    public init(restoreProvider: IApiTransactionProvider, syncProvider: IApiTransactionProvider, apiSyncStateManager: ApiSyncStateManager) {
+    public init(
+        restoreProvider: IApiTransactionProvider,
+        syncProvider: IApiTransactionProvider,
+        apiSyncStateManager: ApiSyncStateManager
+    ) {
         self.restoreProvider = restoreProvider
         self.syncProvider = syncProvider
         self.apiSyncStateManager = apiSyncStateManager

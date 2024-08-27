@@ -7,19 +7,28 @@
 
 import Foundation
 
+// MARK: - TransactionSyncer
+
 public class TransactionSyncer {
     private let storage: IStorage
     private let processor: IPendingTransactionProcessor
     private let invalidator: TransactionInvalidator
     private let publicKeyManager: IPublicKeyManager
 
-    init(storage: IStorage, processor: IPendingTransactionProcessor, invalidator: TransactionInvalidator, publicKeyManager: IPublicKeyManager) {
+    init(
+        storage: IStorage,
+        processor: IPendingTransactionProcessor,
+        invalidator: TransactionInvalidator,
+        publicKeyManager: IPublicKeyManager
+    ) {
         self.storage = storage
         self.processor = processor
         self.invalidator = invalidator
         self.publicKeyManager = publicKeyManager
     }
 }
+
+// MARK: ITransactionSyncer
 
 extension TransactionSyncer: ITransactionSyncer {
     public func newTransactions() -> [FullTransaction] {
@@ -37,7 +46,7 @@ extension TransactionSyncer: ITransactionSyncer {
             try processor.processReceived(transactions: transactions, skipCheckBloomFilter: false)
         } catch _ as BloomFilterManager.BloomFilterExpired {
             needToUpdateBloomFilter = true
-        } catch {}
+        } catch { }
 
         if needToUpdateBloomFilter {
             try? publicKeyManager.fillGap()

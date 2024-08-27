@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - DustCalculator
+
 public class DustCalculator {
     private let minFeeRate: Int
     private let sizeCalculator: ITransactionSizeCalculator
@@ -18,6 +20,8 @@ public class DustCalculator {
         self.sizeCalculator = sizeCalculator
     }
 }
+
+// MARK: IDustCalculator
 
 extension DustCalculator: IDustCalculator {
     public func dust(type: ScriptType, dustThreshold: Int?) -> Int {

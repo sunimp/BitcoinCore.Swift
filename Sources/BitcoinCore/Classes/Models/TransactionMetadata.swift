@@ -9,22 +9,28 @@ import Foundation
 
 import GRDB
 
+// MARK: - TransactionType
+
 public enum TransactionType: Int, DatabaseValueConvertible, Codable {
     case incoming = 1
     case outgoing = 2
     case sentToSelf = 3
 }
 
+// MARK: - TransactionFilterType
+
 public enum TransactionFilterType {
     case incoming, outgoing
 
     var types: [TransactionType] {
         switch self {
-        case .incoming: return [.incoming, .sentToSelf]
-        case .outgoing: return [.outgoing, .sentToSelf]
+        case .incoming: [.incoming, .sentToSelf]
+        case .outgoing: [.outgoing, .sentToSelf]
         }
     }
 }
+
+// MARK: - TransactionMetadata
 
 public class TransactionMetadata: Record {
     public var transactionHash: Data

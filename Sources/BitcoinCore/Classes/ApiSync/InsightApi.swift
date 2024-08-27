@@ -8,8 +8,10 @@
 import Foundation
 
 import Alamofire
-import WWToolKit
 import ObjectMapper
+import WWToolKit
+
+// MARK: - InsightApi
 
 public class InsightApi {
     private static let paginationLimit = 50
@@ -23,6 +25,8 @@ public class InsightApi {
         networkManager = NetworkManager(logger: logger)
     }
 }
+
+// MARK: IApiTransactionProvider
 
 extension InsightApi: IApiTransactionProvider {
     public func transactions(addresses: [String], stopHeight _: Int?) async throws -> [ApiTransactionItem] {
@@ -42,7 +46,11 @@ extension InsightApi: IApiTransactionProvider {
         }
     }
 
-    private func sendAddressesRecursive(addresses: [String], from: Int = 0, transactions: [InsightTransactionItem] = []) async throws -> [InsightTransactionItem] {
+    private func sendAddressesRecursive(
+        addresses: [String],
+        from: Int = 0,
+        transactions: [InsightTransactionItem] = []
+    ) async throws -> [InsightTransactionItem] {
         let last = min(from + InsightApi.addressesLimit, addresses.count)
         let chunk = addresses[from ..< last].joined(separator: ",")
 
@@ -52,11 +60,19 @@ extension InsightApi: IApiTransactionProvider {
         if last >= addresses.count {
             return resultTransactions
         } else {
-            return try await sendAddressesRecursive(addresses: addresses, from: from + InsightApi.addressesLimit, transactions: resultTransactions)
+            return try await sendAddressesRecursive(
+                addresses: addresses,
+                from: from + InsightApi.addressesLimit,
+                transactions: resultTransactions
+            )
         }
     }
 
-    private func getTransactionsRecursive(addresses: String, from: Int = 0, transactions: [InsightTransactionItem] = []) async throws -> [InsightTransactionItem] {
+    private func getTransactionsRecursive(
+        addresses: String,
+        from: Int = 0,
+        transactions: [InsightTransactionItem] = []
+    ) async throws -> [InsightTransactionItem] {
         let result = try await getTransactions(addresses: addresses, from: from)
         let resultTransactions = transactions + result.transactionItems.map { $0 as InsightTransactionItem }
 
@@ -92,11 +108,11 @@ extension InsightApi: IApiTransactionProvider {
 
         public required init(map: Map) throws {
             totalItems = try map.value("totalItems")
-            var fromInt: Int?
+            let fromInt: Int? =
             if let fromString: String = try? map.value("from") {
-                fromInt = Int(fromString)
+                Int(fromString)
             } else {
-                fromInt = try? map.value("from")
+                try? map.value("from")
             }
             guard let from = fromInt else {
                 throw MapError(key: "from", currentValue: "n/a", reason: "can't parse from value")

@@ -9,6 +9,8 @@ import Foundation
 
 import GRDB
 
+// MARK: - BlockHashPublicKey
+
 public class BlockHashPublicKey: Record {
     let blockHash: Data
     var publicKeyPath: String
@@ -42,11 +44,15 @@ public class BlockHashPublicKey: Record {
     }
 }
 
+// MARK: Equatable
+
 extension BlockHashPublicKey: Equatable {
     public static func == (lhs: BlockHashPublicKey, rhs: BlockHashPublicKey) -> Bool {
         lhs.blockHash == rhs.blockHash && lhs.publicKeyPath == rhs.publicKeyPath
     }
 }
+
+// MARK: Hashable
 
 extension BlockHashPublicKey: Hashable {
     public var hashValue: Int {

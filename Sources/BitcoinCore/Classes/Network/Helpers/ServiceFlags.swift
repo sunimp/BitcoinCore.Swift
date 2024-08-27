@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - ServiceFlags
+
 struct ServiceFlags: OptionSet {
     let rawValue: UInt64
     /// Nothing
@@ -41,6 +43,8 @@ struct ServiceFlags: OptionSet {
     // do not actually support. Other service bits should be allocated via the
     // BIP process.
 }
+
+// MARK: CustomStringConvertible
 
 extension ServiceFlags: CustomStringConvertible {
     var description: String {

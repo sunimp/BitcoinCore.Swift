@@ -5,12 +5,14 @@
 //  Created by Sun on 2024/8/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 import BigInt
 import HDWalletKit
 import WWExtensions
+
+// MARK: - DataProvider
 
 class DataProvider {
     private var cancellables = Set<AnyCancellable>()
@@ -30,11 +32,16 @@ class DataProvider {
     }
 
     private let lastBlockInfoQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.data-provider.last-block-info", qos: .utility)
-    private var _lastBlockInfo: BlockInfo?
+    private var _lastBlockInfo: BlockInfo? = nil
 
-    weak var delegate: IDataProviderDelegate?
+    weak var delegate: IDataProviderDelegate? = nil
 
-    init(storage: IStorage, balanceProvider: IBalanceProvider, transactionInfoConverter: ITransactionInfoConverter, throttleTimeMilliseconds: Int = 500) {
+    init(
+        storage: IStorage,
+        balanceProvider: IBalanceProvider,
+        transactionInfoConverter: ITransactionInfoConverter,
+        throttleTimeMilliseconds: Int = 500
+    ) {
         self.storage = storage
         self.balanceProvider = balanceProvider
         self.transactionInfoConverter = transactionInfoConverter
@@ -42,7 +49,11 @@ class DataProvider {
         _lastBlockInfo = storage.lastBlock.map { blockInfo(fromBlock: $0) }
 
         balanceUpdateSubject
-            .throttle(for: .milliseconds(throttleTimeMilliseconds), scheduler: DispatchQueue.global(qos: .background), latest: true)
+            .throttle(
+                for: .milliseconds(throttleTimeMilliseconds),
+                scheduler: DispatchQueue.global(qos: .background),
+                latest: true
+            )
             .sink { [weak self] in
                 self?.balance = balanceProvider.balanceInfo
             }
@@ -58,11 +69,19 @@ class DataProvider {
     }
 }
 
+// MARK: IBlockchainDataListener
+
 extension DataProvider: IBlockchainDataListener {
     func onUpdate(updated: [Transaction], inserted: [Transaction], inBlock block: Block?) {
         delegate?.transactionsUpdated(
-            inserted: storage.fullInfo(forTransactions: inserted.map { TransactionWithBlock(transaction: $0, blockHeight: block?.height) }).map { transactionInfoConverter.transactionInfo(fromTransaction: $0) },
-            updated: storage.fullInfo(forTransactions: updated.map { TransactionWithBlock(transaction: $0, blockHeight: block?.height) }).map { transactionInfoConverter.transactionInfo(fromTransaction: $0) }
+            inserted: storage.fullInfo(forTransactions: inserted.map { TransactionWithBlock(
+                transaction: $0,
+                blockHeight: block?.height
+            ) }).map { transactionInfoConverter.transactionInfo(fromTransaction: $0) },
+            updated: storage.fullInfo(forTransactions: updated.map { TransactionWithBlock(
+                transaction: $0,
+                blockHeight: block?.height
+            ) }).map { transactionInfoConverter.transactionInfo(fromTransaction: $0) }
         )
 
         balanceUpdateSubject.send()
@@ -89,6 +108,8 @@ extension DataProvider: IBlockchainDataListener {
     }
 }
 
+// MARK: IDataProvider
+
 extension DataProvider: IDataProvider {
     var lastBlockInfo: BlockInfo? {
         lastBlockInfoQueue.sync {
@@ -105,7 +126,12 @@ extension DataProvider: IDataProvider {
             resolvedOrder = transaction.order
         }
 
-        let transactions = storage.validOrInvalidTransactionsFullInfo(fromTimestamp: resolvedTimestamp, fromOrder: resolvedOrder, type: type, limit: limit)
+        let transactions = storage.validOrInvalidTransactionsFullInfo(
+            fromTimestamp: resolvedTimestamp,
+            fromOrder: resolvedOrder,
+            type: type,
+            limit: limit
+        )
 
         return transactions.map { transactionInfoConverter.transactionInfo(fromTransaction: $0) }
     }
@@ -132,7 +158,10 @@ extension DataProvider: IDataProvider {
         let pubKeys = storage.publicKeys().sorted(by: { $0.index < $1.index })
 
         for pubKey in pubKeys {
-            lines.append("acc: \(pubKey.account) - inx: \(pubKey.index) - ext: \(pubKey.external) : \((try! addressConverter.convert(publicKey: pubKey, type: scriptType)).stringValue)")
+            lines
+                .append(
+                    "acc: \(pubKey.account) - inx: \(pubKey.index) - ext: \(pubKey.external) : \((try! addressConverter.convert(publicKey: pubKey, type: scriptType)).stringValue)"
+                )
         }
         lines.append("PUBLIC KEYS COUNT: \(pubKeys.count)")
         return lines.joined(separator: "\n")

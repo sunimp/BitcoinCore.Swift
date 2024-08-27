@@ -12,16 +12,16 @@ public class MutableTransaction {
     var inputsToSign = [InputToSign]()
     var outputs = [Output]()
 
-    public var recipientAddress: Address!
+    public var recipientAddress: Address! = nil
     public var recipientValue = 0
-    var memo: String?
-    var changeAddress: Address?
+    var memo: String? = nil
+    var changeAddress: Address? = nil
     var changeValue = 0
 
     private(set) var pluginData = [UInt8: Data]()
 
     var pluginDataOutputSize: Int {
-        pluginData.count > 0 ? 1 + pluginData.reduce(into: 0) { $0 += 1 + $1.value.count } : 0 // OP_RETURN (PLUGIN_ID PLUGIN_DATA)
+        !pluginData.isEmpty ? 1 + pluginData.reduce(into: 0) { $0 += 1 + $1.value.count } : 0 // OP_RETURN (PLUGIN_ID PLUGIN_DATA)
     }
 
     public init(outgoing: Bool = true) {
@@ -30,8 +30,8 @@ public class MutableTransaction {
         transaction.isOutgoing = outgoing
     }
 
-    public func add(pluginData: Data, pluginId: UInt8) {
-        self.pluginData[pluginId] = pluginData
+    public func add(pluginData: Data, pluginID: UInt8) {
+        self.pluginData[pluginID] = pluginData
     }
 
     func add(inputToSign: InputToSign) {
