@@ -38,19 +38,19 @@ class PeerGroup {
 
     private let localDownloadedBestBlockHeight: Int32
     private let peerCountToHold: Int // number of peers held
-    private var peerCountToConnect: Int? = nil // number of peers to connect to
+    private var peerCountToConnect: Int? // number of peers to connect to
     private var peerCountConnected = 0 // number of peers connected to
 
     private(set) var started = false
 
     private let peersQueue: DispatchQueue
     private let inventoryQueue: DispatchQueue
-    private var eventLoopGroup: MultiThreadedEventLoopGroup? = nil
+    private var eventLoopGroup: MultiThreadedEventLoopGroup?
 
     private let logger: Logger?
 
-    weak var inventoryItemsHandler: IInventoryItemsHandler? = nil
-    weak var peerTaskHandler: IPeerTaskHandler? = nil
+    weak var inventoryItemsHandler: IInventoryItemsHandler?
+    weak var peerTaskHandler: IPeerTaskHandler?
 
     private let subject = PassthroughSubject<PeerGroupEvent, Never>()
 

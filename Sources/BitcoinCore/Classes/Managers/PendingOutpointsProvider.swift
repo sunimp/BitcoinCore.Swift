@@ -12,7 +12,7 @@ import Foundation
 class PendingOutpointsProvider {
     private let storage: IStorage
 
-    weak var bloomFilterManager: IBloomFilterManager? = nil
+    weak var bloomFilterManager: IBloomFilterManager?
 
     init(storage: IStorage) {
         self.storage = storage

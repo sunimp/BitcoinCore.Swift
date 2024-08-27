@@ -17,8 +17,8 @@ class BlockTransactionProcessor {
     private let conflictsResolver: TransactionConflictsResolver
     private let invalidator: TransactionInvalidator
 
-    weak var listener: IBlockchainDataListener? = nil
-    weak var transactionListener: ITransactionListener? = nil
+    weak var listener: IBlockchainDataListener?
+    weak var transactionListener: ITransactionListener?
 
     private let queue: DispatchQueue
 

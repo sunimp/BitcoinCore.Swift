@@ -34,7 +34,7 @@ This package is designed to be used by a concrete kit like BitcoinKit.Swift. See
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sunimp/BitcoinCore.Swift.git", .upToNextMajor(from: "3.1.0"))
+    .package(url: "https://github.com/sunimp/BitcoinCore.Swift.git", .upToNextMajor(from: "3.1.1"))
 ]
 ```
 

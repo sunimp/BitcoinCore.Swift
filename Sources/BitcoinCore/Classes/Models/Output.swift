@@ -48,7 +48,7 @@ public class Output: Record {
     var address: String? = nil
     var failedToSpend = false
 
-    public var pluginID: UInt8? = nil
+    public var pluginId: UInt8? = nil
     public var pluginData: String? = nil
     public var signatureScriptFunction: (([Data]) -> Data)? = nil
 
@@ -69,7 +69,7 @@ public class Output: Record {
         lockingScriptPayload = original.lockingScriptPayload
         address = original.address
         failedToSpend = original.failedToSpend
-        pluginID = original.pluginID
+        pluginId = original.pluginId
         pluginData = original.pluginData
         signatureScriptFunction = original.signatureScriptFunction
 
@@ -118,7 +118,7 @@ public class Output: Record {
         case redeemScript
         case keyHash
         case address
-        case pluginID
+        case pluginId
         case pluginData
         case failedToSpend
     }
@@ -134,7 +134,7 @@ public class Output: Record {
         redeemScript = row[Columns.redeemScript]
         lockingScriptPayload = row[Columns.keyHash]
         address = row[Columns.address]
-        pluginID = row[Columns.pluginID]
+        pluginId = row[Columns.pluginId]
         pluginData = row[Columns.pluginData]
         failedToSpend = row[Columns.failedToSpend]
 
@@ -152,7 +152,7 @@ public class Output: Record {
         container[Columns.redeemScript] = redeemScript
         container[Columns.keyHash] = lockingScriptPayload
         container[Columns.address] = address
-        container[Columns.pluginID] = pluginID
+        container[Columns.pluginId] = pluginId
         container[Columns.pluginData] = pluginData
         container[Columns.failedToSpend] = failedToSpend
     }
@@ -160,7 +160,7 @@ public class Output: Record {
 
 extension Output {
     var memo: String? {
-        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginID == nil else {
+        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginId == nil else {
             return nil
         }
 

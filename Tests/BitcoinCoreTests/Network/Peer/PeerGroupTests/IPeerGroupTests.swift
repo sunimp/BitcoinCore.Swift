@@ -1,6 +1,6 @@
 // import XCTest
 // import Cuckoo
-// import HSHDWalletKit
+// import HDWalletKit
 // @testable import BitcoinCore
 //
 // class IPeerGroupTests: PeerGroupTests {

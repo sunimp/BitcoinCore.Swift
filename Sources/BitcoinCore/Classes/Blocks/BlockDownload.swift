@@ -13,7 +13,7 @@ import WWToolKit
 // MARK: - BlockDownload
 
 public class BlockDownload {
-    public weak var listener: IBlockSyncListener? = nil
+    public weak var listener: IBlockSyncListener?
     private static let peerSwitchMinimumRatio = 1.5
 
     private var cancellables = Set<AnyCancellable>()
@@ -35,7 +35,7 @@ public class BlockDownload {
     private let logger: Logger?
 
     public var syncedPeers = [IPeer]()
-    public var syncPeer: IPeer? = nil
+    public var syncPeer: IPeer?
 
     init(
         blockSyncer: IBlockSyncer,

@@ -21,14 +21,14 @@ public class SynchronizedArray<Element> {
 extension SynchronizedArray {
     /// The first element of the collection.
     public var first: Element? {
-        var result: Element? = nil
+        var result: Element?
         queue.sync { result = self.array.first }
         return result
     }
 
     /// The last element of the collection.
     public var last: Element? {
-        var result: Element? = nil
+        var result: Element?
         queue.sync { result = self.array.last }
         return result
     }
@@ -63,7 +63,7 @@ extension SynchronizedArray {
     /// - Parameter predicate: A closure that takes an element of the sequence as its argument and returns a Boolean value indicating whether the element is a match.
     /// - Returns: The first match or nil if there was no match.
     public func first(where predicate: (Element) -> Bool) -> Element? {
-        var result: Element? = nil
+        var result: Element?
         queue.sync { result = self.array.first(where: predicate) }
         return result
     }
@@ -83,7 +83,7 @@ extension SynchronizedArray {
     /// - Parameter predicate: A closure that takes an element as its argument and returns a Boolean value that indicates whether the passed element represents a match.
     /// - Returns: The index of the first element for which predicate returns true. If no elements in the collection satisfy the given predicate, returns nil.
     public func index(where predicate: (Element) -> Bool) -> Int? {
-        var result: Int? = nil
+        var result: Int?
         queue.sync { result = self.array.firstIndex(where: predicate) }
         return result
     }
@@ -211,7 +211,7 @@ extension SynchronizedArray {
     /// - Returns: optional element if it exists.
     public subscript(index: Int) -> Element? {
         get {
-            var result: Element? = nil
+            var result: Element?
 
             queue.sync {
                 guard self.array.startIndex ..< self.array.endIndex ~= index else { return }

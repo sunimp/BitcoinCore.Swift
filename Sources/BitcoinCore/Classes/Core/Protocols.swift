@@ -66,7 +66,7 @@ protocol IPrivateHDWallet {
 
 protocol IApiConfigProvider {
     var reachabilityHost: String { get }
-    var apiURL: String { get }
+    var apiUrl: String { get }
 }
 
 // MARK: - IPeerAddressManager
@@ -661,7 +661,7 @@ public protocol INetwork: AnyObject {
     var coinType: UInt32 { get }
     var sigHash: SigHashType { get }
     var syncableFromApi: Bool { get }
-    var blockchairChainID: String { get }
+    var blockchairChainId: String { get }
 }
 
 // MARK: - IMerkleBlockValidator

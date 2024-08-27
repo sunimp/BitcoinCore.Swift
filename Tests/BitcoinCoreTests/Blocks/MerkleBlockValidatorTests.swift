@@ -68,11 +68,11 @@
 //        }
 //    }
 //
-//    func testTxIDsClearedFirst() {
-//        var txIDs = [Data]()
+//    func testTxIdsClearedFirst() {
+//        var txIds = [Data]()
 //        do {
-//            txIDs = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
-//            txIDs = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
+//            txIds = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
+//            txIds = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
 //        } catch {
 //            XCTFail("Should be valid")
 //        }

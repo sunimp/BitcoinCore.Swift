@@ -71,13 +71,13 @@ struct BlockchairTransactionsReponse: ImmutableMappable {
     }
 
     struct Transaction: ImmutableMappable, Hashable {
-        let blockID: Int?
+        let blockId: Int?
         let hash: String
         let balanceChange: Int
         let address: String
 
         init(map: Map) throws {
-            blockID = try map.value("block_id")
+            blockId = try map.value("block_id")
             hash = try map.value("hash")
             balanceChange = try map.value("balance_change")
             address = try map.value("address")

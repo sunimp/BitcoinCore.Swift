@@ -24,7 +24,7 @@ class WatchedTransactionManager {
     private var p2ShOutputFilters = [P2ShOutputFilter]()
     private var outpointFilters = [OutpointFilter]()
     private let queue: DispatchQueue
-    weak var bloomFilterManager: IBloomFilterManager? = nil
+    weak var bloomFilterManager: IBloomFilterManager?
 
     init(queue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.watched-transactions-manager", qos: .background)) {
         self.queue = queue

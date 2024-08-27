@@ -12,7 +12,7 @@ import Foundation
 class IrregularOutputFinder {
     private let irregularScriptTypes: [ScriptType]
     private let storage: IStorage
-    weak var bloomFilterManager: IBloomFilterManager? = nil
+    weak var bloomFilterManager: IBloomFilterManager?
 
     init(storage: IStorage, additionalScripts: [ScriptType]) {
         self.storage = storage

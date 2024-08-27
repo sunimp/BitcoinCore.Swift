@@ -70,11 +70,11 @@ extension PluginManager: IPluginManager {
 
     func processInputs(mutableTransaction: MutableTransaction) throws {
         for inputToSign in mutableTransaction.inputsToSign {
-            guard let pluginID = inputToSign.previousOutput.pluginID else {
+            guard let pluginId = inputToSign.previousOutput.pluginId else {
                 continue
             }
 
-            guard let plugin = plugins[pluginID] else {
+            guard let plugin = plugins[pluginId] else {
                 throw PluginError.pluginNotFound
             }
 
@@ -93,8 +93,8 @@ extension PluginManager: IPluginManager {
         _ = iterator.next()
 
         do {
-            while let pluginID = iterator.next() {
-                guard let plugin = plugins[pluginID.opCode] else {
+            while let pluginId = iterator.next() {
+                guard let plugin = plugins[pluginId.opCode] else {
                     break
                 }
 
@@ -106,11 +106,11 @@ extension PluginManager: IPluginManager {
     }
 
     func isSpendable(unspentOutput: UnspentOutput) -> Bool {
-        guard let pluginID = unspentOutput.output.pluginID else {
+        guard let pluginId = unspentOutput.output.pluginId else {
             return true
         }
 
-        guard let plugin = plugins[pluginID] else {
+        guard let plugin = plugins[pluginId] else {
             return false
         }
 
@@ -118,11 +118,11 @@ extension PluginManager: IPluginManager {
     }
 
     public func parsePluginData(
-        fromPlugin pluginID: UInt8,
+        fromPlugin pluginId: UInt8,
         pluginDataString: String,
         transactionTimestamp: Int
     ) -> IPluginOutputData? {
-        guard let plugin = plugins[pluginID] else {
+        guard let plugin = plugins[pluginId] else {
             return nil
         }
 
@@ -131,8 +131,8 @@ extension PluginManager: IPluginManager {
 
     public func incrementedSequence(of inputWithPreviousOutput: InputWithPreviousOutput) -> Int {
         guard
-            let pluginID = inputWithPreviousOutput.previousOutput?.pluginID,
-            let plugin = plugins[pluginID]
+            let pluginId = inputWithPreviousOutput.previousOutput?.pluginId,
+            let plugin = plugins[pluginId]
         else {
             return inputWithPreviousOutput.input.sequence + 1
         }

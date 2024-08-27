@@ -109,11 +109,11 @@ extension InsightApi: IApiTransactionProvider {
         public required init(map: Map) throws {
             totalItems = try map.value("totalItems")
             let fromInt: Int? =
-            if let fromString: String = try? map.value("from") {
-                Int(fromString)
-            } else {
-                try? map.value("from")
-            }
+                if let fromString: String = try? map.value("from") {
+                    Int(fromString)
+                } else {
+                    try? map.value("from")
+                }
             guard let from = fromInt else {
                 throw MapError(key: "from", currentValue: "n/a", reason: "can't parse from value")
             }

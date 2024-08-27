@@ -12,7 +12,7 @@ import WWToolKit
 // MARK: - BlockSyncer
 
 class BlockSyncer {
-    weak var listener: IBlockSyncListener? = nil
+    weak var listener: IBlockSyncListener?
     private let storage: IStorage
 
     private let checkpoint: Checkpoint
@@ -155,11 +155,11 @@ extension BlockSyncer: IBlockSyncer {
 
     func handle(merkleBlock: MerkleBlock, maxBlockHeight: Int32) throws {
         let block: Block =
-        if let height = merkleBlock.height {
-            try blockchain.forceAdd(merkleBlock: merkleBlock, height: height)
-        } else {
-            try blockchain.connect(merkleBlock: merkleBlock)
-        }
+            if let height = merkleBlock.height {
+                try blockchain.forceAdd(merkleBlock: merkleBlock, height: height)
+            } else {
+                try blockchain.connect(merkleBlock: merkleBlock)
+            }
 
         do {
             try transactionProcessor.processReceived(

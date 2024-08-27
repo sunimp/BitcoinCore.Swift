@@ -6,10 +6,10 @@ open class PeerTask {
     class TimeoutError: Error { }
 
     public let dateGenerator: () -> Date
-    public var lastActiveTime: Double? = nil
+    public var lastActiveTime: Double?
 
-    public weak var requester: IPeerTaskRequester? = nil
-    public weak var delegate: IPeerTaskDelegate? = nil
+    public weak var requester: IPeerTaskRequester?
+    public weak var delegate: IPeerTaskDelegate?
 
     public init(dateGenerator: @escaping () -> Date = Date.init) {
         self.dateGenerator = dateGenerator

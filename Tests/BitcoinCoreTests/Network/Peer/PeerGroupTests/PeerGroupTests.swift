@@ -2,7 +2,7 @@
 // import Cuckoo
 // import RxSwift
 // import Alamofire
-// import HSHDWalletKit
+// import HDWalletKit
 // @testable import BitcoinCore
 //
 // class PeerGroupTests: XCTestCase {

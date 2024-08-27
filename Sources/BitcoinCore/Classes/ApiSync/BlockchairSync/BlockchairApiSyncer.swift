@@ -15,8 +15,8 @@ import WWToolKit
 // MARK: - BlockchairApiSyncer
 
 class BlockchairApiSyncer {
-    weak var listener: IApiSyncerListener? = nil
-    private var task: AnyTask? = nil
+    weak var listener: IApiSyncerListener?
+    private var task: AnyTask?
     private var syncing = false
 
     private let storage: IStorage

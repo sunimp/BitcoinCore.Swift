@@ -23,9 +23,9 @@ class Peer {
     private var remotePeerValidated = false
     private var versionSent = false
     private var mempoolSent = false
-    private var connectStartTime: Double? = nil
+    private var connectStartTime: Double?
 
-    weak var delegate: PeerDelegate? = nil
+    weak var delegate: PeerDelegate?
 
     private let connection: IPeerConnection
     private let connectionTimeoutManager: IConnectionTimeoutManager

@@ -21,7 +21,7 @@ protocol IMultiAccountPublicKeyFetcher {
 // MARK: - ApiSyncer
 
 class ApiSyncer {
-    weak var listener: IApiSyncerListener? = nil
+    weak var listener: IApiSyncerListener?
 
     private var tasks = Set<AnyTask>()
 

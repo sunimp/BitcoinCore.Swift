@@ -15,9 +15,9 @@ class BloomFilterManager {
     private var providers = [IBloomFilterProvider]()
 
     private let factory: IFactory
-    weak var delegate: IBloomFilterManagerDelegate? = nil
+    weak var delegate: IBloomFilterManagerDelegate?
 
-    var bloomFilter: BloomFilter? = nil
+    var bloomFilter: BloomFilter?
 
     init(factory: IFactory) {
         self.factory = factory

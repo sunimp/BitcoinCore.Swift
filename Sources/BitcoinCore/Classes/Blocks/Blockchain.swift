@@ -13,10 +13,10 @@ import WWExtensions
 
 class Blockchain {
     private let storage: IStorage
-    private var blockValidator: IBlockValidator? = nil
+    private var blockValidator: IBlockValidator?
     private let factory: IFactory
-    weak var listener: IBlockchainDataListener? = nil
-    private var previousBlock: Block? = nil
+    weak var listener: IBlockchainDataListener?
+    private var previousBlock: Block?
 
     init(storage: IStorage, blockValidator: IBlockValidator?, factory: IFactory, listener: IBlockchainDataListener? = nil) {
         self.storage = storage

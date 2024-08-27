@@ -13,7 +13,7 @@ class TransactionInvalidator {
     private let storage: IStorage
     private let transactionInfoConverter: ITransactionInfoConverter
 
-    weak var listener: IBlockchainDataListener? = nil
+    weak var listener: IBlockchainDataListener?
 
     init(storage: IStorage, transactionInfoConverter: ITransactionInfoConverter, listener: IBlockchainDataListener? = nil) {
         self.storage = storage

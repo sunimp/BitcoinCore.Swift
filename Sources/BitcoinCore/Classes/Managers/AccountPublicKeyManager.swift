@@ -16,7 +16,7 @@ class AccountPublicKeyManager {
     private let storage: IStorage
     private let hdWallet: IHDAccountWallet
     private let gapLimit: Int
-    weak var bloomFilterManager: IBloomFilterManager? = nil
+    weak var bloomFilterManager: IBloomFilterManager?
 
     init(storage: IStorage, hdWallet: IHDAccountWallet, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter) {
         self.storage = storage

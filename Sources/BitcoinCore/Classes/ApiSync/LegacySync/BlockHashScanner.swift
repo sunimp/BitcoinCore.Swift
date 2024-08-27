@@ -10,7 +10,7 @@ import Foundation
 // MARK: - BlockHashScanner
 
 class BlockHashScanner {
-    weak var listener: IApiSyncerListener? = nil
+    weak var listener: IApiSyncerListener?
 
     private let restoreKeyConverter: IRestoreKeyConverter
     private let provider: IApiTransactionProvider

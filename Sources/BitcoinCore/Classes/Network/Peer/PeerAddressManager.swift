@@ -12,7 +12,7 @@ import WWToolKit
 // MARK: - PeerAddressManager
 
 class PeerAddressManager {
-    weak var delegate: IPeerAddressManagerDelegate? = nil
+    weak var delegate: IPeerAddressManagerDelegate?
 
     private let storage: IStorage
     private let dnsSeeds: [String]

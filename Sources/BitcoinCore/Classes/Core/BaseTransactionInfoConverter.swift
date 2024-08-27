@@ -57,11 +57,11 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
                 address: output.address
             )
 
-            if let pluginID = output.pluginID, let pluginDataString = output.pluginData {
-                outputInfo.pluginID = pluginID
+            if let pluginId = output.pluginId, let pluginDataString = output.pluginData {
+                outputInfo.pluginId = pluginId
                 outputInfo.pluginDataString = pluginDataString
                 outputInfo.pluginData = pluginManager.parsePluginData(
-                    fromPlugin: pluginID,
+                    fromPlugin: pluginId,
                     pluginDataString: pluginDataString,
                     transactionTimestamp: transactionTimestamp
                 )
@@ -101,9 +101,9 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
         }
 
         for addressInfo in transactionInfo.outputs {
-            if let pluginID = addressInfo.pluginID, let pluginDataString = addressInfo.pluginDataString {
+            if let pluginId = addressInfo.pluginId, let pluginDataString = addressInfo.pluginDataString {
                 addressInfo.pluginData = pluginManager.parsePluginData(
-                    fromPlugin: pluginID,
+                    fromPlugin: pluginId,
                     pluginDataString: pluginDataString,
                     transactionTimestamp: invalidTransaction.timestamp
                 )

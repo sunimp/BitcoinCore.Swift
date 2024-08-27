@@ -16,7 +16,7 @@ public class BitcoinCoreBuilder {
         case peerSizeLessThanRequired
         case noSeedData
         case noPurpose
-        case noWalletID
+        case noWalletId
         case noNetwork
         case noPaymentAddressParser
         case noAddressSelector
@@ -31,19 +31,19 @@ public class BitcoinCoreBuilder {
     public let addressConverter = AddressConverterChain()
 
     // required parameters
-    private var extendedKey: HDExtendedKey? = nil
-    private var watchAddressPublicKey: WatchAddressPublicKey? = nil
-    private var purpose: Purpose? = nil
-    private var network: INetwork? = nil
-    private var paymentAddressParser: IPaymentAddressParser? = nil
-    private var walletID: String? = nil
-    private var apiTransactionProvider: IApiTransactionProvider? = nil
+    private var extendedKey: HDExtendedKey?
+    private var watchAddressPublicKey: WatchAddressPublicKey?
+    private var purpose: Purpose?
+    private var network: INetwork?
+    private var paymentAddressParser: IPaymentAddressParser?
+    private var walletId: String?
+    private var apiTransactionProvider: IApiTransactionProvider?
     private var plugins = [IPlugin]()
     private var logger: Logger
 
-    private var blockHeaderHasher: IHasher? = nil
-    private var blockValidator: IBlockValidator? = nil
-    private var transactionInfoConverter: ITransactionInfoConverter? = nil
+    private var blockHeaderHasher: IHasher?
+    private var blockValidator: IBlockValidator?
+    private var transactionInfoConverter: ITransactionInfoConverter?
 
     // parameters with default values
     private var confirmationsThreshold = 6
@@ -52,9 +52,9 @@ public class BitcoinCoreBuilder {
     private var peerCount = 10
     private var peerCountToConnect = 100
 
-    private var storage: IStorage? = nil
-    private var checkpoint: Checkpoint? = nil
-    private var apiSyncStateManager: ApiSyncStateManager? = nil
+    private var storage: IStorage?
+    private var checkpoint: Checkpoint?
+    private var apiSyncStateManager: ApiSyncStateManager?
 
     @discardableResult
     public func set(extendedKey: HDExtendedKey?) -> BitcoinCoreBuilder {
@@ -82,8 +82,8 @@ public class BitcoinCoreBuilder {
         return self
     }
 
-    public func set(walletID: String) -> BitcoinCoreBuilder {
-        self.walletID = walletID
+    public func set(walletId: String) -> BitcoinCoreBuilder {
+        self.walletId = walletId
         return self
     }
 
@@ -377,7 +377,7 @@ public class BitcoinCoreBuilder {
                 if let provider = apiTransactionProvider as? BlockchairTransactionProvider {
                     provider.blockchairApi
                 } else {
-                    BlockchairApi(chainID: network.blockchairChainID)
+                    BlockchairApi(chainId: network.blockchairChainId)
                 }
 
             let lastBlockProvider = BlockchairLastBlockProvider(blockchairApi: blockchairApi)

@@ -32,9 +32,9 @@ class DataProvider {
     }
 
     private let lastBlockInfoQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.data-provider.last-block-info", qos: .utility)
-    private var _lastBlockInfo: BlockInfo? = nil
+    private var _lastBlockInfo: BlockInfo?
 
-    weak var delegate: IDataProviderDelegate? = nil
+    weak var delegate: IDataProviderDelegate?
 
     init(
         storage: IStorage,

@@ -8,6 +8,7 @@
 import Foundation
 
 public enum DirectoryHelper {
+    
     public static func directoryURL(for directoryName: String) throws -> URL {
         let fileManager = FileManager.default
 

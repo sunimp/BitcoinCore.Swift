@@ -82,13 +82,13 @@ public class TransactionOutputInfo: Codable {
     public let value: Int
     public let address: String?
     public var memo: String?
-    public var pluginID: UInt8? = nil
+    public var pluginId: UInt8? = nil
     public var pluginData: IPluginOutputData? = nil
 
     var pluginDataString: String? = nil
 
     private enum CodingKeys: String, CodingKey {
-        case mine, changeOutput, value, address, pluginID, pluginDataString
+        case mine, changeOutput, value, address, pluginId, pluginDataString
     }
 
     public init(mine: Bool, changeOutput: Bool, value: Int, address: String?) {

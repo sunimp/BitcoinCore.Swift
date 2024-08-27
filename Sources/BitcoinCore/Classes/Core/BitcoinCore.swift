@@ -91,7 +91,7 @@ public class BitcoinCore {
     // END: Extending
 
     public var delegateQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.bitcoin-core-delegate-queue")
-    public weak var delegate: BitcoinCoreDelegate? = nil
+    public weak var delegate: BitcoinCoreDelegate?
 
     init(
         storage: IStorage,
@@ -575,18 +575,18 @@ extension BitcoinCore {
 // MARK: - SendParameters
 
 public class SendParameters {
-    public var address: String? = nil
-    public var value: Int? = nil
-    public var feeRate: Int? = nil
+    public var address: String?
+    public var value: Int?
+    public var feeRate: Int?
     public var sortType: TransactionDataSortType
     public var senderPay: Bool
     public var rbfEnabled: Bool
-    public var memo: String? = nil
-    public var unspentOutputs: [UnspentOutputInfo]? = nil
+    public var memo: String?
+    public var unspentOutputs: [UnspentOutputInfo]?
     public var pluginData: [UInt8: IPluginData]
-    public var dustThreshold: Int? = nil
+    public var dustThreshold: Int?
     public var utxoFilters: UtxoFilters
-    public var maxOutputsCountForInputs: Int? = nil
+    public var maxOutputsCountForInputs: Int?
     public var changeToFirstInput: Bool
 
     public init(

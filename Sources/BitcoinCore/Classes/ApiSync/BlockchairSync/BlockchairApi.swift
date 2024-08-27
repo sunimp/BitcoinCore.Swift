@@ -12,13 +12,13 @@ import ObjectMapper
 import WWToolKit
 
 public class BlockchairApi {
-    private let baseURL = "https://api.blocksdecoded.com/v1/blockchair"
-    private let chainID: String
+    private let baseUrl = "https://api.blocksdecoded.com/v1/blockchair"
+    private let chainId: String
     private let limit = 10000
     private let networkManager: NetworkManager
 
-    public init(chainID: String = "bitcoin", logger: Logger? = nil) {
-        self.chainID = chainID
+    public init(chainId: String = "bitcoin", logger: Logger? = nil) {
+        self.chainId = chainId
         networkManager = NetworkManager(logger: logger)
     }
 
@@ -33,7 +33,7 @@ public class BlockchairApi {
             "limit": "\(limit),0",
             "offset": "\(receivedTransactions.count),0",
         ]
-        let url = "\(baseURL)/\(chainID)/dashboards/addresses/\(addresses.joined(separator: ","))"
+        let url = "\(baseUrl)/\(chainId)/dashboards/addresses/\(addresses.joined(separator: ","))"
 
         do {
             let response: BlockchairTransactionsReponse = try await networkManager.fetch(
@@ -43,7 +43,7 @@ public class BlockchairApi {
             )
             let scriptsSlice = response.data.addresses.map { ApiAddressItem(script: $0.value.script, address: $0.key) }
             let filteredTransactions = response.data.transactions.filter { transaction in
-                if let height = transaction.blockID, let stopHeight {
+                if let height = transaction.blockId, let stopHeight {
                     stopHeight < height
                 } else {
                     true
@@ -78,7 +78,7 @@ public class BlockchairApi {
             "limit": "0",
         ]
         let heightsStr = heights.map { "\($0)" }.joined(separator: ",")
-        let url = "\(baseURL)/\(chainID)/dashboards/blocks/\(heightsStr)"
+        let url = "\(baseUrl)/\(chainId)/dashboards/blocks/\(heightsStr)"
 
         do {
             let response: BlockchairBlocksResponse = try await networkManager.fetch(
@@ -113,7 +113,7 @@ public class BlockchairApi {
             let (addressItems, transactions) = try await _transactions(addresses: chunk, stopHeight: stopHeight)
 
             for transaction in transactions {
-                guard let blockHeight = transaction.blockID else {
+                guard let blockHeight = transaction.blockId else {
                     continue
                 }
 
@@ -138,7 +138,7 @@ public class BlockchairApi {
         let parameters: Parameters = [
             "limit": "0",
         ]
-        let url = "\(baseURL)/\(chainID)/stats"
+        let url = "\(baseUrl)/\(chainId)/stats"
         let response: BlockchairStatsReponse = try await networkManager.fetch(url: url, method: .get, parameters: parameters)
 
         return ApiBlockHeaderItem(
@@ -160,7 +160,7 @@ public class BlockchairApi {
     }
 
     func broadcastTransaction(hex: Data) async throws {
-        let url = "https://api.blockchair.com/\(chainID)/push/transaction"
+        let url = "https://api.blockchair.com/\(chainId)/push/transaction"
         let response: BlockchairBroadcastResponse = try await networkManager.fetch(
             url: url,
             method: .post,

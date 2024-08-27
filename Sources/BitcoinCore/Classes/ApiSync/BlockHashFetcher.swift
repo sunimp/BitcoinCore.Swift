@@ -8,12 +8,12 @@
 import Foundation
 
 public class BlockHashFetcher: IBlockHashFetcher {
-    private let hsFetcher: HsBlockHashFetcher
+    private let wwFetcher: WWBlockHashFetcher
     private let blockchairFetcher: BlockchairBlockHashFetcher
     private let checkpointHeight: Int
 
-    public init(hsFetcher: HsBlockHashFetcher, blockchairFetcher: BlockchairBlockHashFetcher, checkpointHeight: Int) {
-        self.hsFetcher = hsFetcher
+    public init(wwFetcher: WWBlockHashFetcher, blockchairFetcher: BlockchairBlockHashFetcher, checkpointHeight: Int) {
+        self.wwFetcher = wwFetcher
         self.blockchairFetcher = blockchairFetcher
         self.checkpointHeight = checkpointHeight
     }
@@ -26,7 +26,7 @@ public class BlockHashFetcher: IBlockHashFetcher {
         var blockHashes = [Int: String]()
 
         if !beforeCheckpoint.isEmpty {
-            blockHashes = try await hsFetcher.fetch(heights: beforeCheckpoint)
+            blockHashes = try await wwFetcher.fetch(heights: beforeCheckpoint)
         }
 
         if !afterCheckpoint.isEmpty {

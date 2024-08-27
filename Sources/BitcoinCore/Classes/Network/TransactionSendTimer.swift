@@ -12,9 +12,9 @@ import Foundation
 class TransactionSendTimer {
     let interval: TimeInterval
 
-    weak var delegate: ITransactionSendTimerDelegate? = nil
-    var runLoop: RunLoop? = nil
-    var timer: Timer? = nil
+    weak var delegate: ITransactionSendTimerDelegate?
+    var runLoop: RunLoop?
+    var timer: Timer?
 
     init(interval: TimeInterval) {
         self.interval = interval

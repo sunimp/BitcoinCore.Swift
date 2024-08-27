@@ -1,6 +1,6 @@
 // import XCTest
 // import Cuckoo
-// import HSCryptoKit
+// import HDWalletKit
 // @testable import BitcoinCore
 //
 // class GetMerkleBlockTaskTests:XCTestCase {

@@ -97,7 +97,7 @@ class ReplacementTransactionBuilder {
     private func incrementedSequence(of inputWithPreviousOutput: InputWithPreviousOutput) -> Int {
         let input = inputWithPreviousOutput.input
 
-        if inputWithPreviousOutput.previousOutput?.pluginID != nil {
+        if inputWithPreviousOutput.previousOutput?.pluginId != nil {
             return pluginManager.incrementedSequence(of: inputWithPreviousOutput)
         }
 
@@ -142,8 +142,8 @@ class ReplacementTransactionBuilder {
         fixedUtxo: [Output]
     ) throws -> MutableTransaction? {
         // If an output has a pluginId, it most probably has a timelocked value and it shouldn't be altered.
-        var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginID != nil }
-        let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginID == nil }
+        var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginId != nil }
+        let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginId == nil }
         let myChangeOutputs = myOutputs.filter(\.changeOutput).sorted { a, b in a.value < b.value }
         let myExternalOutputs = myOutputs.filter { !$0.changeOutput }.sorted { a, b in a.value < b.value }
 
@@ -154,7 +154,7 @@ class ReplacementTransactionBuilder {
 
         let unusedUtxo = unspentOutputProvider.confirmedSpendableUtxo(filters: UtxoFilters())
             .sorted(by: { a, b in a.output.value < b.output.value })
-        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)? = nil
+        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)?
 
         var utxoCount = 0
         repeat {
@@ -214,7 +214,7 @@ class ReplacementTransactionBuilder {
             .confirmedSpendableUtxo(filters: UtxoFilters())
             .sorted(by: { a, b in a.output.value < b.output.value })
         let originalInputsValue = fixedUtxo.map(\.value).reduce(0, +)
-        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)? = nil
+        var optimalReplacement: (inputs: [UnspentOutput], outputs: [Output], fee: Int)?
 
         var utxoCount = 0
         repeat {
@@ -310,27 +310,27 @@ class ReplacementTransactionBuilder {
         guard absoluteFee <= minFee else {
             throw ReplacementTransactionBuildError.feeTooLow
         }
-
-        var mutableTransaction: MutableTransaction? = nil
-        switch type {
-        case .speedUp:
-            mutableTransaction = try speedUpReplacement(
-                originalFullInfo: originalFullInfo,
-                minFee: minFee,
-                originalFeeRate: originalFeeRate,
-                fixedUtxo: fixedUtxo
-            )
-
-        case .cancel(let userAddress, let publicKey):
-            mutableTransaction = try cancelReplacement(
-                originalFullInfo: originalFullInfo,
-                minFee: minFee,
-                originalFeeRate: originalFeeRate,
-                fixedUtxo: fixedUtxo,
-                userAddress: userAddress,
-                publicKey: publicKey
-            )
-        }
+        
+        let mutableTransaction: MutableTransaction? =
+            switch type {
+            case .speedUp:
+                try speedUpReplacement(
+                    originalFullInfo: originalFullInfo,
+                    minFee: minFee,
+                    originalFeeRate: originalFeeRate,
+                    fixedUtxo: fixedUtxo
+                )
+            
+            case .cancel(let userAddress, let publicKey):
+                try cancelReplacement(
+                    originalFullInfo: originalFullInfo,
+                    minFee: minFee,
+                    originalFeeRate: originalFeeRate,
+                    fixedUtxo: fixedUtxo,
+                    userAddress: userAddress,
+                    publicKey: publicKey
+                )
+            }
 
         guard let mutableTransaction else {
             throw ReplacementTransactionBuildError.unableToReplace
@@ -391,8 +391,8 @@ class ReplacementTransactionBuilder {
 
         switch type {
         case .speedUp:
-            var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginID != nil }
-            let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginID == nil }
+            var fixedOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath == nil || $0.pluginId != nil }
+            let myOutputs = originalFullInfo.outputs.filter { $0.publicKeyPath != nil && $0.pluginId == nil }
             let myChangeOutputs = myOutputs.filter(\.changeOutput).sorted { a, b in a.value < b.value }
             let myExternalOutputs = myOutputs.filter { !$0.changeOutput }.sorted { a, b in a.value < b.value }
 

@@ -21,7 +21,7 @@ public enum InitialDownloadEvent {
 // MARK: - InitialBlockDownload
 
 public class InitialBlockDownload {
-    public weak var listener: IBlockSyncListener? = nil
+    public weak var listener: IBlockSyncListener?
     private static let peerSwitchMinimumRatio = 1.5
 
     private var cancellables = Set<AnyCancellable>()
@@ -44,7 +44,7 @@ public class InitialBlockDownload {
     private let logger: Logger?
 
     public var syncedPeers = [IPeer]()
-    public var syncPeer: IPeer? = nil
+    public var syncPeer: IPeer?
 
     init(
         blockSyncer: IBlockSyncer,

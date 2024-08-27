@@ -14,7 +14,7 @@ import WWToolKit
 
 class SyncManager {
     private var cancellables = Set<AnyCancellable>()
-    weak var delegate: ISyncManagerDelegate? = nil
+    weak var delegate: ISyncManagerDelegate?
 
     private let reachabilityManager: ReachabilityManager
     private let apiSyncer: IApiSyncer

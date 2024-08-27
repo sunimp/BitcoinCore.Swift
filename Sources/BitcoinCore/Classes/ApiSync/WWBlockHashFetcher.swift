@@ -1,5 +1,5 @@
 //
-//  HsBlockHashFetcher.swift
+//  WWBlockHashFetcher.swift
 //  BitcoinCore
 //
 //  Created by Sun on 2024/8/21.
@@ -11,16 +11,16 @@ import Alamofire
 import ObjectMapper
 import WWToolKit
 
-// MARK: - HsBlockHashFetcher
+// MARK: - WWBlockHashFetcher
 
-public class HsBlockHashFetcher: IBlockHashFetcher {
+public class WWBlockHashFetcher: IBlockHashFetcher {
     private static let paginationLimit = 100
 
-    private let hsURL: String
+    private let wwUrl: String
     private let networkManager: NetworkManager
 
-    public init(hsURL: String, logger: Logger? = nil) {
-        self.hsURL = hsURL
+    public init(wwUrl: String, logger: Logger? = nil) {
+        self.wwUrl = wwUrl
         networkManager = NetworkManager(logger: logger)
     }
 
@@ -30,7 +30,7 @@ public class HsBlockHashFetcher: IBlockHashFetcher {
         ]
 
         let blockResponses: [BlockResponse] = try await networkManager.fetch(
-            url: "\(hsURL)/hashes",
+            url: "\(wwUrl)/hashes",
             method: .get,
             parameters: parameters
         )

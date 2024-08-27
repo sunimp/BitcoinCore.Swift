@@ -17,8 +17,8 @@ class PendingTransactionProcessor {
     private let conflictsResolver: ITransactionConflictsResolver
     private let ignoreIncoming: Bool
 
-    weak var listener: IBlockchainDataListener? = nil
-    weak var transactionListener: ITransactionListener? = nil
+    weak var listener: IBlockchainDataListener?
+    weak var transactionListener: ITransactionListener?
 
     private let queue: DispatchQueue
 

@@ -224,7 +224,7 @@ open class GrdbStorage {
 
         migrator.registerMigration("addPluginInfoToOutput") { db in
             try db.alter(table: Output.databaseTableName) { t in
-                t.add(column: Output.Columns.pluginID.name, .integer)
+                t.add(column: Output.Columns.pluginId.name, .integer)
                 t.add(column: Output.Columns.pluginData.name, .text)
             }
         }
