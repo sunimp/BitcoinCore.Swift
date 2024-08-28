@@ -9,7 +9,7 @@ import Foundation
 
 public enum DirectoryHelper {
     
-    public static func directoryURL(for directoryName: String) throws -> URL {
+    public static func directoryUrl(for directoryName: String) throws -> URL {
         let fileManager = FileManager.default
 
         let url = try fileManager
@@ -22,14 +22,14 @@ public enum DirectoryHelper {
     }
 
     public static func removeDirectory(_ name: String) throws {
-        try FileManager.default.removeItem(at: directoryURL(for: name))
+        try FileManager.default.removeItem(at: directoryUrl(for: name))
     }
 
     public static func removeAll(inDirectory directoryName: String, except excludedFiles: [String]) throws {
         let fileManager = FileManager.default
-        let fileURLs = try fileManager.contentsOfDirectory(at: directoryURL(for: directoryName), includingPropertiesForKeys: nil)
+        let fileUrls = try fileManager.contentsOfDirectory(at: directoryUrl(for: directoryName), includingPropertiesForKeys: nil)
 
-        for filename in fileURLs {
+        for filename in fileUrls {
             if !excludedFiles.contains(where: { filename.lastPathComponent.contains($0) }) {
                 try fileManager.removeItem(at: filename)
             }
