@@ -1,8 +1,7 @@
 //
 //  GrdbStorage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/1.
 //
 
 import Foundation
@@ -12,13 +11,11 @@ import GRDB
 // MARK: - GrdbStorage
 
 open class GrdbStorage {
+    // MARK: Properties
+
     public var dbPool: DatabasePool
 
-    public init(databaseFilePath: String) {
-        dbPool = try! DatabasePool(path: databaseFilePath)
-
-        try? migrator.migrate(dbPool)
-    }
+    // MARK: Computed Properties
 
     open var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
@@ -224,7 +221,7 @@ open class GrdbStorage {
 
         migrator.registerMigration("addPluginInfoToOutput") { db in
             try db.alter(table: Output.databaseTableName) { t in
-                t.add(column: Output.Columns.pluginId.name, .integer)
+                t.add(column: Output.Columns.pluginID.name, .integer)
                 t.add(column: Output.Columns.pluginData.name, .text)
             }
         }
@@ -309,7 +306,8 @@ open class GrdbStorage {
                 t.column(TransactionMetadata.Columns.fee.name, .integer)
             }
 
-            for transaction in try Transaction.order([Transaction.Columns.timestamp, Transaction.Columns.order]).fetchAll(db) {
+            for transaction in try Transaction.order([Transaction.Columns.timestamp, Transaction.Columns.order])
+                .fetchAll(db) {
                 let fullTransaction = try FullTransaction(
                     header: transaction,
                     inputs: self._inputs(transactionHash: transaction.dataHash, db: db),
@@ -331,7 +329,10 @@ open class GrdbStorage {
             let blockHashes = try BlockHash.fetchAll(db)
             let hashes = blockHashes.map(\.headerHash)
 
-            try Block.filter(hashes.contains(Block.Columns.headerHash)).updateAll(db, Block.Columns.partial.set(to: true))
+            try Block.filter(hashes.contains(Block.Columns.headerHash)).updateAll(
+                db,
+                Block.Columns.partial.set(to: true)
+            )
         }
 
         migrator.registerMigration("addConvertedForP2trToPublicKey") { db in
@@ -365,9 +366,9 @@ open class GrdbStorage {
             for output in outputs {
                 if
                     output.scriptType == .p2sh,
-                    let publicKey = try PublicKey.filter(PublicKey.Columns.scriptHashForP2WPKH == output.lockingScriptPayload)
-                        .fetchOne(db)
-                {
+                    let publicKey = try PublicKey
+                        .filter(PublicKey.Columns.scriptHashForP2WPKH == output.lockingScriptPayload)
+                        .fetchOne(db) {
                     output.set(publicKey: publicKey)
                     output.scriptType = .p2wpkhSh
                     try output.update(db)
@@ -470,6 +471,16 @@ open class GrdbStorage {
         return migrator
     }
 
+    // MARK: Lifecycle
+
+    public init(databaseFilePath: String) {
+        dbPool = try! DatabasePool(path: databaseFilePath)
+
+        try? migrator.migrate(dbPool)
+    }
+
+    // MARK: Functions
+
     private func fullTransaction(transaction: Transaction) -> FullTransaction {
         FullTransaction(
             header: transaction,
@@ -551,7 +562,11 @@ open class GrdbStorage {
             .fetchOne(db)
     }
 
-    private func inputsWithPreviousOutputs(transactionHashes: [Data], db: Database) throws -> [InputWithPreviousOutput] {
+    private func inputsWithPreviousOutputs(
+        transactionHashes: [Data],
+        db: Database
+    ) throws
+        -> [InputWithPreviousOutput] {
         var inputs = [InputWithPreviousOutput]()
 
         let inputC = Input.Columns.allCases.count
@@ -868,7 +883,10 @@ extension GrdbStorage: IStorage {
 
     public func unstaleAllBlocks() throws {
         _ = try dbPool.write { db in
-            try db.execute(sql: "UPDATE \(Block.databaseTableName) SET stale = ? WHERE stale = ?", arguments: [false, true])
+            try db.execute(
+                sql: "UPDATE \(Block.databaseTableName) SET stale = ? WHERE stale = ?",
+                arguments: [false, true]
+            )
         }
     }
 
@@ -1007,7 +1025,10 @@ extension GrdbStorage: IStorage {
         try! dbPool.read { db in
             for transactionHashChunks in hashes.chunked(into: 999) {
                 try inputs
-                    .append(contentsOf: Input.filter(transactionHashChunks.contains(Input.Columns.transactionHash)).fetchAll(db))
+                    .append(
+                        contentsOf: Input.filter(transactionHashChunks.contains(Input.Columns.transactionHash))
+                            .fetchAll(db)
+                    )
                 try outputs
                     .append(
                         contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash))
@@ -1016,7 +1037,8 @@ extension GrdbStorage: IStorage {
                 try metadata
                     .append(
                         contentsOf: TransactionMetadata
-                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db)
+                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash))
+                            .fetchAll(db)
                     )
             }
         }
@@ -1122,7 +1144,10 @@ extension GrdbStorage: IStorage {
 
         try! dbPool.read { db in
             for transactionHashChunks in transactionHashes.chunked(into: 999) {
-                try inputs.append(contentsOf: inputsWithPreviousOutputs(transactionHashes: transactionHashChunks, db: db))
+                try inputs.append(contentsOf: inputsWithPreviousOutputs(
+                    transactionHashes: transactionHashChunks,
+                    db: db
+                ))
                 try outputs
                     .append(
                         contentsOf: Output.filter(transactionHashChunks.contains(Output.Columns.transactionHash))
@@ -1131,7 +1156,8 @@ extension GrdbStorage: IStorage {
                 try metadata
                     .append(
                         contentsOf: TransactionMetadata
-                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash)).fetchAll(db)
+                            .filter(transactionHashChunks.contains(TransactionMetadata.Columns.transactionHash))
+                            .fetchAll(db)
                     )
             }
         }
@@ -1141,7 +1167,10 @@ extension GrdbStorage: IStorage {
             by: { $0.input.transactionHash }
         )
         let outputsByTransaction: [Data: [Output]] = Dictionary(grouping: outputs, by: { $0.transactionHash })
-        let metadataByTransaction: [Data: [TransactionMetadata]] = Dictionary(grouping: metadata, by: { $0.transactionHash })
+        let metadataByTransaction: [Data: [TransactionMetadata]] = Dictionary(
+            grouping: metadata,
+            by: { $0.transactionHash }
+        )
         var results = [FullTransactionForInfo]()
 
         for transactionWithBlock in transactionsWithBlocks {
@@ -1194,7 +1223,8 @@ extension GrdbStorage: IStorage {
         fromOrder: Int?,
         type: TransactionFilterType?,
         limit: Int?
-    ) -> [FullTransactionForInfo] {
+    )
+        -> [FullTransactionForInfo] {
         var transactions = [TransactionWithBlock]()
 
         try! dbPool.read { db in
@@ -1221,7 +1251,8 @@ extension GrdbStorage: IStorage {
             }
 
             if let filterType = type {
-                let filters = filterType.types.map { "transaction_metadata.type == \($0.rawValue)" }.joined(separator: " OR ")
+                let filters = filterType.types.map { "transaction_metadata.type == \($0.rawValue)" }
+                    .joined(separator: " OR ")
                 whereConditions.append("(\(filters))")
             }
 
@@ -1326,8 +1357,7 @@ extension GrdbStorage: IStorage {
                     !inputs
                         .contains(where: {
                             $0.previousOutputTxHash == output.transactionHash && $0.previousOutputIndex == output.index
-                        })
-                {
+                        }) {
                     outputs.append(UnspentOutput(
                         output: output,
                         publicKey: row["publicKey"],

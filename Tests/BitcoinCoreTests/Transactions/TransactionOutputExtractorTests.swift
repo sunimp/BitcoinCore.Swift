@@ -1,3 +1,9 @@
+//
+//  TransactionOutputExtractorTests.swift
+//
+//  Created by Sun on 2018/12/17.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -22,7 +28,8 @@
 //            when(mock.processTransactionWithNullData(transaction: any(), nullDataOutput: any())).thenDoNothing()
 //        }
 //
-//        extractor = TransactionOutputExtractor(transactionKeySetter: mockPublicKeySetter, pluginManager: mockPluginManager)
+//        extractor = TransactionOutputExtractor(transactionKeySetter: mockPublicKeySetter, pluginManager:
+//        mockPluginManager)
 //        transaction = TestData.p2pkhTransaction
 //    }
 //
@@ -61,7 +68,8 @@
 //
 //    func testExtractP2PK() {
 //        let keyHash = Data(hex: "037d56797fbe9aa506fc263751abf23bb46c9770181a6059096808923f0a64cb15")!
-//        transaction.outputs[0].lockingScript = Data(hex: "21037d56797fbe9aa506fc263751abf23bb46c9770181a6059096808923f0a64cb15ac")!
+//        transaction.outputs[0].lockingScript = Data(hex:
+//        "21037d56797fbe9aa506fc263751abf23bb46c9770181a6059096808923f0a64cb15ac")!
 //
 //        extractor.extract(transaction: transaction)
 //        XCTAssertEqual(transaction.outputs[0].keyHash, keyHash)

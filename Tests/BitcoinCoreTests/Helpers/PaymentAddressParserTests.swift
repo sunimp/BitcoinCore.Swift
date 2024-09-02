@@ -1,3 +1,9 @@
+//
+//  PaymentAddressParserTests.swift
+//
+//  Created by Sun on 2018/12/3.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -46,7 +52,8 @@
 //        paymentData = BitcoinPaymentData(address: "address_data", parameters: ["custom":"any"])
 //        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoin:address_data?custom=any", paymentData: paymentData)
 //
-//        paymentData = BitcoinPaymentData(address: "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", amount: 50, label: "Luke-Jr", message: "Donation for project xyz")
+//        paymentData = BitcoinPaymentData(address: "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", amount: 50, label: "Luke-Jr",
+//        message: "Donation for project xyz")
 //        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=50&label=Luke-Jr&message=Donation%20for%20project%20xyz", paymentData: paymentData)
 //    }
 //
@@ -81,7 +88,8 @@
 //        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?custom=any", paymentData: paymentData)
 //    }
 //
-//    private func checkPaymentData(addressParser: PaymentAddressParser, paymentAddress: String, paymentData: BitcoinPaymentData) {
+//    private func checkPaymentData(addressParser: PaymentAddressParser, paymentAddress: String, paymentData:
+//    BitcoinPaymentData) {
 //        let bitcoinPaymentData = addressParser.parse(paymentAddress: paymentAddress)
 //        XCTAssertEqual(bitcoinPaymentData, paymentData)
 //    }

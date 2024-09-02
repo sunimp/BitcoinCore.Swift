@@ -1,8 +1,7 @@
 //
 //  DataObjects.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/22.
 //
 
 import Foundation
@@ -12,6 +11,8 @@ import WWCryptoKit
 // MARK: - BlockHeader
 
 public struct BlockHeader {
+    // MARK: Properties
+
     public let version: Int
     public let headerHash: Data
     public let previousBlockHeaderHash: Data
@@ -19,6 +20,8 @@ public struct BlockHeader {
     public let timestamp: Int
     public let bits: Int
     public let nonce: Int
+
+    // MARK: Lifecycle
 
     public init(
         version: Int,
@@ -42,10 +45,14 @@ public struct BlockHeader {
 // MARK: - FullTransaction
 
 open class FullTransaction {
+    // MARK: Properties
+
     public let header: Transaction
     public let inputs: [Input]
     public let outputs: [Output]
     public let metaData = TransactionMetadata()
+
+    // MARK: Lifecycle
 
     public init(header: Transaction, inputs: [Input], outputs: [Output], forceHashUpdate: Bool = true) {
         self.header = header
@@ -57,6 +64,8 @@ open class FullTransaction {
             set(hash: hash)
         }
     }
+
+    // MARK: Functions
 
     public func set(hash: Data) {
         header.dataHash = hash
@@ -99,23 +108,21 @@ public struct InputWithPreviousOutput {
 
 public struct TransactionWithBlock {
     public let transaction: Transaction
+
     let blockHeight: Int?
 }
 
 // MARK: - UnspentOutput
 
 public struct UnspentOutput {
+    // MARK: Properties
+
     public let output: Output
     public let publicKey: PublicKey
     public let transaction: Transaction
     public let blockHeight: Int?
 
-    public init(output: Output, publicKey: PublicKey, transaction: Transaction, blockHeight: Int? = nil) {
-        self.output = output
-        self.publicKey = publicKey
-        self.transaction = transaction
-        self.blockHeight = blockHeight
-    }
+    // MARK: Computed Properties
 
     public var info: UnspentOutputInfo {
         .init(
@@ -126,21 +133,36 @@ public struct UnspentOutput {
             value: output.value
         )
     }
+
+    // MARK: Lifecycle
+
+    public init(output: Output, publicKey: PublicKey, transaction: Transaction, blockHeight: Int? = nil) {
+        self.output = output
+        self.publicKey = publicKey
+        self.transaction = transaction
+        self.blockHeight = blockHeight
+    }
 }
 
 // MARK: - UnspentOutputInfo
 
 public struct UnspentOutputInfo: Hashable, Equatable {
+    // MARK: Properties
+
     public var outputIndex: Int
     public var transactionHash: Data
     public let timestamp: TimeInterval
     public let address: String?
     public let value: Int
 
+    // MARK: Static Functions
+
     public static func == (lhs: UnspentOutputInfo, rhs: UnspentOutputInfo) -> Bool {
         lhs.outputIndex == rhs.outputIndex &&
             lhs.transactionHash == rhs.transactionHash
     }
+
+    // MARK: Functions
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(outputIndex)
@@ -162,10 +184,15 @@ extension [UnspentOutputInfo] {
 // MARK: - FullTransactionForInfo
 
 public struct FullTransactionForInfo {
+    // MARK: Properties
+
     public let transactionWithBlock: TransactionWithBlock
+
     let inputsWithPreviousOutputs: [InputWithPreviousOutput]
     let outputs: [Output]
     let metaData: TransactionMetadata
+
+    // MARK: Computed Properties
 
     var rawTransaction: String {
         TransactionSerializer.serialize(transaction: fullTransaction).ww.hex

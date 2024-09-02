@@ -1,8 +1,7 @@
 //
 //  WWBlockHashFetcher.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
@@ -14,15 +13,23 @@ import WWToolKit
 // MARK: - WWBlockHashFetcher
 
 public class WWBlockHashFetcher: IBlockHashFetcher {
+    // MARK: Static Properties
+
     private static let paginationLimit = 100
 
-    private let wwUrl: String
+    // MARK: Properties
+
+    private let wwURL: String
     private let networkManager: NetworkManager
 
-    public init(wwUrl: String, logger: Logger? = nil) {
-        self.wwUrl = wwUrl
+    // MARK: Lifecycle
+
+    public init(wwURL: String, logger: Logger? = nil) {
+        self.wwURL = wwURL
         networkManager = NetworkManager(logger: logger)
     }
+
+    // MARK: Functions
 
     public func fetch(heights: [Int]) async throws -> [Int: String] {
         let parameters: Parameters = [
@@ -30,7 +37,7 @@ public class WWBlockHashFetcher: IBlockHashFetcher {
         ]
 
         let blockResponses: [BlockResponse] = try await networkManager.fetch(
-            url: "\(wwUrl)/hashes",
+            url: "\(wwURL)/hashes",
             method: .get,
             parameters: parameters
         )
@@ -47,8 +54,12 @@ public class WWBlockHashFetcher: IBlockHashFetcher {
 // MARK: - BlockResponse
 
 struct BlockResponse: ImmutableMappable {
+    // MARK: Properties
+
     let height: Int
     let hash: String
+
+    // MARK: Lifecycle
 
     init(map: Map) throws {
         height = try map.value("number")

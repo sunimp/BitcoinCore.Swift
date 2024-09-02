@@ -1,3 +1,9 @@
+//
+//  UnspentOutputProviderTests.swift
+//
+//  Created by Sun on 2018/8/13.
+//
+
 // import Quick
 // import Nimble
 // import XCTest
@@ -8,7 +14,8 @@
 //    override func spec() {
 //        let mockStorage = MockIStorage()
 //
-//        let output = Output(withValue: 1, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data(hex: "000010000")!)
+//        let output = Output(withValue: 1, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data(hex:
+//        "000010000")!)
 //        let pubKey = TestData.pubKey()
 //        let lastBlockHeight = 550368
 //        let lastBlock = Block(withHeader: TestData.checkpointBlock.header, height: lastBlockHeight)
@@ -34,7 +41,8 @@
 //                beforeEach {
 //                    let transaction = Transaction()
 //                    transaction.isOutgoing = true
-//                    unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction, block: nil)
+//                    unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction, block:
+//                    nil)
 //
 //                    stub(mockStorage) { mock in
 //                        when(mock.unspentOutputs()).thenReturn([unspentOutput])
@@ -56,7 +64,8 @@
 //
 //                context("when transaction is not included in block") {
 //                    beforeEach {
-//                        unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction, block: nil)
+//                        unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction,
+//                        block: nil)
 //
 //                        stub(mockStorage) { mock in
 //                            when(mock.unspentOutputs()).thenReturn([unspentOutput])
@@ -73,7 +82,8 @@
 //
 //                    beforeEach {
 //                        block = TestData.firstBlock
-//                        unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction, block: block)
+//                        unspentOutput = UnspentOutput(output: output, publicKey: pubKey, transaction: transaction,
+//                        block: block)
 //
 //                        stub(mockStorage) { mock in
 //                            when(mock.unspentOutputs()).thenReturn([unspentOutput])

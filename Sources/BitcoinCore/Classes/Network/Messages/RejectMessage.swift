@@ -1,14 +1,15 @@
 //
 //  RejectMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 
 /// The reject message is sent when messages are rejected.
 struct RejectMessage: IMessage {
+    // MARK: Properties
+
     /// type of message rejected
     let message: VarString
     /// code relating to rejected message
@@ -27,6 +28,8 @@ struct RejectMessage: IMessage {
     /// Currently, all errors which provide this field fill it with the TXID or
     /// block header hash of the object being rejected, so the field is 32 bytes.
     let data: Data
+
+    // MARK: Computed Properties
 
     var description: String {
         "\(message) code: 0x\(String(ccode, radix: 16)) reason: \(reason)"

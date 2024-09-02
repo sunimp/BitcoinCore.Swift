@@ -1,20 +1,25 @@
 //
 //  FilterLoadMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 
 struct FilterLoadMessage: IMessage {
+    // MARK: Properties
+
     let bloomFilter: BloomFilter
 
-    init(bloomFilter: BloomFilter) {
-        self.bloomFilter = bloomFilter
-    }
+    // MARK: Computed Properties
 
     var description: String {
         "\(bloomFilter.elementsCount) item(s)"
+    }
+
+    // MARK: Lifecycle
+
+    init(bloomFilter: BloomFilter) {
+        self.bloomFilter = bloomFilter
     }
 }

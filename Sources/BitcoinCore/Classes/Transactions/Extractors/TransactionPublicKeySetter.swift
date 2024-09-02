@@ -1,8 +1,7 @@
 //
 //  TransactionPublicKeySetter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/12/17.
 //
 
 import Foundation
@@ -10,7 +9,11 @@ import Foundation
 // MARK: - TransactionPublicKeySetter
 
 class TransactionPublicKeySetter {
+    // MARK: Properties
+
     let storage: IStorage
+
+    // MARK: Lifecycle
 
     init(storage: IStorage) {
         self.storage = storage

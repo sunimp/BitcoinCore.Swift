@@ -1,8 +1,7 @@
 //
 //  IrregularOutputFinder.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/17.
 //
 
 import Foundation
@@ -10,14 +9,21 @@ import Foundation
 // MARK: - IrregularOutputFinder
 
 class IrregularOutputFinder {
+    // MARK: Properties
+
+    weak var bloomFilterManager: IBloomFilterManager?
+
     private let irregularScriptTypes: [ScriptType]
     private let storage: IStorage
-    weak var bloomFilterManager: IBloomFilterManager?
+
+    // MARK: Lifecycle
 
     init(storage: IStorage, additionalScripts: [ScriptType]) {
         self.storage = storage
         irregularScriptTypes = ([.p2wpkh, .p2pk, .p2wpkhSh, .p2tr] + additionalScripts).unique
     }
+
+    // MARK: Functions
 
     private func needToSetToBloomFilter(output: OutputWithPublicKey, bestBlockHeight: Int) -> Bool {
         // Need to set if output is unspent

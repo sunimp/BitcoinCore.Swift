@@ -1,3 +1,9 @@
+//
+//  TransactionSenderTests.swift
+//
+//  Created by Sun on 2020/8/14.
+//
+
 // import XCTest
 // import Quick
 // import Nimble
@@ -56,11 +62,14 @@
 //                when(mock.add(task: any())).thenDoNothing()
 //            }
 //
-//            sender = TransactionSender(transactionSyncer: mockTransactionSyncer, initialBlockDownload: mockInitialBlockDownload, peerManager: mockPeerManager, storage: mockStorage, timer: mockTimer, queue: DispatchQueue.main)
+//            sender = TransactionSender(transactionSyncer: mockTransactionSyncer, initialBlockDownload:
+//            mockInitialBlockDownload, peerManager: mockPeerManager, storage: mockStorage, timer: mockTimer, queue:
+//            DispatchQueue.main)
 //        }
 //
 //        afterEach {
-//            reset(mockTransactionSyncer, mockInitialBlockDownload, mockPeerManager, mockStorage, mockTimer, readyPeer, readyPeer2, syncedPeer, syncedPeer2, syncedReadyPeer)
+//            reset(mockTransactionSyncer, mockInitialBlockDownload, mockPeerManager, mockStorage, mockTimer, readyPeer,
+//            readyPeer2, syncedPeer, syncedPeer2, syncedReadyPeer)
 //
 //            sender = nil
 //        }

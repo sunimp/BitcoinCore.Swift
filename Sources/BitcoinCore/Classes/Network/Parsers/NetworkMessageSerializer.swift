@@ -1,8 +1,7 @@
 //
 //  NetworkMessageSerializer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/19.
 //
 
 import Foundation
@@ -13,12 +12,18 @@ import WWExtensions
 // MARK: - NetworkMessageSerializer
 
 class NetworkMessageSerializer: INetworkMessageSerializer {
+    // MARK: Properties
+
     let magic: UInt32
     var messageSerializers = [IMessageSerializer]()
+
+    // MARK: Lifecycle
 
     init(magic: UInt32) {
         self.magic = magic
     }
+
+    // MARK: Functions
 
     func add(serializer: IMessageSerializer) {
         messageSerializers.append(serializer)
@@ -58,7 +63,11 @@ class NetworkMessageSerializer: INetworkMessageSerializer {
 // MARK: - GetDataMessageSerializer
 
 class GetDataMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "getdata" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? GetDataMessage else {
@@ -79,7 +88,11 @@ class GetDataMessageSerializer: IMessageSerializer {
 // MARK: - GetBlocksMessageSerializer
 
 class GetBlocksMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "getblocks" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? GetBlocksMessage else {
@@ -100,7 +113,11 @@ class GetBlocksMessageSerializer: IMessageSerializer {
 // MARK: - InventoryMessageSerializer
 
 class InventoryMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "inv" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? InventoryMessage else {
@@ -119,7 +136,11 @@ class InventoryMessageSerializer: IMessageSerializer {
 // MARK: - PingMessageSerializer
 
 class PingMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "ping" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? PingMessage else {
@@ -135,7 +156,11 @@ class PingMessageSerializer: IMessageSerializer {
 // MARK: - PongMessageSerializer
 
 class PongMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "pong" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? PongMessage else {
@@ -151,7 +176,11 @@ class PongMessageSerializer: IMessageSerializer {
 // MARK: - VersionMessageSerializer
 
 class VersionMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "version" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? VersionMessage else {
@@ -175,7 +204,11 @@ class VersionMessageSerializer: IMessageSerializer {
 // MARK: - VerackMessageSerializer
 
 class VerackMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "verack" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard message is VerackMessage else {
@@ -189,7 +222,11 @@ class VerackMessageSerializer: IMessageSerializer {
 // MARK: - MempoolMessageSerializer
 
 class MempoolMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "mempool" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard message is MemPoolMessage else {
@@ -203,7 +240,11 @@ class MempoolMessageSerializer: IMessageSerializer {
 // MARK: - TransactionMessageSerializer
 
 class TransactionMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "tx" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? TransactionMessage else {
@@ -217,7 +258,11 @@ class TransactionMessageSerializer: IMessageSerializer {
 // MARK: - FilterLoadMessageSerializer
 
 class FilterLoadMessageSerializer: IMessageSerializer {
+    // MARK: Computed Properties
+
     var id: String { "filterload" }
+
+    // MARK: Functions
 
     func serialize(message: IMessage) -> Data? {
         guard let message = message as? FilterLoadMessage else {

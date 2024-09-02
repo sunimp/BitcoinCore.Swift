@@ -1,8 +1,7 @@
 //
 //  TransactionInputSerializer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation

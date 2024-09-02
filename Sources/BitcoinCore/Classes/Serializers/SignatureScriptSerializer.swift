@@ -1,8 +1,7 @@
 //
 //  SignatureScriptSerializer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/7/13.
 //
 
 import Foundation
@@ -10,6 +9,10 @@ import Foundation
 import WWExtensions
 
 public enum SignatureScriptSerializer {
+    public static func deserialize(data: Data) -> [Data] {
+        deserialize(byteStream: ByteStream(data))
+    }
+
     static func deserialize(byteStream: ByteStream) -> [Data] {
         var data = [Data]()
 
@@ -50,9 +53,5 @@ public enum SignatureScriptSerializer {
         }
 
         return data
-    }
-
-    public static func deserialize(data: Data) -> [Data] {
-        deserialize(byteStream: ByteStream(data))
     }
 }

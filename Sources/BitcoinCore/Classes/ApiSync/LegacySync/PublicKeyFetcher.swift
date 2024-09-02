@@ -1,8 +1,7 @@
 //
 //  PublicKeyFetcher.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/17.
 //
 
 import Foundation
@@ -12,7 +11,11 @@ import HDWalletKit
 // MARK: - PublicKeyFetcher
 
 class PublicKeyFetcher {
+    // MARK: Properties
+
     private let hdAccountWallet: HDAccountWallet
+
+    // MARK: Lifecycle
 
     init(hdAccountWallet: HDAccountWallet) {
         self.hdAccountWallet = hdAccountWallet
@@ -30,7 +33,11 @@ extension PublicKeyFetcher: IPublicKeyFetcher {
 // MARK: - WatchPublicKeyFetcher
 
 class WatchPublicKeyFetcher {
+    // MARK: Properties
+
     private let hdWatchAccountWallet: HDWatchAccountWallet
+
+    // MARK: Lifecycle
 
     init(hdWatchAccountWallet: HDWatchAccountWallet) {
         self.hdWatchAccountWallet = hdWatchAccountWallet
@@ -48,8 +55,13 @@ extension WatchPublicKeyFetcher: IPublicKeyFetcher {
 // MARK: - MultiAccountPublicKeyFetcher
 
 class MultiAccountPublicKeyFetcher {
-    private let hdWallet: HDWallet
+    // MARK: Properties
+
     private(set) var currentAccount = 0
+
+    private let hdWallet: HDWallet
+
+    // MARK: Lifecycle
 
     init(hdWallet: HDWallet) {
         self.hdWallet = hdWallet

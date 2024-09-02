@@ -1,8 +1,7 @@
 //
 //  Block.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -10,6 +9,30 @@ import Foundation
 import GRDB
 
 public class Block: Record {
+    // MARK: Nested Types
+
+    public enum Columns: String, ColumnExpression, CaseIterable {
+        case version
+        case previousBlockHash
+        case merkleRoot
+        case timestamp
+        case bits
+        case nonce
+        case headerHash
+        case height
+        case stale
+        case hasTransactions
+        case partial
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "blocks"
+    }
+
+    // MARK: Properties
+
     public var version: Int
     public var previousBlockHash: Data
     public var merkleRoot: Data
@@ -19,9 +42,12 @@ public class Block: Record {
 
     public var headerHash: Data
     public var height: Int
+
     var stale = false
     var hasTransactions = false
     var partial = false
+
+    // MARK: Lifecycle
 
     public init(withHeader header: BlockHeader, height: Int) {
         version = header.version
@@ -40,24 +66,6 @@ public class Block: Record {
         self.init(withHeader: header, height: previousBlock.height + 1)
     }
 
-    override open class var databaseTableName: String {
-        "blocks"
-    }
-
-    public enum Columns: String, ColumnExpression, CaseIterable {
-        case version
-        case previousBlockHash
-        case merkleRoot
-        case timestamp
-        case bits
-        case nonce
-        case headerHash
-        case height
-        case stale
-        case hasTransactions
-        case partial
-    }
-
     required init(row: Row) throws {
         version = row[Columns.version]
         previousBlockHash = row[Columns.previousBlockHash]
@@ -73,6 +81,8 @@ public class Block: Record {
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.version] = version

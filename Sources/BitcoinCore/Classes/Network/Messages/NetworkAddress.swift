@@ -1,8 +1,7 @@
 //
 //  NetworkAddress.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -14,9 +13,13 @@ import WWExtensions
 /// When a network address is needed somewhere,
 /// this structure is used. Network addresses are not prefixed with a timestamp in the version message.
 public struct NetworkAddress {
+    // MARK: Properties
+
     let services: UInt64
     let address: String
     let port: UInt16
+
+    // MARK: Lifecycle
 
     init(services: UInt64, address: String, port: UInt16) {
         self.services = services
@@ -37,6 +40,8 @@ public struct NetworkAddress {
 
         port = byteStream.read(UInt16.self)
     }
+
+    // MARK: Functions
 
     func serialized() -> Data {
         var data = Data()

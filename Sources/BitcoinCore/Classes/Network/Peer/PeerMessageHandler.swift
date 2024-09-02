@@ -1,8 +1,7 @@
 //
 //  PeerMessageHandler.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2021/4/22.
 //
 
 import Foundation
@@ -22,19 +21,27 @@ protocol PeerMessageHandlerDelegate: AnyObject {
 // MARK: - PeerMessageHandler
 
 class PeerMessageHandler: ChannelInboundHandler {
+    // MARK: Nested Types
+
     typealias InboundIn = ByteBuffer
     typealias OutboundOut = ByteBuffer
+
+    // MARK: Properties
+
+    weak var delegate: PeerMessageHandlerDelegate?
 
     private var bufferSize = 4096
     private var packets: Data = .init()
 
     private let networkMessageParser: INetworkMessageParser
 
-    weak var delegate: PeerMessageHandlerDelegate?
+    // MARK: Lifecycle
 
     init(networkMessageParser: INetworkMessageParser) {
         self.networkMessageParser = networkMessageParser
     }
+
+    // MARK: Functions
 
     func channelActive(context _: ChannelHandlerContext) {
         delegate?.onChannelActive()

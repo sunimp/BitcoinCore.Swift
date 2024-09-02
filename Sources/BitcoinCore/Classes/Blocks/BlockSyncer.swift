@@ -1,8 +1,7 @@
 //
 //  BlockSyncer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/30.
 //
 
 import Foundation
@@ -12,7 +11,10 @@ import WWToolKit
 // MARK: - BlockSyncer
 
 class BlockSyncer {
+    // MARK: Properties
+
     weak var listener: IBlockSyncListener?
+
     private let storage: IStorage
 
     private let checkpoint: Checkpoint
@@ -25,6 +27,21 @@ class BlockSyncer {
     private var state: BlockSyncerState
 
     private let logger: Logger?
+
+    // MARK: Computed Properties
+
+    var localDownloadedBestBlockHeight: Int32 {
+        let height = storage.lastBlock?.height
+        return Int32(height ?? 0)
+    }
+
+    var localKnownBestBlockHeight: Int32 {
+        let blockchainHashes = storage.blockchainBlockHashes
+        let existingHashesCount = storage.blocksCount(headerHashes: blockchainHashes.map(\.headerHash))
+        return localDownloadedBestBlockHeight + Int32(blockchainHashes.count - existingHashesCount)
+    }
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -48,16 +65,7 @@ class BlockSyncer {
         self.state = state
     }
 
-    var localDownloadedBestBlockHeight: Int32 {
-        let height = storage.lastBlock?.height
-        return Int32(height ?? 0)
-    }
-
-    var localKnownBestBlockHeight: Int32 {
-        let blockchainHashes = storage.blockchainBlockHashes
-        let existingHashesCount = storage.blocksCount(headerHashes: blockchainHashes.map(\.headerHash))
-        return localDownloadedBestBlockHeight + Int32(blockchainHashes.count - existingHashesCount)
-    }
+    // MARK: Functions
 
     /// We need to clear block hashes when sync peer is disconnected
     private func clearBlockHashes() {
@@ -66,7 +74,9 @@ class BlockSyncer {
 
     private func clearPartialBlocks() throws {
         var excludedHashes = [checkpoint.block.headerHash]
-        for additionalBlock in checkpoint.additionalBlocks { excludedHashes.append(additionalBlock.headerHash) }
+        for additionalBlock in checkpoint.additionalBlocks {
+            excludedHashes.append(additionalBlock.headerHash)
+        }
 
         let blockHashes = storage.blockHashHeaderHashes(except: excludedHashes)
         let blocksToDelete = storage.blocks(byHexes: blockHashes)
@@ -122,7 +132,11 @@ extension BlockSyncer: IBlockSyncer {
         if let lastBlockHash = storage.lastBlockchainBlockHash {
             blockLocatorHashes.append(lastBlockHash.headerHash)
         } else {
-            for block in storage.blocks(heightGreaterThan: checkpoint.block.height, sortedBy: Block.Columns.height, limit: 10) {
+            for block in storage.blocks(
+                heightGreaterThan: checkpoint.block.height,
+                sortedBy: Block.Columns.height,
+                limit: 10
+            ) {
                 blockLocatorHashes.append(block.headerHash)
             }
         }
@@ -196,8 +210,9 @@ extension BlockSyncer {
         hashCheckpointThreshold: Int = 100,
         logger: Logger? = nil,
         state: BlockSyncerState = BlockSyncerState()
-    ) -> BlockSyncer {
-        let syncer = BlockSyncer(
+    )
+        -> BlockSyncer {
+        return BlockSyncer(
             storage: storage,
             checkpoint: checkpoint,
             factory: factory,
@@ -208,7 +223,5 @@ extension BlockSyncer {
             logger: logger,
             state: state
         )
-
-        return syncer
     }
 }

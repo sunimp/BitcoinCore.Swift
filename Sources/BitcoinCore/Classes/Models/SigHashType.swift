@@ -1,8 +1,7 @@
 //
 //  SigHashType.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/24.
 //
 
 import Foundation
@@ -11,6 +10,8 @@ public enum SigHashType {
     case bitcoinAll
     case bitcoinTaprootAll
     case bitcoinCashAll
+
+    // MARK: Computed Properties
 
     var value: UInt8 {
         switch self {

@@ -1,3 +1,9 @@
+//
+//  BlockHashFetcherHelperTests.swift
+//
+//  Created by Sun on 2019/2/26.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore

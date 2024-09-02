@@ -1,8 +1,7 @@
 //
 //  TransactionCreator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/14.
 //
 
 import Foundation
@@ -10,15 +9,21 @@ import Foundation
 // MARK: - TransactionCreator
 
 class TransactionCreator {
+    // MARK: Nested Types
+
     enum CreationError: Error {
         case transactionAlreadyExists
     }
+
+    // MARK: Properties
 
     private let transactionBuilder: ITransactionBuilder
     private let transactionProcessor: IPendingTransactionProcessor
     private let transactionSender: ITransactionSender
     private let transactionSigner: TransactionSigner
     private let bloomFilterManager: IBloomFilterManager
+
+    // MARK: Lifecycle
 
     init(
         transactionBuilder: ITransactionBuilder,
@@ -33,6 +38,8 @@ class TransactionCreator {
         self.transactionSigner = transactionSigner
         self.bloomFilterManager = bloomFilterManager
     }
+
+    // MARK: Functions
 
     private func processAndSend(transaction: FullTransaction) throws {
         try transactionSender.verifyCanSend()

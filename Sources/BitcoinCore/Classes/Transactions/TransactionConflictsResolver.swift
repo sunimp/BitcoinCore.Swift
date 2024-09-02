@@ -1,8 +1,7 @@
 //
 //  TransactionConflictsResolver.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/9/24.
 //
 
 import Foundation
@@ -10,11 +9,17 @@ import Foundation
 // MARK: - TransactionConflictsResolver
 
 class TransactionConflictsResolver {
+    // MARK: Properties
+
     private let storage: IStorage
+
+    // MARK: Lifecycle
 
     init(storage: IStorage) {
         self.storage = storage
     }
+
+    // MARK: Functions
 
     private func conflictingTransactions(for transaction: FullTransaction) -> [Transaction] {
         let storageTransactionHashes = transaction.inputs
@@ -35,14 +40,17 @@ class TransactionConflictsResolver {
         return storage.transactions(hashes: storageTransactionHashes)
     }
 
-    private func existingHasHigherSequence(mempoolTransaction: FullTransaction, existingTransaction: FullTransaction) -> Bool {
+    private func existingHasHigherSequence(
+        mempoolTransaction: FullTransaction,
+        existingTransaction: FullTransaction
+    )
+        -> Bool {
         for existingInput in existingTransaction.inputs {
             if
                 let mempoolInput = mempoolTransaction.inputs.first(where: {
                     $0.previousOutputTxHash == existingInput.previousOutputTxHash &&
                         $0.previousOutputIndex == existingInput.previousOutputIndex
-                })
-            {
+                }) {
                 if existingInput.sequence > mempoolInput.sequence {
                     return true
                 }
@@ -68,7 +76,8 @@ extension TransactionConflictsResolver: ITransactionConflictsResolver {
             return []
         }
 
-        // If any of conflicting transactions is already in a block, then current transaction is invalid and non of them is conflicting with it.
+        // If any of conflicting transactions is already in a block, then current transaction is invalid and non of them
+        // is conflicting with it.
         guard conflictingTransactions.allSatisfy({ $0.blockHash == nil }) else {
             return []
         }
@@ -116,8 +125,7 @@ extension TransactionConflictsResolver: ITransactionConflictsResolver {
             .map(\.transactionHash)
         if
             conflictingTransactionHashes
-                .isEmpty
-        { // handle if transaction has conflicting inputs, otherwise it's false-positive tx
+                .isEmpty { // handle if transaction has conflicting inputs, otherwise it's false-positive tx
             return []
         }
 

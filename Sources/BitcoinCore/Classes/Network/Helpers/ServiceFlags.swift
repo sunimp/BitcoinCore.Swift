@@ -1,9 +1,7 @@
 //
 //  ServiceFlags.swift
-//  BitcoinKit
 //
-//  Created by Kishikawa Katsumi on 2018/02/11.
-//  Copyright © 2018 Kishikawa Katsumi. All rights reserved.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -11,7 +9,8 @@ import Foundation
 // MARK: - ServiceFlags
 
 struct ServiceFlags: OptionSet {
-    let rawValue: UInt64
+    // MARK: Static Properties
+
     /// Nothing
     static let none = [ServiceFlags(rawValue: 0)]
     /// NODE_NETWORK means that the node is capable of serving the complete block chain. It is currently
@@ -42,13 +41,24 @@ struct ServiceFlags: OptionSet {
     // collisions and other cases where nodes may be advertising a service they
     // do not actually support. Other service bits should be allocated via the
     // BIP process.
+
+    // MARK: Properties
+
+    let rawValue: UInt64
 }
 
 // MARK: CustomStringConvertible
 
 extension ServiceFlags: CustomStringConvertible {
     var description: String {
-        let strings = ["NODE_NETWORK", "NODE_GETUTXO", "NODE_BLOOM", "NODE_WITNESS", "NODE_XTHIN", "NODE_NETWORK_LIMITED"]
+        let strings = [
+            "NODE_NETWORK",
+            "NODE_GETUTXO",
+            "NODE_BLOOM",
+            "NODE_WITNESS",
+            "NODE_XTHIN",
+            "NODE_NETWORK_LIMITED",
+        ]
         var members = [String]()
         for (flag, string) in strings.enumerated() where contains(ServiceFlags(rawValue: 1 << UInt8(flag))) {
             members.append(string)

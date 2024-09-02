@@ -1,3 +1,9 @@
+//
+//  PeerManagerTests.swift
+//
+//  Created by Sun on 2018/11/13.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -115,7 +121,8 @@
 //        XCTAssertEqual(manager.halfIsSynced(), false)
 //    }
 //
-//    private func addPeer(host: String, ready: Bool = false, connected: Bool = false, synced: Bool = false) -> MockIPeer {
+//    private func addPeer(host: String, ready: Bool = false, connected: Bool = false, synced: Bool = false) ->
+//    MockIPeer {
 //        let peer = MockIPeer()
 //
 //        stub(peer) { mock in

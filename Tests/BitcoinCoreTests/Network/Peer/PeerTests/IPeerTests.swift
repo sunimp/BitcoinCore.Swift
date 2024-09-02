@@ -1,3 +1,9 @@
+//
+//  IPeerTests.swift
+//
+//  Created by Sun on 2018/11/15.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift
@@ -52,7 +58,8 @@
 //            when(mock.timePeriodPassed(peer: any())).thenDoNothing()
 //        }
 //
-//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager: mockConnectionTimeoutManager, queue: DispatchQueue.main)
+//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager:
+//        mockConnectionTimeoutManager, queue: DispatchQueue.main)
 //        peer.delegate = mockPeerGroup
 //    }
 //
@@ -140,7 +147,8 @@
 //            when(mock.delegate.set(any())).thenDoNothing()
 //            when(mock.host.get).thenReturn("other_host")
 //        }
-//        let otherPeer = Peer(host: "", network: mockNetwork, connection: mockConnection2, connectionTimeoutManager: MockIConnectionTimeoutManager())
+//        let otherPeer = Peer(host: "", network: mockNetwork, connection: mockConnection2, connectionTimeoutManager:
+//        MockIConnectionTimeoutManager())
 //
 //        XCTAssertEqual(peer.equalTo(peer), true)
 //        XCTAssertEqual(peer.equalTo(otherPeer), false)

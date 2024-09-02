@@ -1,8 +1,7 @@
 //
-//  URLRequestConvertible+.swift
-//  BitcoinCore
+//  URLRequestConvertible.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/11/7.
 //
 
 import Foundation
@@ -10,7 +9,6 @@ import Foundation
 import Alamofire
 
 extension URLRequestConvertible {
-    
     var description: String {
         "\(urlRequest?.httpMethod ?? "") \(urlRequest?.url?.absoluteString ?? "")"
     }

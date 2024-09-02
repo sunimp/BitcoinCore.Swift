@@ -1,8 +1,7 @@
 //
 //  BlockDownload.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
@@ -13,8 +12,15 @@ import WWToolKit
 // MARK: - BlockDownload
 
 public class BlockDownload {
-    public weak var listener: IBlockSyncListener?
+    // MARK: Static Properties
+
     private static let peerSwitchMinimumRatio = 1.5
+
+    // MARK: Properties
+
+    public weak var listener: IBlockSyncListener?
+    public var syncedPeers = [IPeer]()
+    public var syncPeer: IPeer?
 
     private var cancellables = Set<AnyCancellable>()
     private var blockSyncer: IBlockSyncer
@@ -34,8 +40,13 @@ public class BlockDownload {
     private let peersQueue: DispatchQueue
     private let logger: Logger?
 
-    public var syncedPeers = [IPeer]()
-    public var syncPeer: IPeer?
+    // MARK: Computed Properties
+
+    public var publisher: AnyPublisher<InitialDownloadEvent, Never> {
+        subject.eraseToAnyPublisher()
+    }
+
+    // MARK: Lifecycle
 
     init(
         blockSyncer: IBlockSyncer,
@@ -52,9 +63,7 @@ public class BlockDownload {
         resetRequiredDownloadSpeed()
     }
 
-    public var publisher: AnyPublisher<InitialDownloadEvent, Never> {
-        subject.eraseToAnyPublisher()
-    }
+    // MARK: Functions
 
     private func syncedState(_ peer: IPeer) -> Bool {
         syncedStates[peer.host] ?? false
@@ -113,7 +122,7 @@ public class BlockDownload {
     private func resetRequiredDownloadSpeed() {
         minMerkleBlocksCount = 500
         minTransactionsCount = 50000
-        minTransactionsSize = 100_000
+        minTransactionsSize = 100000
     }
 
     private func decreaseRequiredDownloadSpeed() {
@@ -161,8 +170,7 @@ public class BlockDownload {
             self.syncedStates[peer.host] = false
             if
                 let syncPeer = self.syncPeer,
-                syncPeer.connectionTime > peer.connectionTime * BlockDownload.peerSwitchMinimumRatio
-            {
+                syncPeer.connectionTime > peer.connectionTime * BlockDownload.peerSwitchMinimumRatio {
                 self.selectNewPeer = true
             }
             self.assignNextSyncPeer()
@@ -239,9 +247,9 @@ extension BlockDownload: IInitialDownload {
                 case .onStart: self?.onStart()
                 case .onStop: self?.onStop()
                 case .onRefresh: self?.onRefresh()
-                case .onPeerConnect(let peer): self?.onPeerConnect(peer: peer)
-                case .onPeerDisconnect(let peer, let error): self?.onPeerDisconnect(peer: peer, error: error)
-                case .onPeerReady(let peer): self?.onPeerReady(peer: peer)
+                case let .onPeerConnect(peer): self?.onPeerConnect(peer: peer)
+                case let .onPeerDisconnect(peer, error): self?.onPeerDisconnect(peer: peer, error: error)
+                case let .onPeerReady(peer): self?.onPeerReady(peer: peer)
                 default: ()
                 }
             }

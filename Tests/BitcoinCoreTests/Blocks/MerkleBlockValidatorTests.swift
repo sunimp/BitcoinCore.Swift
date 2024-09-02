@@ -1,3 +1,9 @@
+//
+//  MerkleBlockValidatorTests.swift
+//
+//  Created by Sun on 2018/7/24.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -20,7 +26,8 @@
 //
 //        mockMerkleBranch = MockIMerkleBranch() // use real hasher function for real test data
 //
-//        blockHeader = BlockHeader(version: 0, headerHash: Data(), previousBlockHeaderHash: Data(), merkleRoot: Data(repeating: 9, count: 32), timestamp: 0, bits: 0, nonce: 0)
+//        blockHeader = BlockHeader(version: 0, headerHash: Data(), previousBlockHeaderHash: Data(), merkleRoot:
+//        Data(repeating: 9, count: 32), timestamp: 0, bits: 0, nonce: 0)
 //
 //        totalTransactions = 10
 //        numberOfHashes = 10
@@ -68,11 +75,11 @@
 //        }
 //    }
 //
-//    func testTxIdsClearedFirst() {
-//        var txIds = [Data]()
+//    func testTxIDsClearedFirst() {
+//        var txIDs = [Data]()
 //        do {
-//            txIds = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
-//            txIds = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
+//            txIDs = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
+//            txIDs = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
 //        } catch {
 //            XCTFail("Should be valid")
 //        }
@@ -82,7 +89,8 @@
 //    }
 //
 //    func testWrongMerkleRoot() {
-//        blockHeader = BlockHeader(version: 0, headerHash: Data(repeating: 9, count: 32), previousBlockHeaderHash: Data(),
+//        blockHeader = BlockHeader(version: 0, headerHash: Data(repeating: 9, count: 32), previousBlockHeaderHash:
+//        Data(),
 //                merkleRoot: Data(hex: "0000000000000000000000000000000000000000000000000000000000000001")!,
 //                timestamp: 0, bits: 0, nonce: 0)
 //
@@ -134,7 +142,8 @@
 //            _ = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
 //            XCTFail("Should Throw Exception")
 //        } catch let error as MerkleBlockValidator.ValidationError {
-//            XCTAssertEqual(error, MerkleBlockValidator.DashKitErrors.MasternodeListValidation.moreHashesThanTransactions)
+//            XCTAssertEqual(error,
+//            MerkleBlockValidator.DashKitErrors.MasternodeListValidation.moreHashesThanTransactions)
 //        } catch {
 //            XCTFail("Unknown Exception")
 //        }
@@ -148,7 +157,8 @@
 //            _ = try validator.merkleBlock(from: getSampleMessage()).transactionHashes
 //            XCTFail("Should Throw Exception")
 //        } catch let error as MerkleBlockValidator.ValidationError {
-//            XCTAssertEqual(error, MerkleBlockValidator.DashKitErrors.MasternodeListValidation.matchedBitsFewerThanHashes)
+//            XCTAssertEqual(error,
+//            MerkleBlockValidator.DashKitErrors.MasternodeListValidation.matchedBitsFewerThanHashes)
 //        } catch {
 //            XCTFail("Unknown Exception")
 //        }

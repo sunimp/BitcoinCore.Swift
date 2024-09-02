@@ -1,3 +1,9 @@
+//
+//  BitcoinRegTestNetTests.swift
+//
+//  Created by Sun on 2018/9/20.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -13,7 +19,8 @@
 //
 //        mockValidatorHelper = MockValidatorHelper()
 //        mockMerkleBranch = MockIMerkleBranch()
-//        mockNetwork = BitcoinMainNet(validatorFactory: mockValidatorHelper.mockFactory, merkleBranch: mockMerkleBranch)
+//        mockNetwork = BitcoinMainNet(validatorFactory: mockValidatorHelper.mockFactory, merkleBranch:
+//        mockMerkleBranch)
 //    }
 //
 //    override func tearDown() {
@@ -27,7 +34,8 @@
 //        let block = TestData.firstBlock
 //        do {
 //            try mockNetwork.validate(block: block, previousBlock: TestData.checkpointBlock)
-//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(), network: any())
+//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
 //        } catch let error {
 //            XCTFail("\(error) Exception Thrown")
 //        }

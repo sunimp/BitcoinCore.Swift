@@ -1,8 +1,7 @@
 //
 //  UnspentOutputSelector.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/13.
 //
 
 import Foundation
@@ -10,10 +9,14 @@ import Foundation
 // MARK: - UnspentOutputSelector
 
 public class UnspentOutputSelector {
+    // MARK: Properties
+
     private let calculator: ITransactionSizeCalculator
     private let provider: IUnspentOutputProvider
     private let dustCalculator: IDustCalculator
     private let outputsLimit: Int?
+
+    // MARK: Lifecycle
 
     public init(
         calculator: ITransactionSizeCalculator,
@@ -40,7 +43,8 @@ extension UnspentOutputSelector: IUnspentOutputSelector {
         outputScriptType: ScriptType = .p2pkh,
         changeType: ScriptType = .p2pkh,
         pluginDataOutputSize: Int
-    ) throws -> SelectedUnspentOutputInfo {
+    ) throws
+        -> SelectedUnspentOutputInfo {
         guard let value = params.value else {
             throw BitcoinCoreErrors.TransactionSendError.invalidParameters
         }
@@ -63,7 +67,11 @@ extension UnspentOutputSelector: IUnspentOutputSelector {
             changeType: changeType,
             pluginDataOutputSize: pluginDataOutputSize
         )
-        let queue = UnspentOutputQueue(parameters: utxoSelectParams, sizeCalculator: calculator, dustCalculator: dustCalculator)
+        let queue = UnspentOutputQueue(
+            parameters: utxoSelectParams,
+            sizeCalculator: calculator,
+            dustCalculator: dustCalculator
+        )
 
         // select unspentOutputs with least value until we get needed value
         var lastError: Error?

@@ -1,21 +1,15 @@
 //
 //  MurmurHash.swift
-//  BitcoinKit
 //
-//  Created by Kishikawa Katsumi on 2018/01/28.
-//  Copyright © 2018 Kishikawa Katsumi. All rights reserved.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 
 enum MurmurHash {
-    private static func rotateLeft(_ x: UInt32, _ r: UInt32) -> UInt32 {
-        (x << r) | (x >> (32 - r))
-    }
-
     static func hashValue(_ bytes: Data, _ seed: UInt32) -> UInt32 {
-        let c1: UInt32 = 0xCC9E_2D51
-        let c2: UInt32 = 0x1B87_3593
+        let c1: UInt32 = 0xCC9E2D51
+        let c2: UInt32 = 0x1B873593
 
         let byteCount = bytes.count
 
@@ -32,7 +26,7 @@ enum MurmurHash {
 
             h1 = h1 ^ k1
             h1 = rotateLeft(h1, 13)
-            h1 = h1 &* 5 &+ 0xE654_6B64
+            h1 = h1 &* 5 &+ 0xE6546B64
         }
         let remaining = byteCount & 3
         if remaining != 0 {
@@ -50,11 +44,15 @@ enum MurmurHash {
 
         h1 ^= UInt32(truncatingIfNeeded: byteCount)
         h1 ^= (h1 >> 16)
-        h1 = h1 &* 0x85EB_CA6B
+        h1 = h1 &* 0x85EBCA6B
         h1 ^= (h1 >> 13)
-        h1 = h1 &* 0xC2B2_AE35
+        h1 = h1 &* 0xC2B2AE35
         h1 ^= (h1 >> 16)
 
         return h1
+    }
+
+    private static func rotateLeft(_ x: UInt32, _ r: UInt32) -> UInt32 {
+        (x << r) | (x >> (32 - r))
     }
 }

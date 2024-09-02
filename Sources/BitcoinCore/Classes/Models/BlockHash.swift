@@ -1,8 +1,7 @@
 //
 //  BlockHash.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/17.
 //
 
 import Foundation
@@ -13,9 +12,27 @@ import WWExtensions
 // MARK: - BlockHash
 
 public class BlockHash: Record {
+    // MARK: Nested Types
+
+    enum Columns: String, ColumnExpression {
+        case headerHash
+        case height
+        case sequence
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "blockHashes"
+    }
+
+    // MARK: Properties
+
     let headerHash: Data
     let height: Int
     let sequence: Int
+
+    // MARK: Lifecycle
 
     public init(headerHash: Data, height: Int, order: Int) {
         self.headerHash = headerHash
@@ -37,16 +54,6 @@ public class BlockHash: Record {
         super.init()
     }
 
-    override open class var databaseTableName: String {
-        "blockHashes"
-    }
-
-    enum Columns: String, ColumnExpression {
-        case headerHash
-        case height
-        case sequence
-    }
-
     required init(row: Row) throws {
         headerHash = row[Columns.headerHash]
         height = row[Columns.height]
@@ -54,6 +61,8 @@ public class BlockHash: Record {
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.headerHash] = headerHash

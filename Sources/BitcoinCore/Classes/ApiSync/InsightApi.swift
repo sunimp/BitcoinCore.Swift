@@ -1,8 +1,7 @@
 //
 //  InsightApi.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/5/7.
 //
 
 import Foundation
@@ -14,11 +13,17 @@ import WWToolKit
 // MARK: - InsightApi
 
 public class InsightApi {
+    // MARK: Static Properties
+
     private static let paginationLimit = 50
     private static let addressesLimit = 99
 
+    // MARK: Properties
+
     private let url: String
     private let networkManager: NetworkManager
+
+    // MARK: Lifecycle
 
     public init(url: String, logger: Logger? = nil) {
         self.url = url
@@ -50,7 +55,8 @@ extension InsightApi: IApiTransactionProvider {
         addresses: [String],
         from: Int = 0,
         transactions: [InsightTransactionItem] = []
-    ) async throws -> [InsightTransactionItem] {
+    ) async throws
+        -> [InsightTransactionItem] {
         let last = min(from + InsightApi.addressesLimit, addresses.count)
         let chunk = addresses[from ..< last].joined(separator: ",")
 
@@ -72,14 +78,19 @@ extension InsightApi: IApiTransactionProvider {
         addresses: String,
         from: Int = 0,
         transactions: [InsightTransactionItem] = []
-    ) async throws -> [InsightTransactionItem] {
+    ) async throws
+        -> [InsightTransactionItem] {
         let result = try await getTransactions(addresses: addresses, from: from)
         let resultTransactions = transactions + result.transactionItems.map { $0 as InsightTransactionItem }
 
         if result.totalItems <= result.to {
             return resultTransactions
         } else {
-            return try await getTransactionsRecursive(addresses: addresses, from: result.to, transactions: resultTransactions)
+            return try await getTransactionsRecursive(
+                addresses: addresses,
+                from: result.to,
+                transactions: resultTransactions
+            )
         }
     }
 
@@ -94,10 +105,14 @@ extension InsightApi: IApiTransactionProvider {
     }
 
     class InsightResponseItem: ImmutableMappable {
+        // MARK: Properties
+
         public let totalItems: Int
         public let from: Int
         public let to: Int
         public let transactionItems: [InsightTransactionItem]
+
+        // MARK: Lifecycle
 
         public init(totalItems: Int, from: Int, to: Int, transactionItems: [InsightTransactionItem]) {
             self.totalItems = totalItems
@@ -128,7 +143,11 @@ extension InsightApi: IApiTransactionProvider {
             let blockHash: String? = try? map.value("blockhash")
             let blockHeight: Int? = try? map.value("blockheight")
             let txOutputs: [InsightTransactionOutputItem] = (try? map.value("vout")) ?? []
-            super.init(hash: blockHash, height: blockHeight, txOutputs: txOutputs.map { $0 as BCoinTransactionOutputItem })
+            super.init(
+                hash: blockHash,
+                height: blockHeight,
+                txOutputs: txOutputs.map { $0 as BCoinTransactionOutputItem }
+            )
         }
     }
 

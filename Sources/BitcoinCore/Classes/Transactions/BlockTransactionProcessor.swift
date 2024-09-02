@@ -1,8 +1,7 @@
 //
 //  BlockTransactionProcessor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/9/24.
 //
 
 import Foundation
@@ -10,6 +9,11 @@ import Foundation
 // MARK: - BlockTransactionProcessor
 
 class BlockTransactionProcessor {
+    // MARK: Properties
+
+    weak var listener: IBlockchainDataListener?
+    weak var transactionListener: ITransactionListener?
+
     private let storage: IStorage
     private let extractor: ITransactionExtractor
     private let publicKeyManager: IPublicKeyManager
@@ -17,10 +21,9 @@ class BlockTransactionProcessor {
     private let conflictsResolver: TransactionConflictsResolver
     private let invalidator: TransactionInvalidator
 
-    weak var listener: IBlockchainDataListener?
-    weak var transactionListener: ITransactionListener?
-
     private let queue: DispatchQueue
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -41,6 +44,8 @@ class BlockTransactionProcessor {
         self.listener = listener
         self.queue = queue
     }
+
+    // MARK: Functions
 
     private func relay(transaction: Transaction, inBlock block: Block, order: Int) {
         transaction.blockHash = block.headerHash

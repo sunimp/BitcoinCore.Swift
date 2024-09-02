@@ -1,8 +1,7 @@
 //
 //  WatchAddressPublicKey.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/11/22.
 //
 
 import Foundation
@@ -14,9 +13,12 @@ public class WatchAddressPublicKey: PublicKey {
         let path = "WatchAddressPublicKey"
 
         switch scriptType {
-        case .p2pkh, .p2wpkh:
+        case .p2pkh,
+             .p2wpkh:
             super.init(path: path, hashP2pkh: data)
-        case .p2sh, .p2wsh, .p2wpkhSh:
+        case .p2sh,
+             .p2wsh,
+             .p2wpkhSh:
             super.init(path: path, hashP2wpkhWrappedInP2sh: data)
         case .p2tr:
             super.init(path: path, convertedForP2tr: data)

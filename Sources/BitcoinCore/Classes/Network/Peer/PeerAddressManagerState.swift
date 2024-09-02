@@ -1,14 +1,17 @@
 //
 //  PeerAddressManagerState.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/4.
 //
 
 import Foundation
 
 class PeerAddressManagerState {
+    // MARK: Properties
+
     private(set) var usedIps: [String] = []
+
+    // MARK: Functions
 
     func add(usedIp: String) {
         usedIps.append(usedIp)

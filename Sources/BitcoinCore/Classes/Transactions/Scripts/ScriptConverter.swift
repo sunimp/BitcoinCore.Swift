@@ -1,8 +1,7 @@
 //
 //  ScriptConverter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/22.
 //
 
 import Foundation
@@ -10,7 +9,11 @@ import Foundation
 // MARK: - ScriptConverter
 
 public class ScriptConverter {
+    // MARK: Lifecycle
+
     public init() { }
+
+    // MARK: Functions
 
     public func encode(script: Script) -> Data {
         var scriptData = Data()

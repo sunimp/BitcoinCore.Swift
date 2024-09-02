@@ -1,14 +1,17 @@
 //
 //  InventoryItemsHandlerChain.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
 
 class InventoryItemsHandlerChain: IInventoryItemsHandler {
+    // MARK: Properties
+
     private var concreteHandlers = [IInventoryItemsHandler]()
+
+    // MARK: Functions
 
     func handleInventoryItems(peer: IPeer, inventoryItems: [InventoryItem]) {
         for handler in concreteHandlers {

@@ -1,8 +1,7 @@
 //
 //  GetHeadersMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -10,6 +9,8 @@ import Foundation
 import WWExtensions
 
 struct GetHeadersMessage: IMessage {
+    // MARK: Properties
+
     /// the protocol version
     let version: UInt32
     /// number of block locator hash entries
@@ -19,12 +20,14 @@ struct GetHeadersMessage: IMessage {
     /// hash of the last desired header; set to zero to get as many headers as possible (2000)
     let hashStop: Data
 
+    let description = ""
+
+    // MARK: Lifecycle
+
     init(protocolVersion: Int32, headerHashes: [Data]) {
         version = UInt32(protocolVersion)
         hashCount = VarInt(headerHashes.count)
         blockLocatorHashes = headerHashes
         hashStop = Data(count: 32)
     }
-
-    let description = ""
 }

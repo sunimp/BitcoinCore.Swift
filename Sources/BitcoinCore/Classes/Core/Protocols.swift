@@ -1,8 +1,7 @@
 //
 //  Protocols.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/18.
 //
 
 import Combine
@@ -66,7 +65,7 @@ protocol IPrivateHDWallet {
 
 protocol IApiConfigProvider {
     var reachabilityHost: String { get }
-    var apiUrl: String { get }
+    var apiURL: String { get }
 }
 
 // MARK: - IPeerAddressManager
@@ -162,7 +161,12 @@ public protocol IStorage: IOutputStorage {
     func update(transaction: FullTransaction) throws
     func update(transaction: Transaction) throws
     func fullInfo(forTransactions: [TransactionWithBlock]) -> [FullTransactionForInfo]
-    func validOrInvalidTransactionsFullInfo(fromTimestamp: Int?, fromOrder: Int?, type: TransactionFilterType?, limit: Int?)
+    func validOrInvalidTransactionsFullInfo(
+        fromTimestamp: Int?,
+        fromOrder: Int?,
+        type: TransactionFilterType?,
+        limit: Int?
+    )
         -> [FullTransactionForInfo]
     func transactionFullInfo(byHash hash: Data) -> FullTransactionForInfo?
     func moveTransactionsTo(invalidTransactions: [InvalidTransaction]) throws
@@ -525,14 +529,20 @@ public protocol IBlockchainDataListener: AnyObject {
 // MARK: - IInputSigner
 
 protocol IInputSigner {
-    func sigScriptData(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], index: Int) throws -> [Data]
+    func sigScriptData(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], index: Int) throws
+        -> [Data]
 }
 
 // MARK: - ITransactionSizeCalculator
 
 public protocol ITransactionSizeCalculator {
     func transactionSize(previousOutputs: [Output], outputScriptTypes: [ScriptType], memo: String?) -> Int
-    func transactionSize(previousOutputs: [Output], outputScriptTypes: [ScriptType], memo: String?, pluginDataOutputSize: Int)
+    func transactionSize(
+        previousOutputs: [Output],
+        outputScriptTypes: [ScriptType],
+        memo: String?,
+        pluginDataOutputSize: Int
+    )
         -> Int
     func outputSize(type: ScriptType) -> Int
     func inputSize(type: ScriptType) -> Int
@@ -551,7 +561,12 @@ public protocol IDustCalculator {
 
 public protocol IUnspentOutputSelector {
     func all(filters: UtxoFilters) -> [UnspentOutput]
-    func select(params: SendParameters, outputScriptType: ScriptType, changeType: ScriptType, pluginDataOutputSize: Int) throws
+    func select(
+        params: SendParameters,
+        outputScriptType: ScriptType,
+        changeType: ScriptType,
+        pluginDataOutputSize: Int
+    ) throws
         -> SelectedUnspentOutputInfo
 }
 
@@ -661,7 +676,7 @@ public protocol INetwork: AnyObject {
     var coinType: UInt32 { get }
     var sigHash: SigHashType { get }
     var syncableFromApi: Bool { get }
-    var blockchairChainId: String { get }
+    var blockchairChainID: String { get }
 }
 
 // MARK: - IMerkleBlockValidator
@@ -674,7 +689,8 @@ protocol IMerkleBlockValidator: AnyObject {
 // MARK: - IMerkleBranch
 
 public protocol IMerkleBranch: AnyObject {
-    func calculateMerkleRoot(txCount: Int, hashes: [Data], flags: [UInt8]) throws -> (merkleRoot: Data, matchedHashes: [Data])
+    func calculateMerkleRoot(txCount: Int, hashes: [Data], flags: [UInt8]) throws
+        -> (merkleRoot: Data, matchedHashes: [Data])
 }
 
 // MARK: - IMessage
@@ -810,7 +826,10 @@ public protocol IPlugin: IRestoreKeyConverter {
     var maxSpendLimit: Int? { get }
     func validate(address: Address) throws
     func processOutputs(mutableTransaction: MutableTransaction, pluginData: IPluginData, skipChecks: Bool) throws
-    func processTransactionWithNullData(transaction: FullTransaction, nullDataChunks: inout IndexingIterator<[Chunk]>) throws
+    func processTransactionWithNullData(
+        transaction: FullTransaction,
+        nullDataChunks: inout IndexingIterator<[Chunk]>
+    ) throws
     func isSpendable(unspentOutput: UnspentOutput) throws -> Bool
     func inputSequenceNumber(output: Output) throws -> Int
     func parsePluginData(from: String, transactionTimestamp: Int) throws -> IPluginOutputData
@@ -827,7 +846,11 @@ public protocol IPluginManager {
     func validate(address: Address, pluginData: [UInt8: IPluginData]) throws
     func maxSpendLimit(pluginData: [UInt8: IPluginData]) throws -> Int?
     func add(plugin: IPlugin)
-    func processOutputs(mutableTransaction: MutableTransaction, pluginData: [UInt8: IPluginData], skipChecks: Bool) throws
+    func processOutputs(
+        mutableTransaction: MutableTransaction,
+        pluginData: [UInt8: IPluginData],
+        skipChecks: Bool
+    ) throws
     func processInputs(mutableTransaction: MutableTransaction) throws
     func processTransactionWithNullData(transaction: FullTransaction, nullDataOutput: Output) throws
     func isSpendable(unspentOutput: UnspentOutput) -> Bool

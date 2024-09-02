@@ -1,3 +1,9 @@
+//
+//  IrregularOutputFinderTests.swift
+//
+//  Created by Sun on 2019/9/11.
+//
+
 // import Quick
 // import Nimble
 // import XCTest
@@ -66,7 +72,8 @@
 //                    it("returns output") {
 //                        elements = finder.filterElements()
 //
-//                        let expectedElements = [output1.transactionHash + self.byteArrayLittleEndian(int: output1.index)]
+//                        let expectedElements = [output1.transactionHash + self.byteArrayLittleEndian(int:
+//                        output1.index)]
 //                        expect(elements).to(equal(expectedElements))
 //                    }
 //                }
@@ -82,7 +89,8 @@
 //                        it("returns output") {
 //                            elements = finder.filterElements()
 //
-//                            let expectedElements = [output1.transactionHash + self.byteArrayLittleEndian(int: output1.index)]
+//                            let expectedElements = [output1.transactionHash + self.byteArrayLittleEndian(int:
+//                            output1.index)]
 //                            expect(elements).to(equal(expectedElements))
 //                        }
 //                    }
@@ -105,7 +113,8 @@
 //    }
 //
 //    private func getPublicKey(withIndex index: Int, chain: HDWallet.Chain) -> PublicKey {
-//        let hdWallet = HDWallet(seed: Data(), coinType: UInt32(1), xPrivKey: UInt32(0x04358394), xPubKey: UInt32(0x043587cf))
+//        let hdWallet = HDWallet(seed: Data(), coinType: UInt32(1), xPrivKey: UInt32(0x04358394), xPubKey:
+//        UInt32(0x043587cf))
 //        let hdPrivKeyData = try! hdWallet.privateKeyData(account: 0, index: index, external: chain == .external)
 //        return PublicKey(withAccount: 0, index: index, external: chain == .external, hdPublicKeyData: hdPrivKeyData)
 //    }

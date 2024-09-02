@@ -1,8 +1,7 @@
 //
 //  SentTransaction.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/11/12.
 //
 
 import Foundation
@@ -11,10 +10,29 @@ import GRDB
 import QuartzCore
 
 public class SentTransaction: Record {
+    // MARK: Nested Types
+
+    enum Columns: String, ColumnExpression {
+        case dataHash
+        case lastSendTime
+        case retriesCount
+        case sendSuccess
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "sentTransactions"
+    }
+
+    // MARK: Properties
+
     let dataHash: Data
     var lastSendTime: Double
     var retriesCount: Int
     var sendSuccess: Bool
+
+    // MARK: Lifecycle
 
     init(dataHash: Data, lastSendTime: Double, retriesCount: Int, sendSuccess: Bool) {
         self.dataHash = dataHash
@@ -25,19 +43,8 @@ public class SentTransaction: Record {
         super.init()
     }
 
-    override open class var databaseTableName: String {
-        "sentTransactions"
-    }
-
     convenience init(dataHash: Data) {
         self.init(dataHash: dataHash, lastSendTime: CACurrentMediaTime(), retriesCount: 0, sendSuccess: false)
-    }
-
-    enum Columns: String, ColumnExpression {
-        case dataHash
-        case lastSendTime
-        case retriesCount
-        case sendSuccess
     }
 
     required init(row: Row) throws {
@@ -48,6 +55,8 @@ public class SentTransaction: Record {
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.dataHash] = dataHash

@@ -1,8 +1,7 @@
 //
 //  ConnectionTimeoutManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/11/29.
 //
 
 import Foundation
@@ -10,9 +9,13 @@ import Foundation
 import WWToolKit
 
 class ConnectionTimeoutManager: IConnectionTimeoutManager {
+    // MARK: Nested Types
+
     enum TimeoutError: Error {
         case pingTimedOut
     }
+
+    // MARK: Properties
 
     private var messageLastReceivedTime: Double? = nil
     private var lastPingTime: Double? = nil
@@ -22,10 +25,14 @@ class ConnectionTimeoutManager: IConnectionTimeoutManager {
     private let logger: Logger?
     private let dateGenerator: () -> Date
 
+    // MARK: Lifecycle
+
     init(dateGenerator: @escaping () -> Date = Date.init, logger: Logger? = nil) {
         self.logger = logger
         self.dateGenerator = dateGenerator
     }
+
+    // MARK: Functions
 
     func reset() {
         messageLastReceivedTime = dateGenerator().timeIntervalSince1970

@@ -1,8 +1,7 @@
 //
 //  Helpers.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/9.
 //
 
 import Foundation
@@ -27,9 +26,9 @@ func pton(_ address: String) -> Data {
 
 func byteArrayLittleEndian(int: Int) -> [UInt8] {
     [
-        UInt8(int & 0x0000_00FF),
-        UInt8((int & 0x0000_FF00) >> 8),
-        UInt8((int & 0x00FF_0000) >> 16),
-        UInt8((int & 0xFF00_0000) >> 24),
+        UInt8(int & 0x000000FF),
+        UInt8((int & 0x0000FF00) >> 8),
+        UInt8((int & 0x00FF0000) >> 16),
+        UInt8((int & 0xFF000000) >> 24),
     ]
 }

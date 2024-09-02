@@ -22,11 +22,11 @@ Being an SPV client, `BitcoinCore.Swift` downloads and validates all the block h
 
 This package is designed to be used by a concrete kit like BitcoinKit.Swift. See [BitcoinKit.Swift](https://github.com/sunimp/BitcoinKit.Swift) for more documentation.
 
-## Prerequisites
+## Requirements
 
-* Xcode 15.0+
+* Xcode 15.4+
 * Swift 5.10+
-* iOS 14+
+* iOS 14.0+
 
 ### Swift Package Manager
 
@@ -34,7 +34,7 @@ This package is designed to be used by a concrete kit like BitcoinKit.Swift. See
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sunimp/BitcoinCore.Swift.git", .upToNextMajor(from: "3.1.2"))
+    .package(url: "https://github.com/sunimp/BitcoinCore.Swift.git", .upToNextMajor(from: "3.2.0"))
 ]
 ```
 

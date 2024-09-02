@@ -1,3 +1,9 @@
+//
+//  IPeerTaskRequesterTests.swift
+//
+//  Created by Sun on 2018/11/15.
+//
+
 // import XCTest
 // import Cuckoo
 // import HDWalletKit
@@ -37,7 +43,8 @@
 //            when(mock.timePeriodPassed(peer: any())).thenDoNothing()
 //        }
 //
-//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager: mockConnectionTimeoutManager, queue: DispatchQueue.main)
+//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager:
+//        mockConnectionTimeoutManager, queue: DispatchQueue.main)
 //        peer.delegate = mockPeerGroup
 //    }
 //
@@ -72,7 +79,8 @@
 //
 //    func testSendTransactionInventory() {
 //        let hash = Data(from: 10000)
-//        let message = InventoryMessage(inventoryItems: [InventoryItem(type: InventoryItem.ObjectType.transaction.rawValue, hash: hash)])
+//        let message = InventoryMessage(inventoryItems: [InventoryItem(type:
+//        InventoryItem.ObjectType.transaction.rawValue, hash: hash)])
 //
 //        peer.sendTransactionInventory(hash: hash)
 //

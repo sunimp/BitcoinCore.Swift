@@ -1,3 +1,9 @@
+//
+//  SendTransactionTaskTests.swift
+//
+//  Created by Sun on 2018/11/14.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -47,7 +53,8 @@
 //    }
 //
 //    func testHandleGetData() {
-//        let inv = InventoryItem(type: InventoryItem.ObjectType.transaction.rawValue, hash: transaction.header.dataHash)
+//        let inv = InventoryItem(type: InventoryItem.ObjectType.transaction.rawValue, hash:
+//        transaction.header.dataHash)
 //
 //        let handled = try! task.handle(message: GetDataMessage(inventoryItems: [inv]))
 //
@@ -59,7 +66,8 @@
 //    }
 //
 //    func testHandleGetData_NotTransactionInventory() {
-//        let inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: transaction.header.dataHash)
+//        let inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash:
+//        transaction.header.dataHash)
 //
 //        let handled = try! task.handle(message: GetDataMessage(inventoryItems: [inv]))
 //

@@ -1,3 +1,9 @@
+//
+//  UnspentOutputSelectorOldTests.swift
+//
+//  Created by Sun on 2018/8/13.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -25,9 +31,11 @@
 //            when(mock.outputSize(type: any())).thenReturn(2)
 //            when(mock.transactionSize(previousOutputs: any(), outputScriptTypes: any(), pluginDataOutputSize: 0)).thenReturn(100)
 //        }
-//        unspentOutputSelector = UnspentOutputSelector(calculator: mockTransactionSizeCalculator, provider: mockUnspentOutputProvider, dustCalculator: mockDustCalculator)
+//        unspentOutputSelector = UnspentOutputSelector(calculator: mockTransactionSizeCalculator, provider:
+//        mockUnspentOutputProvider, dustCalculator: mockDustCalculator)
 //
-//        outputs = [TestData.unspentOutput(output: Output(withValue: 1000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
+//        outputs = [TestData.unspentOutput(output: Output(withValue: 1000, index: 0, lockingScript: Data(), type:
+//        .p2pkh, keyHash: Data())),
 //                   TestData.unspentOutput(output: Output(withValue: 2000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
 //                   TestData.unspentOutput(output: Output(withValue: 4000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
 //                   TestData.unspentOutput(output: Output(withValue: 8000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
@@ -52,7 +60,8 @@
 //
 //    func testSummaryValueReceiverPay() {
 //        do {
-//            let selectedOutputs = try unspentOutputSelector.select(value: 7000, feeRate: 1, senderPay: false, pluginDataOutputSize: 0)
+//            let selectedOutputs = try unspentOutputSelector.select(value: 7000, feeRate: 1, senderPay: false,
+//            pluginDataOutputSize: 0)
 //            XCTAssertEqual(selectedOutputs.unspentOutputs, [outputs[0], outputs[1], outputs[2]])
 //            XCTAssertEqual(selectedOutputs.recipientValue, 7000 - 100)
 //            XCTAssertEqual(selectedOutputs.changeValue, nil)
@@ -64,7 +73,8 @@
 //    func testSummaryValueSenderPay() {
 //        // with change output
 //        do {
-//            let selectedOutputs = try unspentOutputSelector.select(value: 7000, feeRate: 1, senderPay: true, pluginDataOutputSize: 0)
+//            let selectedOutputs = try unspentOutputSelector.select(value: 7000, feeRate: 1, senderPay: true,
+//            pluginDataOutputSize: 0)
 //            XCTAssertEqual(selectedOutputs.unspentOutputs, [outputs[0], outputs[1], outputs[2], outputs[3]])
 //            XCTAssertEqual(selectedOutputs.recipientValue, 7000)
 //            XCTAssertEqual(selectedOutputs.changeValue, 15000 - 7000 - 100)
@@ -78,7 +88,8 @@
 //
 //        do {
 //            let expectedFee = 100 + 10 + 2  // fee for tx + fee for change input + fee for change output
-//            let selectedOutputs = try unspentOutputSelector.select(value: 15000 - expectedFee, feeRate: 1, senderPay: true, pluginDataOutputSize: 0)
+//            let selectedOutputs = try unspentOutputSelector.select(value: 15000 - expectedFee, feeRate: 1, senderPay:
+//            true, pluginDataOutputSize: 0)
 //            XCTAssertEqual(selectedOutputs.unspentOutputs, [outputs[0], outputs[1], outputs[2], outputs[3]])
 //            XCTAssertEqual(selectedOutputs.recipientValue, 15000 - expectedFee)
 //            XCTAssertEqual(selectedOutputs.changeValue, nil)

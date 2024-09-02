@@ -1,8 +1,7 @@
 //
 //  TransactionSender.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Combine
@@ -14,7 +13,11 @@ import WWToolKit
 // MARK: - TransactionSender
 
 class TransactionSender {
+    // MARK: Static Properties
+
     static let minConnectedPeersCount = 2
+
+    // MARK: Properties
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -29,6 +32,8 @@ class TransactionSender {
     private let sendType: BitcoinCore.SendType
     private let maxRetriesCount: Int
     private let retriesPeriod: Double // seconds
+
+    // MARK: Lifecycle
 
     init(
         transactionSyncer: ITransactionSyncer,
@@ -53,6 +58,8 @@ class TransactionSender {
         self.maxRetriesCount = maxRetriesCount
         self.retriesPeriod = retriesPeriod
     }
+
+    // MARK: Functions
 
     private func peersToSendTo() -> [IPeer] {
         let syncedPeers = initialBlockDownload.syncedPeers
@@ -122,7 +129,8 @@ class TransactionSender {
         Task(priority: .userInitiated) {
             for transaction in transactions {
                 do {
-                    try await blockchairApi.broadcastTransaction(hex: TransactionSerializer.serialize(transaction: transaction))
+                    try await blockchairApi
+                        .broadcastTransaction(hex: TransactionSerializer.serialize(transaction: transaction))
                     transactionSyncer.handleRelayed(transactions: [transaction])
                 } catch {
                     transactionSyncer.handleInvalid(fullTransaction: transaction)
@@ -152,7 +160,7 @@ class TransactionSender {
         switch sendType {
         case .p2p:
             p2pSend(transactions: transactions)
-        case .api(let blockchairApi):
+        case let .api(blockchairApi):
             apiSend(transactions: transactions, blockchairApi: blockchairApi)
         }
     }

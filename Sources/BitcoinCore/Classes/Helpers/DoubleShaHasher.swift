@@ -1,8 +1,7 @@
 //
 //  DoubleShaHasher.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/18.
 //
 
 import Foundation
@@ -10,7 +9,11 @@ import Foundation
 import WWCryptoKit
 
 public class DoubleShaHasher: IHasher {
+    // MARK: Lifecycle
+
     public init() { }
+
+    // MARK: Functions
 
     public func hash(data: Data) -> Data {
         Crypto.doubleSha256(data)

@@ -1,8 +1,7 @@
 //
 //  Factory.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/10.
 //
 
 import Foundation
@@ -11,15 +10,25 @@ import NIO
 import WWToolKit
 
 class Factory: IFactory {
+    // MARK: Properties
+
     private let network: INetwork
     private let networkMessageParser: INetworkMessageParser
     private let networkMessageSerializer: INetworkMessageSerializer
 
-    init(network: INetwork, networkMessageParser: INetworkMessageParser, networkMessageSerializer: INetworkMessageSerializer) {
+    // MARK: Lifecycle
+
+    init(
+        network: INetwork,
+        networkMessageParser: INetworkMessageParser,
+        networkMessageSerializer: INetworkMessageSerializer
+    ) {
         self.network = network
         self.networkMessageParser = networkMessageParser
         self.networkMessageSerializer = networkMessageSerializer
     }
+
+    // MARK: Functions
 
     func block(withHeader header: BlockHeader, previousBlock: Block) -> Block {
         Block(withHeader: header, previousBlock: previousBlock)
@@ -35,11 +44,16 @@ class Factory: IFactory {
 
     func inputToSign(withPreviousOutput previousOutput: UnspentOutput, script: Data, sequence: Int) -> InputToSign {
         let input = Input(
-            withPreviousOutputTxHash: previousOutput.output.transactionHash, previousOutputIndex: previousOutput.output.index,
+            withPreviousOutputTxHash: previousOutput.output.transactionHash,
+            previousOutputIndex: previousOutput.output.index,
             script: script, sequence: sequence
         )
 
-        return InputToSign(input: input, previousOutput: previousOutput.output, previousOutputPublicKey: previousOutput.publicKey)
+        return InputToSign(
+            input: input,
+            previousOutput: previousOutput.output,
+            previousOutputPublicKey: previousOutput.publicKey
+        )
     }
 
     func output(withIndex index: Int, address: Address, value: Int, publicKey: PublicKey?) -> Output {

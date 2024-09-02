@@ -1,8 +1,7 @@
 //
 //  TransactionSigner.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/10/4.
 //
 
 import Foundation
@@ -10,18 +9,26 @@ import Foundation
 // MARK: - TransactionSigner
 
 class TransactionSigner {
+    // MARK: Nested Types
+
     enum SignError: Error {
         case notSupportedScriptType
         case noRedeemScript
     }
 
+    // MARK: Properties
+
     private let ecdsaInputSigner: IInputSigner
     private let schnorrInputSigner: IInputSigner
+
+    // MARK: Lifecycle
 
     init(ecdsaInputSigner: IInputSigner, schnorrInputSigner: IInputSigner) {
         self.ecdsaInputSigner = ecdsaInputSigner
         self.schnorrInputSigner = schnorrInputSigner
     }
+
+    // MARK: Functions
 
     private func signatureScript(from sigScriptData: [Data]) -> Data {
         sigScriptData.reduce(Data()) {
@@ -51,7 +58,10 @@ class TransactionSigner {
         case .p2wpkhSh:
             mutableTransaction.transaction.segWit = true
             inputToSign.input.witnessData = sigScriptData
-            inputToSign.input.signatureScript = OpCode.push(OpCode.segWitOutputScript(publicKey.hashP2pkh, versionByte: 0))
+            inputToSign.input.signatureScript = OpCode.push(OpCode.segWitOutputScript(
+                publicKey.hashP2pkh,
+                versionByte: 0
+            ))
 
         case .p2sh:
             guard let redeemScript = previousOutput.redeemScript else {

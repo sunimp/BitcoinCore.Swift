@@ -1,8 +1,7 @@
 //
 //  BlockchairApi.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
@@ -12,14 +11,89 @@ import ObjectMapper
 import WWToolKit
 
 public class BlockchairApi {
-    private let baseUrl = "https://api.blocksdecoded.com/v1/blockchair"
-    private let chainId: String
+    // MARK: Properties
+
+    private let baseURL = "https://api.blocksdecoded.com/v1/blockchair"
+    private let chainID: String
     private let limit = 10000
     private let networkManager: NetworkManager
 
-    public init(chainId: String = "bitcoin", logger: Logger? = nil) {
-        self.chainId = chainId
+    // MARK: Lifecycle
+
+    public init(chainID: String = "bitcoin", logger: Logger? = nil) {
+        self.chainID = chainID
         networkManager = NetworkManager(logger: logger)
+    }
+
+    // MARK: Functions
+
+    func transactions(addresses: [String], stopHeight: Int?) async throws -> [ApiTransactionItem] {
+        var transactionItemsMap = [String: ApiTransactionItem]()
+
+        for chunk in addresses.chunked(into: 100) {
+            let (addressItems, transactions) = try await _transactions(addresses: chunk, stopHeight: stopHeight)
+
+            for transaction in transactions {
+                guard let blockHeight = transaction.blockID else {
+                    continue
+                }
+
+                if transactionItemsMap[transaction.hash] == nil {
+                    transactionItemsMap[transaction.hash] = ApiTransactionItem(
+                        blockHash: "",
+                        blockHeight: blockHeight,
+                        apiAddressItems: []
+                    )
+                }
+
+                if let addressItem = addressItems.first(where: { transaction.address == $0.address }) {
+                    transactionItemsMap[transaction.hash]?.apiAddressItems.append(addressItem)
+                }
+            }
+        }
+
+        return Array(transactionItemsMap.values)
+    }
+
+    func lastBlockHeader() async throws -> ApiBlockHeaderItem {
+        let parameters: Parameters = [
+            "limit": "0",
+        ]
+        let url = "\(baseURL)/\(chainID)/stats"
+        let response: BlockchairStatsReponse = try await networkManager.fetch(
+            url: url,
+            method: .get,
+            parameters: parameters
+        )
+
+        return ApiBlockHeaderItem(
+            hash: response.data.bestBlockHash.ww.reversedHexData!,
+            height: response.data.bestBlockHeight,
+            timestamp: response.data.bestBlockTime
+        )
+    }
+
+    func blockHashes(heights: [Int]) async throws -> [Int: String] {
+        var hashesMap = [Int: String]()
+
+        for chunk in heights.chunked(into: 10) {
+            let map = try await _blockHashes(heights: chunk)
+            hashesMap.merge(map, uniquingKeysWith: { a, _ in a })
+        }
+
+        return hashesMap
+    }
+
+    func broadcastTransaction(hex: Data) async throws {
+        let url = "https://api.blockchair.com/\(chainID)/push/transaction"
+        let response: BlockchairBroadcastResponse = try await networkManager.fetch(
+            url: url,
+            method: .post,
+            parameters: ["data": hex.ww.hex]
+        )
+        guard let data = response.data, data["transaction_hash"] != nil else {
+            throw BitcoinCoreErrors.TransactionSendError.apiSendFailed(reason: response.context.error)
+        }
     }
 
     private func _transactions(
@@ -27,13 +101,14 @@ public class BlockchairApi {
         stopHeight: Int? = nil,
         receivedScripts: [ApiAddressItem] = [],
         receivedTransactions: [BlockchairTransactionsReponse.Transaction] = []
-    ) async throws -> ([ApiAddressItem], [BlockchairTransactionsReponse.Transaction]) {
+    ) async throws
+        -> ([ApiAddressItem], [BlockchairTransactionsReponse.Transaction]) {
         let parameters: Parameters = [
             "transaction_details": true,
             "limit": "\(limit),0",
             "offset": "\(receivedTransactions.count),0",
         ]
-        let url = "\(baseUrl)/\(chainId)/dashboards/addresses/\(addresses.joined(separator: ","))"
+        let url = "\(baseURL)/\(chainID)/dashboards/addresses/\(addresses.joined(separator: ","))"
 
         do {
             let response: BlockchairTransactionsReponse = try await networkManager.fetch(
@@ -43,7 +118,7 @@ public class BlockchairApi {
             )
             let scriptsSlice = response.data.addresses.map { ApiAddressItem(script: $0.value.script, address: $0.key) }
             let filteredTransactions = response.data.transactions.filter { transaction in
-                if let height = transaction.blockId, let stopHeight {
+                if let height = transaction.blockID, let stopHeight {
                     stopHeight < height
                 } else {
                     true
@@ -78,7 +153,7 @@ public class BlockchairApi {
             "limit": "0",
         ]
         let heightsStr = heights.map { "\($0)" }.joined(separator: ",")
-        let url = "\(baseUrl)/\(chainId)/dashboards/blocks/\(heightsStr)"
+        let url = "\(baseURL)/\(chainID)/dashboards/blocks/\(heightsStr)"
 
         do {
             let response: BlockchairBlocksResponse = try await networkManager.fetch(
@@ -103,71 +178,6 @@ public class BlockchairApi {
             }
         } catch {
             throw error
-        }
-    }
-
-    func transactions(addresses: [String], stopHeight: Int?) async throws -> [ApiTransactionItem] {
-        var transactionItemsMap = [String: ApiTransactionItem]()
-
-        for chunk in addresses.chunked(into: 100) {
-            let (addressItems, transactions) = try await _transactions(addresses: chunk, stopHeight: stopHeight)
-
-            for transaction in transactions {
-                guard let blockHeight = transaction.blockId else {
-                    continue
-                }
-
-                if transactionItemsMap[transaction.hash] == nil {
-                    transactionItemsMap[transaction.hash] = ApiTransactionItem(
-                        blockHash: "",
-                        blockHeight: blockHeight,
-                        apiAddressItems: []
-                    )
-                }
-
-                if let addressItem = addressItems.first(where: { transaction.address == $0.address }) {
-                    transactionItemsMap[transaction.hash]?.apiAddressItems.append(addressItem)
-                }
-            }
-        }
-
-        return Array(transactionItemsMap.values)
-    }
-
-    func lastBlockHeader() async throws -> ApiBlockHeaderItem {
-        let parameters: Parameters = [
-            "limit": "0",
-        ]
-        let url = "\(baseUrl)/\(chainId)/stats"
-        let response: BlockchairStatsReponse = try await networkManager.fetch(url: url, method: .get, parameters: parameters)
-
-        return ApiBlockHeaderItem(
-            hash: response.data.bestBlockHash.ww.reversedHexData!,
-            height: response.data.bestBlockHeight,
-            timestamp: response.data.bestBlockTime
-        )
-    }
-
-    func blockHashes(heights: [Int]) async throws -> [Int: String] {
-        var hashesMap = [Int: String]()
-
-        for chunk in heights.chunked(into: 10) {
-            let map = try await _blockHashes(heights: chunk)
-            hashesMap.merge(map, uniquingKeysWith: { a, _ in a })
-        }
-
-        return hashesMap
-    }
-
-    func broadcastTransaction(hex: Data) async throws {
-        let url = "https://api.blockchair.com/\(chainId)/push/transaction"
-        let response: BlockchairBroadcastResponse = try await networkManager.fetch(
-            url: url,
-            method: .post,
-            parameters: ["data": hex.ww.hex]
-        )
-        guard let data = response.data, data["transaction_hash"] != nil else {
-            throw BitcoinCoreErrors.TransactionSendError.apiSendFailed(reason: response.context.error)
         }
     }
 }

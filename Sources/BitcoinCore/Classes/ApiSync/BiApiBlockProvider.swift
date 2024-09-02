@@ -1,16 +1,19 @@
 //
 //  BiApiBlockProvider.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
 
 public class BiApiBlockProvider: IApiTransactionProvider {
+    // MARK: Properties
+
     private let restoreProvider: IApiTransactionProvider
     private let syncProvider: IApiTransactionProvider
     private let apiSyncStateManager: ApiSyncStateManager
+
+    // MARK: Lifecycle
 
     public init(
         restoreProvider: IApiTransactionProvider,
@@ -21,6 +24,8 @@ public class BiApiBlockProvider: IApiTransactionProvider {
         self.syncProvider = syncProvider
         self.apiSyncStateManager = apiSyncStateManager
     }
+
+    // MARK: Functions
 
     public func transactions(addresses: [String], stopHeight: Int?) async throws -> [ApiTransactionItem] {
         apiSyncStateManager.restored

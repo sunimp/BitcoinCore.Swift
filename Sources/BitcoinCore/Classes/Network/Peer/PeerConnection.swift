@@ -1,8 +1,7 @@
 //
 //  PeerConnection.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation
@@ -15,10 +14,14 @@ import WWToolKit
 // MARK: - PeerConnection
 
 class PeerConnection: NSObject {
+    // MARK: Nested Types
+
     enum PeerConnectionError: Error {
         case connectionClosedWithUnknownError
         case connectionClosedByPeer
     }
+
+    // MARK: Properties
 
     let host: String
     let port: Int
@@ -34,6 +37,8 @@ class PeerConnection: NSObject {
     private var waitingForDisconnect = false
     private let interval = TimeAmount.seconds(1)
 
+    // MARK: Computed Properties
+
     var logName: String {
         let index = abs(host.hash) % WordList.english.count
         return "[\(WordList.english[index])]".uppercased()
@@ -46,6 +51,8 @@ class PeerConnection: NSObject {
                 self?.initializeChannel(channel: channel) ?? channel.eventLoop.makeSucceededVoidFuture()
             }
     }
+
+    // MARK: Lifecycle
 
     init(
         host: String,
@@ -67,6 +74,8 @@ class PeerConnection: NSObject {
         disconnect()
     }
 
+    // MARK: Functions
+
     private func log(_ message: @autoclosure () -> Any, level: Logger.Level = .debug) {
         logger?.log(level: level, message: message(), context: [logName])
     }
@@ -81,14 +90,15 @@ class PeerConnection: NSObject {
     private func onConnected(channel: Channel) {
         self.channel = channel
 
-        channel.eventLoop.scheduleRepeatedTask(initialDelay: .zero, delay: interval, notifying: nil) { [weak self] task in
-            guard !(self?.waitingForDisconnect ?? true) else {
-                task.cancel()
-                return
-            }
+        channel.eventLoop
+            .scheduleRepeatedTask(initialDelay: .zero, delay: interval, notifying: nil) { [weak self] task in
+                guard !(self?.waitingForDisconnect ?? true) else {
+                    task.cancel()
+                    return
+                }
 
-            self?.delegate?.connectionTimePeriodPassed()
-        }
+                self?.delegate?.connectionTimePeriodPassed()
+            }
     }
 
     private func onConnectFailure(error: Error) {

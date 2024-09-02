@@ -1,8 +1,7 @@
 //
 //  TransactionSizeCalculator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/27.
 //
 
 import Foundation
@@ -10,12 +9,15 @@ import Foundation
 // MARK: - TransactionSizeCalculator
 
 public class TransactionSizeCalculator {
+    // MARK: Static Properties
+
     static let legacyTx = 16 + 4 + 4 + 16 // 40 Version + number of inputs + number of outputs + locktime
     static let witnessTx = legacyTx + 1 + 1 // 42 SegWit marker + SegWit flag
     static let legacyWitnessData = 1 // 1 Only 0x00 for legacy input
     /// P2WPKH or P2WPKH(SH)
     static let p2wpkhWitnessData = 1 + ecdsaSignatureLength +
-        pubKeyLength // 108 Number of stack items for input + Size of stack item 0 + Stack item 0, signature + Size of stack item 1 + Stack item 1, pubkey
+        pubKeyLength // 108 Number of stack items for input + Size of stack item 0 + Stack item 0, signature + Size of
+    /// stack item 1 + Stack item 1, pubkey
     static let p2trWitnessData = 1 + schnorrSignatureLength
 
     static let ecdsaSignatureLength = 72 + 1 // signature length plus pushByte
@@ -23,7 +25,11 @@ public class TransactionSizeCalculator {
     static let pubKeyLength = 33 + 1 // ECDSA compressed pubKey length plus pushByte
     static let p2wpkhShLength = 22 + 1 // 0014<20byte-scriptHash> plus pushByte
 
+    // MARK: Lifecycle
+
     public init() { }
+
+    // MARK: Functions
 
     private func outputSize(lockingScriptSize: Int) -> Int {
         8 + 1 + lockingScriptSize // spentValue + scriptLength + script
@@ -35,7 +41,8 @@ public class TransactionSizeCalculator {
 
         let sigScriptLength: Int
         switch output.scriptType {
-        case .p2pkh: sigScriptLength = TransactionSizeCalculator.ecdsaSignatureLength + TransactionSizeCalculator.pubKeyLength
+        case .p2pkh: sigScriptLength = TransactionSizeCalculator.ecdsaSignatureLength + TransactionSizeCalculator
+            .pubKeyLength
 
         case .p2pk: sigScriptLength = TransactionSizeCalculator.ecdsaSignatureLength
 
@@ -60,8 +67,7 @@ public class TransactionSizeCalculator {
 
         default: sigScriptLength = 0
         }
-        let inputTxSize = 32 + 4 + 1 + sigScriptLength + 4 // PreviousOutputHex + InputIndex + sigLength + sigScript + sequence
-        return inputTxSize
+        return 32 + 4 + 1 + sigScriptLength + 4 // PreviousOutputHex + InputIndex + sigLength + sigScript + sequence
     }
 }
 
@@ -72,7 +78,8 @@ extension TransactionSizeCalculator: ITransactionSizeCalculator {
         previousOutputs: [Output],
         outputScriptTypes: [ScriptType],
         memo: String?
-    ) -> Int { // in real bytes upped to int
+    )
+        -> Int { // in real bytes upped to int
         transactionSize(
             previousOutputs: previousOutputs,
             outputScriptTypes: outputScriptTypes,
@@ -86,7 +93,8 @@ extension TransactionSizeCalculator: ITransactionSizeCalculator {
         outputScriptTypes: [ScriptType],
         memo: String?,
         pluginDataOutputSize: Int
-    ) -> Int { // in real bytes upped to int
+    )
+        -> Int { // in real bytes upped to int
         var segWit = false
         var inputWeight = 0
 
@@ -129,15 +137,15 @@ extension TransactionSizeCalculator: ITransactionSizeCalculator {
             case .p2wpkhSh: TransactionSizeCalculator.p2wpkhShLength
             default: 0
             }
-        let inputTxSize = 32 + 4 + 1 + sigScriptLength + 4 // PreviousOutputHex + InputIndex + sigLength + sigScript + sequence
-        return inputTxSize
+        return 32 + 4 + 1 + sigScriptLength + 4 // PreviousOutputHex + InputIndex + sigLength + sigScript + sequence
     }
 
     public func witnessSize(type: ScriptType) -> Int { // in vbytes
         // We assume that only single-key outputs can be here (P2PKH, P2PKH(SH), P2TR)
 
         switch type {
-        case .p2wpkh, .p2wpkhSh:
+        case .p2wpkh,
+             .p2wpkhSh:
             TransactionSizeCalculator.p2wpkhWitnessData
         case .p2tr:
             TransactionSizeCalculator.p2trWitnessData
@@ -174,7 +182,8 @@ extension TransactionSizeCalculator: ITransactionSizeCalculator {
             case .nullData:
                 outputWeight += outputSize(lockingScriptSize: output.lockingScript.count) * 4
 
-            case .unknown, .p2multi:
+            case .unknown,
+                 .p2multi:
                 throw CalculationError.unsupportedOutputScriptType
 
             default:

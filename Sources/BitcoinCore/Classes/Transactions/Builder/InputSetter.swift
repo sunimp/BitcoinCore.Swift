@@ -1,8 +1,7 @@
 //
 //  InputSetter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/10/4.
 //
 
 import Foundation
@@ -10,10 +9,14 @@ import Foundation
 // MARK: - InputSetter
 
 class InputSetter {
+    // MARK: Nested Types
+
     enum UnspentOutputError: Error {
         case feeMoreThanValue
         case notSupportedScriptType
     }
+
+    // MARK: Properties
 
     private let unspentOutputSelector: IUnspentOutputSelector
     private let transactionSizeCalculator: ITransactionSizeCalculator
@@ -24,6 +27,8 @@ class InputSetter {
     private let dustCalculator: IDustCalculator
     private let changeType: ScriptType
     private let inputSorterFactory: ITransactionDataSorterFactory
+
+    // MARK: Lifecycle
 
     init(
         unspentOutputSelector: IUnspentOutputSelector,
@@ -47,10 +52,12 @@ class InputSetter {
         self.inputSorterFactory = inputSorterFactory
     }
 
+    // MARK: Functions
+
     private func input(fromUnspentOutput unspentOutput: UnspentOutput, rbfEnabled: Bool) throws -> InputToSign {
         // Maximum nSequence value (0xFFFFFFFF) disables nLockTime.
         // According to BIP-125, any value less than 0xFFFFFFFE makes a Replace-by-Fee(RBF) opted in.
-        let sequence = rbfEnabled ? 0x0 : 0xFFFF_FFFE
+        let sequence = rbfEnabled ? 0x0 : 0xFFFFFFFE
 
         return factory.inputToSign(withPreviousOutput: unspentOutput, script: Data(), sequence: sequence)
     }
@@ -64,8 +71,7 @@ extension InputSetter: IInputSetter {
         let unspentOutputInfo: SelectedUnspentOutputInfo
         if
             let unspentOutputs = params.unspentOutputs
-                .flatMap({ $0.outputs(from: unspentOutputSelector.all(filters: params.utxoFilters)) })
-        {
+                .flatMap({ $0.outputs(from: unspentOutputSelector.all(filters: params.utxoFilters)) }) {
             let utxoSelectorParams = UnspentOutputQueue.Parameters(
                 sendParams: params,
                 outputsLimit: nil,
@@ -94,7 +100,10 @@ extension InputSetter: IInputSetter {
             .sort(unspentOutputs: unspentOutputInfo.unspentOutputs)
 
         for unspentOutput in unspentOutputs {
-            try mutableTransaction.add(inputToSign: input(fromUnspentOutput: unspentOutput, rbfEnabled: params.rbfEnabled))
+            try mutableTransaction.add(inputToSign: input(
+                fromUnspentOutput: unspentOutput,
+                rbfEnabled: params.rbfEnabled
+            ))
         }
 
         mutableTransaction.recipientValue = unspentOutputInfo.recipientValue

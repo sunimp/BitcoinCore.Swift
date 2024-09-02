@@ -1,8 +1,7 @@
 //
 //  OutputSetter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/10/4.
 //
 
 import Foundation
@@ -12,8 +11,12 @@ import WWExtensions
 // MARK: - OutputSetter
 
 class OutputSetter {
+    // MARK: Properties
+
     private let outputSorterFactory: ITransactionDataSorterFactory
     private let factory: IFactory
+
+    // MARK: Lifecycle
 
     init(outputSorterFactory: ITransactionDataSorterFactory, factory: IFactory) {
         self.outputSorterFactory = outputSorterFactory
@@ -28,11 +31,21 @@ extension OutputSetter: IOutputSetter {
         var outputs = [Output]()
 
         if let address = transaction.recipientAddress {
-            outputs.append(factory.output(withIndex: 0, address: address, value: transaction.recipientValue, publicKey: nil))
+            outputs.append(factory.output(
+                withIndex: 0,
+                address: address,
+                value: transaction.recipientValue,
+                publicKey: nil
+            ))
         }
 
         if let address = transaction.changeAddress {
-            outputs.append(factory.output(withIndex: 0, address: address, value: transaction.changeValue, publicKey: nil))
+            outputs.append(factory.output(
+                withIndex: 0,
+                address: address,
+                value: transaction.changeValue,
+                publicKey: nil
+            ))
         }
 
         if !transaction.pluginData.isEmpty {

@@ -1,8 +1,7 @@
 //
 //  OpCode.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/3.
 //
 
 import Foundation
@@ -10,6 +9,8 @@ import Foundation
 import WWExtensions
 
 public enum OpCode {
+    // MARK: Static Properties
+
     public static let p2pkhStart = Data([OpCode.dup, OpCode.hash160])
     public static let p2pkhFinish = Data([OpCode.equalVerify, OpCode.checkSig])
 
@@ -41,6 +42,8 @@ public enum OpCode {
     public static let endIf: UInt8 = 0x68
     public static let op_return: UInt8 = 0x6A
 
+    // MARK: Static Functions
+
     public static func value(fromPush code: UInt8) -> UInt8? {
         if code == 0 {
             return 0
@@ -71,7 +74,7 @@ public enum OpCode {
         case 0x00 ... 0x4B: bytes = Data([UInt8(length)])
         case 0x4C ... 0xFF: bytes = Data([OpCode.pushData1]) + UInt8(length).littleEndian
         case 0x0100 ... 0xFFFF: bytes = Data([OpCode.pushData2]) + UInt16(length).littleEndian
-        case 0x10000 ... 0xFFFF_FFFF: bytes = Data([OpCode.pushData4]) + UInt32(length).littleEndian
+        case 0x10000 ... 0xFFFFFFFF: bytes = Data([OpCode.pushData4]) + UInt32(length).littleEndian
         default: return data
         }
 

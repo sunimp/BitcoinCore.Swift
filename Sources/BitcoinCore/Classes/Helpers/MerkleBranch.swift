@@ -1,14 +1,17 @@
 //
 //  MerkleBranch.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/26.
 //
 
 import Foundation
 
 public class MerkleBranch: IMerkleBranch {
+    // MARK: Static Properties
+
     static let bitMask: [UInt8] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80]
+
+    // MARK: Properties
 
     private let hasher: IHasher
     private var txCount = 0
@@ -18,15 +21,20 @@ public class MerkleBranch: IMerkleBranch {
     private var bitsUsed = 0
     private var hashesUsed = 0
 
+    // MARK: Lifecycle
+
     public init(hasher: IHasher) {
         self.hasher = hasher
     }
+
+    // MARK: Functions
 
     public func calculateMerkleRoot(
         txCount: Int,
         hashes: [Data],
         flags: [UInt8]
-    ) throws -> (merkleRoot: Data, matchedHashes: [Data]) {
+    ) throws
+        -> (merkleRoot: Data, matchedHashes: [Data]) {
         self.txCount = txCount
         self.hashes = hashes
         self.flags = flags

@@ -1,8 +1,7 @@
 //
 //  TransactionSendTimer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/11/19.
 //
 
 import Foundation
@@ -10,11 +9,15 @@ import Foundation
 // MARK: - TransactionSendTimer
 
 class TransactionSendTimer {
+    // MARK: Properties
+
     let interval: TimeInterval
 
     weak var delegate: ITransactionSendTimerDelegate?
     var runLoop: RunLoop?
     var timer: Timer?
+
+    // MARK: Lifecycle
 
     init(interval: TimeInterval) {
         self.interval = interval

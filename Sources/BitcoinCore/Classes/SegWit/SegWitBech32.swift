@@ -1,8 +1,7 @@
 //
 //  SegWitBech32.swift
 //
-//  Created by Evolution Group Ltd on 12.02.2018.
-//  Copyright © 2018 Evolution Group Ltd. All rights reserved.
+//  Created by Sun on 2018/9/11.
 //
 
 //  Base32 address format for native v0-16 witness outputs implementation
@@ -15,35 +14,23 @@ import Foundation
 
 /// Segregated Witness Address encoder/decoder
 public class SegWitBech32 {
+    // MARK: Static Properties
+
     private static let bech32 = Bech32()
 
-    /// Convert from one power-of-2 number base to another
-    private static func convertBits(from: Int, to: Int, pad: Bool, idata: Data) throws -> Data {
-        var acc = 0
-        var bits = 0
-        let maxv: Int = (1 << to) - 1
-        let maxAcc: Int = (1 << (from + to - 1)) - 1
-        var odata = Data()
-        for ibyte in idata {
-            acc = ((acc << from) | Int(ibyte)) & maxAcc
-            bits += from
-            while bits >= to {
-                bits -= to
-                odata.append(UInt8((acc >> bits) & maxv))
-            }
-        }
-        if pad {
-            if bits != 0 {
-                odata.append(UInt8((acc << (to - bits)) & maxv))
-            }
-        } else if bits >= from || ((acc << (to - bits)) & maxv) != 0 {
-            throw CoderError.bitsConversionFailed
-        }
-        return odata
-    }
+    // MARK: Lifecycle
+
+    public init() { }
+
+    // MARK: Static Functions
 
     /// Decode segwit address
-    public static func decode(hrp: String, addr: String, hasAdvanced: Bool = true) throws -> (version: UInt8, program: Data) {
+    public static func decode(
+        hrp: String,
+        addr: String,
+        hasAdvanced: Bool = true
+    ) throws
+        -> (version: UInt8, program: Data) {
         let dec = try bech32.decode(addr)
         guard dec.hrp == hrp else {
             throw CoderError.hrpMismatch(dec.hrp, hrp)
@@ -79,7 +66,30 @@ public class SegWitBech32 {
         return result
     }
 
-    public init() { }
+    /// Convert from one power-of-2 number base to another
+    private static func convertBits(from: Int, to: Int, pad: Bool, idata: Data) throws -> Data {
+        var acc = 0
+        var bits = 0
+        let maxv: Int = (1 << to) - 1
+        let maxAcc: Int = (1 << (from + to - 1)) - 1
+        var odata = Data()
+        for ibyte in idata {
+            acc = ((acc << from) | Int(ibyte)) & maxAcc
+            bits += from
+            while bits >= to {
+                bits -= to
+                odata.append(UInt8((acc >> bits) & maxv))
+            }
+        }
+        if pad {
+            if bits != 0 {
+                odata.append(UInt8((acc << (to - bits)) & maxv))
+            }
+        } else if bits >= from || ((acc << (to - bits)) & maxv) != 0 {
+            throw CoderError.bitsConversionFailed
+        }
+        return odata
+    }
 }
 
 // MARK: SegWitBech32.CoderError
@@ -97,21 +107,23 @@ extension SegWitBech32 {
 
         case encodingCheckFailed
 
+        // MARK: Computed Properties
+
         public var errorDescription: String? {
             switch self {
             case .bitsConversionFailed:
                 "Failed to perform bits conversion"
             case .checksumSizeTooLow:
                 "Checksum size is too low"
-            case .dataSizeMismatch(let size):
+            case let .dataSizeMismatch(size):
                 "Program size \(size) does not meet required range 2...40"
             case .encodingCheckFailed:
                 "Failed to check result after encoding"
-            case .hrpMismatch(let got, let expected):
+            case let .hrpMismatch(got, expected):
                 "Human-readable-part \"\(got)\" does not match requested \"\(expected)\""
-            case .segwitV0ProgramSizeMismatch(let size):
+            case let .segwitV0ProgramSizeMismatch(size):
                 "Segwit program size \(size) does not meet version 0 requirements"
-            case .segwitVersionNotSupported(let version):
+            case let .segwitVersionNotSupported(version):
                 "Segwit version \(version) is not supported by this decoder"
             case .segwitVersionAndEncodingMismatch:
                 "Wrong encoding is used for the Segwit version being used"

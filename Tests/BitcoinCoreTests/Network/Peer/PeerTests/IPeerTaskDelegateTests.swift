@@ -1,3 +1,9 @@
+//
+//  IPeerTaskDelegateTests.swift
+//
+//  Created by Sun on 2018/11/15.
+//
+
 // import XCTest
 // import Cuckoo
 // import HDWalletKit
@@ -42,7 +48,8 @@
 //            when(mock.timePeriodPassed(peer: any())).thenDoNothing()
 //        }
 //
-//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager: mockConnectionTimeoutManager, queue: DispatchQueue.main)
+//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager:
+//        mockConnectionTimeoutManager, queue: DispatchQueue.main)
 //        peer.delegate = mockPeerGroup
 //    }
 //
@@ -67,7 +74,8 @@
 //
 //        verify(mockPeerGroup).peer(equal(to: peer, equalWhen: { $0 === $1 }), didCompleteTask: equal(to: task, equalWhen: { $0 === $1 }))
 //        verify(task2).resetTimer()
-//        verify(mockPeerGroup, never()).peer(equal(to: peer, equalWhen: { $0 === $1 }), didCompleteTask: equal(to: task2, equalWhen: { $0 === $1 }))
+//        verify(mockPeerGroup, never()).peer(equal(to: peer, equalWhen: { $0 === $1 }), didCompleteTask: equal(to:
+//        task2, equalWhen: { $0 === $1 }))
 //        verify(mockPeerGroup, never()).peerReady(any())
 //    }
 //

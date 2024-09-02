@@ -1,8 +1,7 @@
 //
 //  Input.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/22.
 //
 
 import Foundation
@@ -12,27 +11,7 @@ import GRDB
 // MARK: - Input
 
 public class Input: Record {
-    public var previousOutputTxHash: Data
-    var previousOutputIndex: Int
-    public var signatureScript: Data
-    var sequence: Int
-    var transactionHash = Data()
-    var lockingScriptPayload: Data? = nil
-    var address: String? = nil
-    var witnessData = [Data]()
-
-    init(withPreviousOutputTxHash previousOutputTxHash: Data, previousOutputIndex: Int, script: Data, sequence: Int) {
-        self.previousOutputTxHash = previousOutputTxHash
-        self.previousOutputIndex = previousOutputIndex
-        signatureScript = script
-        self.sequence = sequence
-
-        super.init()
-    }
-
-    override open class var databaseTableName: String {
-        "inputs"
-    }
+    // MARK: Nested Types
 
     enum Columns: String, ColumnExpression, CaseIterable {
         case previousOutputTxHash
@@ -43,6 +22,35 @@ public class Input: Record {
         case keyHash
         case address
         case witnessData
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "inputs"
+    }
+
+    // MARK: Properties
+
+    public var previousOutputTxHash: Data
+    public var signatureScript: Data
+
+    var previousOutputIndex: Int
+    var sequence: Int
+    var transactionHash = Data()
+    var lockingScriptPayload: Data? = nil
+    var address: String? = nil
+    var witnessData = [Data]()
+
+    // MARK: Lifecycle
+
+    init(withPreviousOutputTxHash previousOutputTxHash: Data, previousOutputIndex: Int, script: Data, sequence: Int) {
+        self.previousOutputTxHash = previousOutputTxHash
+        self.previousOutputIndex = previousOutputIndex
+        signatureScript = script
+        self.sequence = sequence
+
+        super.init()
     }
 
     required init(row: Row) throws {
@@ -58,6 +66,8 @@ public class Input: Record {
         try super.init(row: row)
     }
 
+    // MARK: Overridden Functions
+
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.previousOutputTxHash] = previousOutputTxHash
         container[Columns.previousOutputIndex] = previousOutputIndex
@@ -72,7 +82,7 @@ public class Input: Record {
 
 extension Input {
     var rbfEnabled: Bool {
-        sequence < 0xFFFF_FFFE
+        sequence < 0xFFFFFFFE
     }
 }
 

@@ -1,9 +1,19 @@
+//
+//  TransactionSizeCalculatorTests.swift
+//
+//  Created by Sun on 2018/8/27.
+//
+
+@testable import BitcoinCore
 import Cuckoo
 import XCTest
-@testable import BitcoinCore
 
 class TransactionSizeCalculatorTests: XCTestCase {
+    // MARK: Properties
+
     var calculator: TransactionSizeCalculator!
+
+    // MARK: Overridden Functions
 
     override func setUp() {
         super.setUp()
@@ -17,11 +27,20 @@ class TransactionSizeCalculatorTests: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: Functions
+
     func testTransactionSize() {
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: [], outputScriptTypes: [], memo: nil), 10) // empty legacy tx
+        XCTAssertEqual(
+            calculator.transactionSize(previousOutputs: [], outputScriptTypes: [], memo: nil),
+            10
+        ) // empty legacy tx
         XCTAssertEqual(
             calculator
-                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2pkh]), outputScriptTypes: [.p2pkh], memo: nil),
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2pkh]),
+                    outputScriptTypes: [.p2pkh],
+                    memo: nil
+                ),
             192
         ) // 1-in 1-out standard tx
         XCTAssertEqual(
@@ -52,12 +71,20 @@ class TransactionSizeCalculatorTests: XCTestCase {
 
         XCTAssertEqual(
             calculator
-                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkh]), outputScriptTypes: [.p2pkh], memo: nil),
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2wpkh]),
+                    outputScriptTypes: [.p2pkh],
+                    memo: nil
+                ),
             113
         ) // 1-in 1-out witness tx
         XCTAssertEqual(
             calculator
-                .transactionSize(previousOutputs: outputs(withScriptTypes: [.p2wpkhSh]), outputScriptTypes: [.p2pkh], memo: nil),
+                .transactionSize(
+                    previousOutputs: outputs(withScriptTypes: [.p2wpkhSh]),
+                    outputScriptTypes: [.p2pkh],
+                    memo: nil
+                ),
             136
         ) // 1-in 1-out (sh) witness tx
         XCTAssertEqual(
@@ -75,7 +102,10 @@ class TransactionSizeCalculatorTests: XCTestCase {
         let redeemScript = Data(repeating: 0, count: 45)
         let shOutput = Output(withValue: 0, index: 0, lockingScript: Data(), type: .p2sh, redeemScript: redeemScript)
 
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: [shOutput], outputScriptTypes: [.p2pkh], memo: nil), 238)
+        XCTAssertEqual(
+            calculator.transactionSize(previousOutputs: [shOutput], outputScriptTypes: [.p2pkh], memo: nil),
+            238
+        )
     }
 
     func testTransactionSizeShInputsNonStandard() {
@@ -84,7 +114,10 @@ class TransactionSizeCalculatorTests: XCTestCase {
             Data(repeating: 0, count: 100)
         }
 
-        XCTAssertEqual(calculator.transactionSize(previousOutputs: [shOutput], outputScriptTypes: [.p2pkh], memo: nil), 185)
+        XCTAssertEqual(
+            calculator.transactionSize(previousOutputs: [shOutput], outputScriptTypes: [.p2pkh], memo: nil),
+            185
+        )
     }
 
     func testInputSize() {

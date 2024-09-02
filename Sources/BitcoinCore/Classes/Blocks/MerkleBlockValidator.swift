@@ -1,20 +1,25 @@
 //
 //  MerkleBlockValidator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 
 class MerkleBlockValidator: IMerkleBlockValidator {
+    // MARK: Properties
+
     private let maxBlockSize: UInt32
     private var merkleBranch: IMerkleBranch?
+
+    // MARK: Lifecycle
 
     init(maxBlockSize: UInt32, merkleBranch: IMerkleBranch? = nil) {
         self.maxBlockSize = maxBlockSize
         self.merkleBranch = merkleBranch
     }
+
+    // MARK: Functions
 
     func set(merkleBranch: IMerkleBranch) {
         self.merkleBranch = merkleBranch

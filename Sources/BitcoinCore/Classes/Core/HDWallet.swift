@@ -1,8 +1,7 @@
 //
 //  HDWallet.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/18.
 //
 
 import Foundation

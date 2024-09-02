@@ -1,3 +1,9 @@
+//
+//  GetMerkleBlocksTaskTests.swift
+//
+//  Created by Sun on 2018/11/14.
+//
+
 // import XCTest
 // import Cuckoo
 // import HDWalletKit
@@ -75,7 +81,8 @@
 //    }
 //
 //    func testHandleMerkleBlock_BlockWasNotRequested() {
-//        let blockHeader = BlockHeader(version: 0, headerHash: Data(), previousBlockHeaderHash: Data(from: 300000), merkleRoot: "00011122".reversedData!, timestamp: 0, bits: 0, nonce: 0)
+//        let blockHeader = BlockHeader(version: 0, headerHash: Data(), previousBlockHeaderHash: Data(from: 300000),
+//        merkleRoot: "00011122".reversedData!, timestamp: 0, bits: 0, nonce: 0)
 //        let merkleBlock = MerkleBlock(header: blockHeader, transactionHashes: [], transactions: [])
 //
 //        let handled = task.handle(merkleBlock: merkleBlock)
@@ -147,7 +154,8 @@
 //
 //    func testHandleMerkleBlock_MerkleBlockWithTransactions() {
 //        let transaction = TestData.p2pkTransaction
-//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash], transactions: [])
+//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash],
+//        transactions: [])
 //
 //        let handled = task.handle(merkleBlock: merkleBlock)
 //
@@ -159,7 +167,8 @@
 //    func testHandleTransaction_NotInPendingMerkleBlocks() {
 //        let transaction = TestData.p2pkTransaction
 //        let transaction2 = TestData.p2pkhTransaction
-//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash], transactions: [])
+//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash],
+//        transactions: [])
 //
 //        let _ = task.handle(merkleBlock: merkleBlock)
 //        dateIsGenerated = false
@@ -172,7 +181,8 @@
 //
 //    func testHandleTransaction_CompletesPendingMerkleBlock() {
 //        let transaction = TestData.p2pkTransaction
-//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash], transactions: [])
+//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash],
+//        transactions: [])
 //
 //        let _ = task.handle(merkleBlock: merkleBlock)
 //        let handled = task.handle(transaction: transaction)
@@ -185,7 +195,8 @@
 //
 //    func testHandleTransaction_CompletesPendingMerkleBlock_AllBlocksReceived() {
 //        let transaction = TestData.p2pkTransaction
-//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash], transactions: [])
+//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash],
+//        transactions: [])
 //        let merkleBlock2 = MerkleBlock(header: blockHeaders[1], transactionHashes: [], transactions: [])
 //
 //        let _ = task.handle(merkleBlock: merkleBlock)
@@ -205,7 +216,8 @@
 //    func testHandleTransaction_DoesNotCompletePendingMerkleBlock() {
 //        let transaction = TestData.p2pkTransaction
 //        let transaction2 = TestData.p2pkhTransaction
-//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash, transaction2.header.dataHash], transactions: [])
+//        let merkleBlock = MerkleBlock(header: blockHeaders[0], transactionHashes: [transaction.header.dataHash,
+//        transaction2.header.dataHash], transactions: [])
 //
 //        let _ = task.handle(merkleBlock: merkleBlock)
 //        let handled = task.handle(transaction: transaction)

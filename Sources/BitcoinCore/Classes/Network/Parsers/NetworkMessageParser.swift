@@ -1,8 +1,7 @@
 //
 //  NetworkMessageParser.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/14.
 //
 
 import Foundation
@@ -13,12 +12,18 @@ import WWExtensions
 // MARK: - NetworkMessageParser
 
 class NetworkMessageParser: INetworkMessageParser {
+    // MARK: Properties
+
     private let magic: UInt32
     private var messageParsers = [String: IMessageParser]()
+
+    // MARK: Lifecycle
 
     init(magic: UInt32) {
         self.magic = magic
     }
+
+    // MARK: Functions
 
     func add(parser: IMessageParser) {
         messageParsers[parser.id] = parser
@@ -54,7 +59,11 @@ class NetworkMessageParser: INetworkMessageParser {
 // MARK: - AddressMessageParser
 
 class AddressMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "addr" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -74,7 +83,11 @@ class AddressMessageParser: IMessageParser {
 // MARK: - GetDataMessageParser
 
 class GetDataMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "getdata" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -96,7 +109,11 @@ class GetDataMessageParser: IMessageParser {
 // MARK: - InventoryMessageParser
 
 class InventoryMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "inv" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -123,7 +140,11 @@ class InventoryMessageParser: IMessageParser {
 // MARK: - PingMessageParser
 
 class PingMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "ping" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -134,7 +155,11 @@ class PingMessageParser: IMessageParser {
 // MARK: - PongMessageParser
 
 class PongMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "pong" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -145,7 +170,11 @@ class PongMessageParser: IMessageParser {
 // MARK: - VerackMessageParser
 
 class VerackMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "verack" }
+
+    // MARK: Functions
 
     func parse(data _: Data) -> IMessage {
         VerackMessage()
@@ -155,7 +184,11 @@ class VerackMessageParser: IMessageParser {
 // MARK: - VersionMessageParser
 
 class VersionMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "version" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -200,7 +233,11 @@ class VersionMessageParser: IMessageParser {
 // MARK: - MemPoolMessageParser
 
 class MemPoolMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "mempool" }
+
+    // MARK: Functions
 
     func parse(data _: Data) -> IMessage {
         MemPoolMessage()
@@ -210,13 +247,21 @@ class MemPoolMessageParser: IMessageParser {
 // MARK: - MerkleBlockMessageParser
 
 class MerkleBlockMessageParser: IMessageParser {
-    var id: String { "merkleblock" }
+    // MARK: Properties
 
     private let blockHeaderParser: IBlockHeaderParser
+
+    // MARK: Computed Properties
+
+    var id: String { "merkleblock" }
+
+    // MARK: Lifecycle
 
     init(blockHeaderParser: IBlockHeaderParser) {
         self.blockHeaderParser = blockHeaderParser
     }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -252,7 +297,11 @@ class MerkleBlockMessageParser: IMessageParser {
 // MARK: - TransactionMessageParser
 
 class TransactionMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "tx" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         TransactionMessage(transaction: TransactionSerializer.deserialize(data: data), size: data.count)
@@ -262,7 +311,11 @@ class TransactionMessageParser: IMessageParser {
 // MARK: - RejectMessageParser
 
 class RejectMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "reject" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         let byteStream = ByteStream(data)
@@ -283,7 +336,11 @@ class RejectMessageParser: IMessageParser {
 // MARK: - UnknownMessageParser
 
 class UnknownMessageParser: IMessageParser {
+    // MARK: Computed Properties
+
     var id: String { "unknown" }
+
+    // MARK: Functions
 
     func parse(data: Data) -> IMessage {
         UnknownMessage(data: data)

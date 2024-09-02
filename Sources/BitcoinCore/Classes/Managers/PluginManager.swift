@@ -1,8 +1,7 @@
 //
 //  PluginManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/10/9.
 //
 
 import Foundation
@@ -12,14 +11,20 @@ import WWToolKit
 // MARK: - PluginManager
 
 class PluginManager {
+    // MARK: Nested Types
+
     enum PluginError: Error {
         case pluginNotFound
     }
+
+    // MARK: Properties
 
     private let scriptConverter: IScriptConverter
     private var plugins = [UInt8: IPlugin]()
 
     private let logger: Logger?
+
+    // MARK: Lifecycle
 
     init(scriptConverter: IScriptConverter, logger: Logger? = nil) {
         self.scriptConverter = scriptConverter
@@ -70,11 +75,11 @@ extension PluginManager: IPluginManager {
 
     func processInputs(mutableTransaction: MutableTransaction) throws {
         for inputToSign in mutableTransaction.inputsToSign {
-            guard let pluginId = inputToSign.previousOutput.pluginId else {
+            guard let pluginID = inputToSign.previousOutput.pluginID else {
                 continue
             }
 
-            guard let plugin = plugins[pluginId] else {
+            guard let plugin = plugins[pluginID] else {
                 throw PluginError.pluginNotFound
             }
 
@@ -93,8 +98,8 @@ extension PluginManager: IPluginManager {
         _ = iterator.next()
 
         do {
-            while let pluginId = iterator.next() {
-                guard let plugin = plugins[pluginId.opCode] else {
+            while let pluginID = iterator.next() {
+                guard let plugin = plugins[pluginID.opCode] else {
                     break
                 }
 
@@ -106,11 +111,11 @@ extension PluginManager: IPluginManager {
     }
 
     func isSpendable(unspentOutput: UnspentOutput) -> Bool {
-        guard let pluginId = unspentOutput.output.pluginId else {
+        guard let pluginID = unspentOutput.output.pluginID else {
             return true
         }
 
-        guard let plugin = plugins[pluginId] else {
+        guard let plugin = plugins[pluginID] else {
             return false
         }
 
@@ -118,11 +123,12 @@ extension PluginManager: IPluginManager {
     }
 
     public func parsePluginData(
-        fromPlugin pluginId: UInt8,
+        fromPlugin pluginID: UInt8,
         pluginDataString: String,
         transactionTimestamp: Int
-    ) -> IPluginOutputData? {
-        guard let plugin = plugins[pluginId] else {
+    )
+        -> IPluginOutputData? {
+        guard let plugin = plugins[pluginID] else {
             return nil
         }
 
@@ -131,8 +137,8 @@ extension PluginManager: IPluginManager {
 
     public func incrementedSequence(of inputWithPreviousOutput: InputWithPreviousOutput) -> Int {
         guard
-            let pluginId = inputWithPreviousOutput.previousOutput?.pluginId,
-            let plugin = plugins[pluginId]
+            let pluginID = inputWithPreviousOutput.previousOutput?.pluginID,
+            let plugin = plugins[pluginID]
         else {
             return inputWithPreviousOutput.input.sequence + 1
         }

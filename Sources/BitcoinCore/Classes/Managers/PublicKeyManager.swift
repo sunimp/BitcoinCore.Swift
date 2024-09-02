@@ -1,8 +1,7 @@
 //
 //  PublicKeyManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/28.
 //
 
 import Foundation
@@ -12,16 +11,23 @@ import HDWalletKit
 // MARK: - PublicKeyManager
 
 class PublicKeyManager {
+    // MARK: Nested Types
+
     enum PublicKeyManagerError: Error {
         case noUnusedPublicKey
         case invalidPath
     }
 
+    // MARK: Properties
+
+    weak var bloomFilterManager: IBloomFilterManager?
+
     private let restoreKeyConverter: IRestoreKeyConverter
     private let storage: IStorage
     private let hdWallet: HDWallet
     private let gapLimit: Int
-    weak var bloomFilterManager: IBloomFilterManager?
+
+    // MARK: Lifecycle
 
     init(storage: IStorage, hdWallet: HDWallet, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter) {
         self.storage = storage
@@ -30,8 +36,11 @@ class PublicKeyManager {
         self.restoreKeyConverter = restoreKeyConverter
     }
 
+    // MARK: Functions
+
     private func fillGap(publicKeysWithUsedStates: [PublicKeyWithUsedState], account: Int, external: Bool) throws {
-        let publicKeys = publicKeysWithUsedStates.filter { $0.publicKey.account == account && $0.publicKey.external == external }
+        let publicKeys = publicKeysWithUsedStates
+            .filter { $0.publicKey.account == account && $0.publicKey.external == external }
         let gapKeysCount = gapKeysCount(publicKeyResults: publicKeys)
         var keys = [PublicKey]()
 
@@ -49,9 +58,9 @@ class PublicKeyManager {
 
     private func gapKeysCount(publicKeyResults publicKeysWithUsedStates: [PublicKeyWithUsedState]) -> Int {
         if
-            let lastUsedKey = publicKeysWithUsedStates.filter(\.used).sorted(by: { $0.publicKey.index < $1.publicKey.index })
-                .last
-        {
+            let lastUsedKey = publicKeysWithUsedStates.filter(\.used)
+                .sorted(by: { $0.publicKey.index < $1.publicKey.index })
+                .last {
             publicKeysWithUsedStates.filter { $0.publicKey.index > lastUsedKey.publicKey.index }.count
         } else {
             publicKeysWithUsedStates.count
@@ -76,7 +85,10 @@ class PublicKeyManager {
 
 extension PublicKeyManager: IPublicKeyManager {
     func usedPublicKeys(change: Bool) -> [PublicKey] {
-        storage.publicKeysWithUsedState().compactMap { ($0.used && $0.publicKey.external == !change) ? $0.publicKey : nil }
+        storage.publicKeysWithUsedState().compactMap { ($0.used && $0.publicKey.external == !change)
+            ? $0.publicKey
+            : nil
+        }
     }
 
     func changePublicKey() throws -> PublicKey {
@@ -92,8 +104,7 @@ extension PublicKeyManager: IPublicKeyManager {
         let requiredAccountsCount: Int =
             if
                 let lastUsedAccount = publicKeysWithUsedStates.filter(\.used)
-                    .sorted(by: { $0.publicKey.account < $1.publicKey.account }).last?.publicKey.account
-            {
+                    .sorted(by: { $0.publicKey.account < $1.publicKey.account }).last?.publicKey.account {
                 lastUsedAccount + 1 + 1 // One because account starts from 0, One because we must have n+1 accounts
             } else {
                 1
@@ -130,8 +141,7 @@ extension PublicKeyManager: IPublicKeyManager {
                 gapKeysCount(
                     publicKeyResults: publicKeysWithUsedStates
                         .filter { $0.publicKey.account == i && $0.publicKey.external }
-                ) < gapLimit
-            {
+                ) < gapLimit {
                 return true
             }
 
@@ -139,8 +149,7 @@ extension PublicKeyManager: IPublicKeyManager {
                 gapKeysCount(
                     publicKeyResults: publicKeysWithUsedStates
                         .filter { $0.publicKey.account == i && !$0.publicKey.external }
-                ) < gapLimit
-            {
+                ) < gapLimit {
                 return true
             }
         }
@@ -151,7 +160,10 @@ extension PublicKeyManager: IPublicKeyManager {
     public func publicKey(byPath path: String) throws -> PublicKey {
         let parts = path.split(separator: "/")
 
-        guard parts.count == 3, let account = Int(parts[0]), let external = Int(parts[1]), let index = Int(parts[2]) else {
+        guard
+            parts.count == 3, let account = Int(parts[0]), let external = Int(parts[1]),
+            let index = Int(parts[2])
+        else {
             throw PublicKeyManagerError.invalidPath
         }
 
@@ -183,7 +195,8 @@ extension PublicKeyManager {
         hdWallet: HDWallet,
         gapLimit: Int,
         restoreKeyConverter: IRestoreKeyConverter
-    ) -> PublicKeyManager {
+    )
+        -> PublicKeyManager {
         let addressManager = PublicKeyManager(
             storage: storage,
             hdWallet: hdWallet,

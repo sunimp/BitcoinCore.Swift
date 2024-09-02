@@ -1,25 +1,24 @@
 //
 //  InventoryMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 
 import WWExtensions
 
-/// Allows a node to advertise its knowledge of one or more objects. It can be received unsolicited, or in reply to getblocks.
+/// Allows a node to advertise its knowledge of one or more objects. It can be received unsolicited, or in reply to
+/// getblocks.
 struct InventoryMessage: IMessage {
+    // MARK: Properties
+
     /// Number of inventory entries
     let count: VarInt
     /// Inventory vectors
     let inventoryItems: [InventoryItem]
 
-    init(inventoryItems: [InventoryItem]) {
-        count = VarInt(inventoryItems.count)
-        self.inventoryItems = inventoryItems
-    }
+    // MARK: Computed Properties
 
     var description: String {
         let items = inventoryItems.map { item in
@@ -33,5 +32,12 @@ struct InventoryMessage: IMessage {
         }.joined(separator: ", ")
 
         return "\(items)"
+    }
+
+    // MARK: Lifecycle
+
+    init(inventoryItems: [InventoryItem]) {
+        count = VarInt(inventoryItems.count)
+        self.inventoryItems = inventoryItems
     }
 }

@@ -1,8 +1,7 @@
 //
 //  EcdsaInputSigner.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/9.
 //
 
 import Foundation
@@ -14,14 +13,20 @@ import WWExtensions
 // MARK: - EcdsaInputSigner
 
 class EcdsaInputSigner {
+    // MARK: Nested Types
+
     enum SignError: Error {
         case noPreviousOutput
         case noPreviousOutputAddress
         case noPrivateKey
     }
 
+    // MARK: Properties
+
     let hdWallet: IPrivateHDWallet
     let network: INetwork
+
+    // MARK: Lifecycle
 
     init(hdWallet: IPrivateHDWallet, network: INetwork) {
         self.hdWallet = hdWallet
@@ -32,7 +37,13 @@ class EcdsaInputSigner {
 // MARK: IInputSigner
 
 extension EcdsaInputSigner: IInputSigner {
-    func sigScriptData(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], index: Int) throws -> [Data] {
+    func sigScriptData(
+        transaction: Transaction,
+        inputsToSign: [InputToSign],
+        outputs: [Output],
+        index: Int
+    ) throws
+        -> [Data] {
         let input = inputsToSign[index]
         let previousOutput = input.previousOutput
         let pubKey = input.previousOutputPublicKey

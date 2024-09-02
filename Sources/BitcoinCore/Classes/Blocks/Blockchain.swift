@@ -1,8 +1,7 @@
 //
 //  Blockchain.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/17.
 //
 
 import Foundation
@@ -12,13 +11,23 @@ import WWExtensions
 // MARK: - Blockchain
 
 class Blockchain {
+    // MARK: Properties
+
+    weak var listener: IBlockchainDataListener?
+
     private let storage: IStorage
     private var blockValidator: IBlockValidator?
     private let factory: IFactory
-    weak var listener: IBlockchainDataListener?
     private var previousBlock: Block?
 
-    init(storage: IStorage, blockValidator: IBlockValidator?, factory: IFactory, listener: IBlockchainDataListener? = nil) {
+    // MARK: Lifecycle
+
+    init(
+        storage: IStorage,
+        blockValidator: IBlockValidator?,
+        factory: IFactory,
+        listener: IBlockchainDataListener? = nil
+    ) {
         self.storage = storage
         self.blockValidator = blockValidator
         self.factory = factory

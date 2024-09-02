@@ -1,8 +1,7 @@
 //
 //  SchnorrInputSigner.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/3/22.
 //
 
 import Foundation
@@ -14,13 +13,19 @@ import WWExtensions
 // MARK: - SchnorrInputSigner
 
 class SchnorrInputSigner {
+    // MARK: Nested Types
+
     enum SignError: Error {
         case noPreviousOutput
         case noPreviousOutputAddress
         case noPrivateKey
     }
 
+    // MARK: Properties
+
     let hdWallet: IPrivateHDWallet
+
+    // MARK: Lifecycle
 
     init(hdWallet: IPrivateHDWallet) {
         self.hdWallet = hdWallet
@@ -30,7 +35,13 @@ class SchnorrInputSigner {
 // MARK: IInputSigner
 
 extension SchnorrInputSigner: IInputSigner {
-    func sigScriptData(transaction: Transaction, inputsToSign: [InputToSign], outputs: [Output], index: Int) throws -> [Data] {
+    func sigScriptData(
+        transaction: Transaction,
+        inputsToSign: [InputToSign],
+        outputs: [Output],
+        index: Int
+    ) throws
+        -> [Data] {
         let input = inputsToSign[index]
         let pubKey = input.previousOutputPublicKey
 

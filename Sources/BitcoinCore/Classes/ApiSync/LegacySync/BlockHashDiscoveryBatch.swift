@@ -1,8 +1,7 @@
 //
-//  BlockDiscoveryBatch.swift
-//  BitcoinCore
+//  BlockHashDiscoveryBatch.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/2/26.
 //
 
 import Foundation
@@ -13,11 +12,15 @@ import WWToolKit
 // MARK: - BlockDiscoveryBatch
 
 class BlockDiscoveryBatch {
+    // MARK: Properties
+
     private let blockHashScanner: BlockHashScanner
     private let publicKeyFetcher: IPublicKeyFetcher
 
     private let maxHeight: Int
     private let gapLimit: Int
+
+    // MARK: Lifecycle
 
     init(
         checkpoint: Checkpoint,
@@ -33,11 +36,18 @@ class BlockDiscoveryBatch {
         self.gapLimit = gapLimit
     }
 
+    // MARK: Functions
+
+    func discoverBlockHashes() async throws -> ([PublicKey], [BlockHash]) {
+        try await fetchRecursive()
+    }
+
     private func fetchRecursive(
         blockHashes: [BlockHash] = [],
         externalBatchInfo: KeyBlockHashBatchInfo = KeyBlockHashBatchInfo(),
         internalBatchInfo: KeyBlockHashBatchInfo = KeyBlockHashBatchInfo()
-    ) async throws -> ([PublicKey], [BlockHash]) {
+    ) async throws
+        -> ([PublicKey], [BlockHash]) {
         let maxHeight = maxHeight
 
         let externalCount = gapLimit - externalBatchInfo.prevCount + externalBatchInfo.prevLastUsedIndex + 1
@@ -87,19 +97,19 @@ class BlockDiscoveryBatch {
             )
         }
     }
-
-    func discoverBlockHashes() async throws -> ([PublicKey], [BlockHash]) {
-        try await fetchRecursive()
-    }
 }
 
 // MARK: - KeyBlockHashBatchInfo
 
 class KeyBlockHashBatchInfo {
+    // MARK: Properties
+
     var publicKeys: [PublicKey]
     var prevCount: Int
     var prevLastUsedIndex: Int
     var startIndex: Int
+
+    // MARK: Lifecycle
 
     init(publicKeys: [PublicKey] = [], prevCount: Int = 0, prevLastUsedIndex: Int = -1, startIndex: Int = 0) {
         self.publicKeys = publicKeys

@@ -1,3 +1,9 @@
+//
+//  PeerHostManagerDelegateTests.swift
+//
+//  Created by Sun on 2018/11/12.
+//
+
 // import XCTest
 // import Cuckoo
 // import HDWalletKit

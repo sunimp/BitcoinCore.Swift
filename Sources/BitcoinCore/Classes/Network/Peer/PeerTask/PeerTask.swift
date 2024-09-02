@@ -1,9 +1,19 @@
+//
+//  PeerTask.swift
+//
+//  Created by Sun on 2018/9/18.
+//
+
 import Foundation
 
 // MARK: - PeerTask
 
 open class PeerTask {
+    // MARK: Nested Types
+
     class TimeoutError: Error { }
+
+    // MARK: Properties
 
     public let dateGenerator: () -> Date
     public var lastActiveTime: Double?
@@ -11,11 +21,17 @@ open class PeerTask {
     public weak var requester: IPeerTaskRequester?
     public weak var delegate: IPeerTaskDelegate?
 
+    // MARK: Computed Properties
+
+    open var state: String { "" }
+
+    // MARK: Lifecycle
+
     public init(dateGenerator: @escaping () -> Date = Date.init) {
         self.dateGenerator = dateGenerator
     }
 
-    open var state: String { "" }
+    // MARK: Functions
 
     open func start() {
         resetTimer()

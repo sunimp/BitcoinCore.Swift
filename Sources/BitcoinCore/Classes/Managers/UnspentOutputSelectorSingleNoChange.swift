@@ -1,8 +1,7 @@
 //
 //  UnspentOutputSelectorSingleNoChange.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/5/7.
 //
 
 import Foundation
@@ -10,11 +9,19 @@ import Foundation
 // MARK: - UnspentOutputSelectorSingleNoChange
 
 public class UnspentOutputSelectorSingleNoChange {
+    // MARK: Properties
+
     private let calculator: ITransactionSizeCalculator
     private let provider: IUnspentOutputProvider
     private let dustCalculator: IDustCalculator
 
-    public init(calculator: ITransactionSizeCalculator, provider: IUnspentOutputProvider, dustCalculator: IDustCalculator) {
+    // MARK: Lifecycle
+
+    public init(
+        calculator: ITransactionSizeCalculator,
+        provider: IUnspentOutputProvider,
+        dustCalculator: IDustCalculator
+    ) {
         self.calculator = calculator
         self.provider = provider
         self.dustCalculator = dustCalculator
@@ -33,7 +40,8 @@ extension UnspentOutputSelectorSingleNoChange: IUnspentOutputSelector {
         outputScriptType: ScriptType = .p2pkh,
         changeType: ScriptType = .p2pkh,
         pluginDataOutputSize: Int
-    ) throws -> SelectedUnspentOutputInfo {
+    ) throws
+        -> SelectedUnspentOutputInfo {
         guard let value = params.value else {
             throw BitcoinCoreErrors.TransactionSendError.invalidParameters
         }
@@ -57,7 +65,11 @@ extension UnspentOutputSelectorSingleNoChange: IUnspentOutputSelector {
             pluginDataOutputSize: pluginDataOutputSize
         )
 
-        let queue = UnspentOutputQueue(parameters: utxoSelectParams, sizeCalculator: calculator, dustCalculator: dustCalculator)
+        let queue = UnspentOutputQueue(
+            parameters: utxoSelectParams,
+            sizeCalculator: calculator,
+            dustCalculator: dustCalculator
+        )
 
         // select unspentOutputs with least value until we get needed value
         for unspentOutput in sortedOutputs {

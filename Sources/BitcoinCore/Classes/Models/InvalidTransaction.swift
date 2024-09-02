@@ -1,8 +1,7 @@
 //
 //  InvalidTransaction.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/11/26.
 //
 
 import Foundation
@@ -10,6 +9,14 @@ import Foundation
 import GRDB
 
 public class InvalidTransaction: Transaction {
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "invalid_transactions"
+    }
+
+    // MARK: Lifecycle
+
     init(
         uid: String,
         dataHash: Data,
@@ -46,9 +53,5 @@ public class InvalidTransaction: Transaction {
 
     required init(row: Row) throws {
         try super.init(row: row)
-    }
-
-    override open class var databaseTableName: String {
-        "invalid_transactions"
     }
 }

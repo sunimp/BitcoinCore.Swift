@@ -1,8 +1,7 @@
 //
 //  DataProvider.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/18.
 //
 
 import Combine
@@ -15,6 +14,10 @@ import WWExtensions
 // MARK: - DataProvider
 
 class DataProvider {
+    // MARK: Properties
+
+    weak var delegate: IDataProviderDelegate?
+
     private var cancellables = Set<AnyCancellable>()
 
     private let storage: IStorage
@@ -22,6 +25,14 @@ class DataProvider {
     private let transactionInfoConverter: ITransactionInfoConverter
 
     private let balanceUpdateSubject = PassthroughSubject<Void, Never>()
+
+    private let lastBlockInfoQueue = DispatchQueue(
+        label: "com.sunimp.bitcoin-core.data-provider.last-block-info",
+        qos: .utility
+    )
+    private var _lastBlockInfo: BlockInfo?
+
+    // MARK: Computed Properties
 
     public var balance: BalanceInfo {
         didSet {
@@ -31,10 +42,7 @@ class DataProvider {
         }
     }
 
-    private let lastBlockInfoQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.data-provider.last-block-info", qos: .utility)
-    private var _lastBlockInfo: BlockInfo?
-
-    weak var delegate: IDataProviderDelegate?
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -59,6 +67,8 @@ class DataProvider {
             }
             .store(in: &cancellables)
     }
+
+    // MARK: Functions
 
     private func blockInfo(fromBlock block: Block) -> BlockInfo {
         BlockInfo(

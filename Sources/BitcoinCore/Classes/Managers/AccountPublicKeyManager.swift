@@ -1,8 +1,7 @@
 //
 //  AccountPublicKeyManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/17.
 //
 
 import Foundation
@@ -12,11 +11,16 @@ import HDWalletKit
 // MARK: - AccountPublicKeyManager
 
 class AccountPublicKeyManager {
+    // MARK: Properties
+
+    weak var bloomFilterManager: IBloomFilterManager?
+
     private let restoreKeyConverter: IRestoreKeyConverter
     private let storage: IStorage
     private let hdWallet: IHDAccountWallet
     private let gapLimit: Int
-    weak var bloomFilterManager: IBloomFilterManager?
+
+    // MARK: Lifecycle
 
     init(storage: IStorage, hdWallet: IHDAccountWallet, gapLimit: Int, restoreKeyConverter: IRestoreKeyConverter) {
         self.storage = storage
@@ -24,6 +28,8 @@ class AccountPublicKeyManager {
         self.gapLimit = gapLimit
         self.restoreKeyConverter = restoreKeyConverter
     }
+
+    // MARK: Functions
 
     private func fillGap(publicKeysWithUsedStates: [PublicKeyWithUsedState], external: Bool) throws {
         let publicKeys = publicKeysWithUsedStates.filter { $0.publicKey.external == external }
@@ -44,9 +50,9 @@ class AccountPublicKeyManager {
 
     private func gapKeysCount(publicKeyResults publicKeysWithUsedStates: [PublicKeyWithUsedState]) -> Int {
         if
-            let lastUsedKey = publicKeysWithUsedStates.filter(\.used).sorted(by: { $0.publicKey.index < $1.publicKey.index })
-                .last
-        {
+            let lastUsedKey = publicKeysWithUsedStates.filter(\.used)
+                .sorted(by: { $0.publicKey.index < $1.publicKey.index })
+                .last {
             publicKeysWithUsedStates.filter { $0.publicKey.index > lastUsedKey.publicKey.index }.count
         } else {
             publicKeysWithUsedStates.count
@@ -71,7 +77,10 @@ class AccountPublicKeyManager {
 
 extension AccountPublicKeyManager: IPublicKeyManager {
     func usedPublicKeys(change: Bool) -> [PublicKey] {
-        storage.publicKeysWithUsedState().compactMap { ($0.used && $0.publicKey.external == !change) ? $0.publicKey : nil }
+        storage.publicKeysWithUsedState().compactMap { ($0.used && $0.publicKey.external == !change)
+            ? $0.publicKey
+            : nil
+        }
     }
 
     func changePublicKey() throws -> PublicKey {
@@ -148,7 +157,8 @@ extension AccountPublicKeyManager {
         hdWallet: IHDAccountWallet,
         gapLimit: Int,
         restoreKeyConverter: IRestoreKeyConverter
-    ) -> AccountPublicKeyManager {
+    )
+        -> AccountPublicKeyManager {
         let addressManager = AccountPublicKeyManager(
             storage: storage,
             hdWallet: hdWallet,

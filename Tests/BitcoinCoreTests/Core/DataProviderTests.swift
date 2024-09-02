@@ -1,3 +1,9 @@
+//
+//  DataProviderTests.swift
+//
+//  Created by Sun on 2019/1/16.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift
@@ -167,7 +173,8 @@
 //    func testTransactionsExist() {
 //        //        let transaction = TestData.p2pkTransaction
 //        //        transaction.isMine = true
-//        //        let transactionInfo = TransactionInfo(transactionHash: transaction.hashReversedHex, from: [TransactionAddressInfo](), to: [TransactionAddressInfo](), amount: 0, blockHeight: nil, timestamp: 0)
+//        //        let transactionInfo = TransactionInfo(transactionHash: transaction.hashReversedHex, from:
+//        /[TransactionAddressInfo](), to: [TransactionAddressInfo](), amount: 0, blockHeight: nil, timestamp: 0)
 //        //
 //        //        stub(mockUnspentOutputProvider) { mock in
 //        //            when(mock.balance.get).thenReturn(3)
@@ -181,7 +188,8 @@
 //        //        waitForMainQueue()
 //        //        waitForMainQueue()
 //        //
-//        //        verify(mockDataProviderDelegate).transactionsUpdated(inserted: equal(to: [transactionInfo]), updated: equal(to: [TransactionInfo]()))
+//        //        verify(mockDataProviderDelegate).transactionsUpdated(inserted: equal(to: [transactionInfo]),
+//        /updated: equal(to: [TransactionInfo]()))
 //        //        verify(mockDataProviderDelegate).balanceUpdated(balance: equal(to: 3))
 //        //        XCTAssertEqual(dataProvider.balance, 3)
 //    }

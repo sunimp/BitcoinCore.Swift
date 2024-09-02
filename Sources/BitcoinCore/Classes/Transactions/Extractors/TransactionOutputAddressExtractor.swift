@@ -1,8 +1,7 @@
 //
 //  TransactionOutputAddressExtractor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/12/17.
 //
 
 import Foundation
@@ -12,8 +11,12 @@ import WWCryptoKit
 // MARK: - TransactionOutputAddressExtractor
 
 class TransactionOutputAddressExtractor {
+    // MARK: Properties
+
     private let storage: IStorage
     private let addressConverter: IAddressConverter
+
+    // MARK: Lifecycle
 
     init(storage: IStorage, addressConverter: IAddressConverter) {
         self.storage = storage

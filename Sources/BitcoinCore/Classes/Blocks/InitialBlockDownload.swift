@@ -1,8 +1,7 @@
 //
 //  InitialBlockDownload.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Combine
@@ -21,8 +20,15 @@ public enum InitialDownloadEvent {
 // MARK: - InitialBlockDownload
 
 public class InitialBlockDownload {
-    public weak var listener: IBlockSyncListener?
+    // MARK: Static Properties
+
     private static let peerSwitchMinimumRatio = 1.5
+
+    // MARK: Properties
+
+    public weak var listener: IBlockSyncListener?
+    public var syncedPeers = [IPeer]()
+    public var syncPeer: IPeer?
 
     private var cancellables = Set<AnyCancellable>()
     private var blockSyncer: IBlockSyncer
@@ -43,14 +49,26 @@ public class InitialBlockDownload {
     private let peersQueue: DispatchQueue
     private let logger: Logger?
 
-    public var syncedPeers = [IPeer]()
-    public var syncPeer: IPeer?
+    // MARK: Computed Properties
+
+    public var publisher: AnyPublisher<InitialDownloadEvent, Never> {
+        subject.eraseToAnyPublisher()
+    }
+
+    public var hasSyncedPeer: Bool {
+        !syncedPeers.isEmpty
+    }
+
+    // MARK: Lifecycle
 
     init(
         blockSyncer: IBlockSyncer,
         peerManager: IPeerManager,
         merkleBlockValidator: IMerkleBlockValidator,
-        peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.initial-block-download", qos: .userInitiated),
+        peersQueue: DispatchQueue = DispatchQueue(
+            label: "com.sunimp.bitcoin-core.initial-block-download",
+            qos: .userInitiated
+        ),
         logger: Logger? = nil
     ) {
         self.blockSyncer = blockSyncer
@@ -61,8 +79,22 @@ public class InitialBlockDownload {
         resetRequiredDownloadSpeed()
     }
 
-    public var publisher: AnyPublisher<InitialDownloadEvent, Never> {
-        subject.eraseToAnyPublisher()
+    // MARK: Functions
+
+    public func subscribeTo(publisher: AnyPublisher<PeerGroupEvent, Never>) {
+        publisher
+            .sink { [weak self] event in
+                switch event {
+                case .onStart: self?.onStart()
+                case .onStop: self?.onStop()
+                case let .onPeerCreate(peer): self?.onPeerCreate(peer: peer)
+                case let .onPeerConnect(peer): self?.onPeerConnect(peer: peer)
+                case let .onPeerDisconnect(peer, error): self?.onPeerDisconnect(peer: peer, error: error)
+                case let .onPeerReady(peer): self?.onPeerReady(peer: peer)
+                default: ()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func syncedState(_ peer: IPeer) -> Bool {
@@ -116,10 +148,17 @@ public class InitialBlockDownload {
         }
 
         if !blockHashesSyncedState(syncPeer) {
-            let blockLocatorHashes = blockSyncer.getBlockLocatorHashes(peerLastBlockHeight: syncPeer.announcedLastBlockHeight)
-            let expectedHashesMinCount = max(syncPeer.announcedLastBlockHeight - blockSyncer.localKnownBestBlockHeight, 0)
+            let blockLocatorHashes = blockSyncer
+                .getBlockLocatorHashes(peerLastBlockHeight: syncPeer.announcedLastBlockHeight)
+            let expectedHashesMinCount = max(
+                syncPeer.announcedLastBlockHeight - blockSyncer.localKnownBestBlockHeight,
+                0
+            )
 
-            syncPeer.add(task: GetBlockHashesTask(hashes: blockLocatorHashes, expectedHashesMinCount: expectedHashesMinCount))
+            syncPeer.add(task: GetBlockHashesTask(
+                hashes: blockLocatorHashes,
+                expectedHashesMinCount: expectedHashesMinCount
+            ))
         }
 
         if syncedState(syncPeer) {
@@ -134,7 +173,7 @@ public class InitialBlockDownload {
     private func resetRequiredDownloadSpeed() {
         minMerkleBlocksCount = 500
         minTransactionsCount = 50000
-        minTransactionsSize = 100_000
+        minTransactionsSize = 100000
     }
 
     private func decreaseRequiredDownloadSpeed() {
@@ -166,26 +205,6 @@ public class InitialBlockDownload {
         }
         subject.send(.onPeerNotSynced(peer: peer))
     }
-
-    public func subscribeTo(publisher: AnyPublisher<PeerGroupEvent, Never>) {
-        publisher
-            .sink { [weak self] event in
-                switch event {
-                case .onStart: self?.onStart()
-                case .onStop: self?.onStop()
-                case .onPeerCreate(let peer): self?.onPeerCreate(peer: peer)
-                case .onPeerConnect(let peer): self?.onPeerConnect(peer: peer)
-                case .onPeerDisconnect(let peer, let error): self?.onPeerDisconnect(peer: peer, error: error)
-                case .onPeerReady(let peer): self?.onPeerReady(peer: peer)
-                default: ()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    public var hasSyncedPeer: Bool {
-        !syncedPeers.isEmpty
-    }
 }
 
 // MARK: IInitialDownload
@@ -203,8 +222,7 @@ extension InitialBlockDownload: IInventoryItemsHandler {
         peersQueue.async {
             if
                 self.syncedState(peer),
-                inventoryItems.first(where: { $0.type == InventoryItem.ObjectType.blockMessage.rawValue }) != nil
-            {
+                inventoryItems.first(where: { $0.type == InventoryItem.ObjectType.blockMessage.rawValue }) != nil {
                 self.setPeerNotSynced(peer)
                 self.assignNextSyncPeer()
             }
@@ -254,8 +272,7 @@ extension InitialBlockDownload {
             self.blockHashesSyncedStates[peer.host] = false
             if
                 let syncPeer = self.syncPeer,
-                syncPeer.connectionTime > peer.connectionTime * InitialBlockDownload.peerSwitchMinimumRatio
-            {
+                syncPeer.connectionTime > peer.connectionTime * InitialBlockDownload.peerSwitchMinimumRatio {
                 self.selectNewPeer = true
             }
             self.assignNextSyncPeer()

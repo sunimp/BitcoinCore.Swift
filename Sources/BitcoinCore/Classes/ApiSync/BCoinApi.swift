@@ -1,8 +1,7 @@
 //
 //  BCoinApi.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
@@ -14,8 +13,12 @@ import WWToolKit
 // MARK: - BCoinApi
 
 public class BCoinApi {
+    // MARK: Properties
+
     private let url: String
     private let networkManager: NetworkManager
+
+    // MARK: Lifecycle
 
     public init(url: String, logger: Logger? = nil) {
         self.url = url
@@ -56,9 +59,13 @@ extension BCoinApi: IApiTransactionProvider {
 // MARK: - BCoinTransactionItem
 
 open class BCoinTransactionItem: ImmutableMappable {
+    // MARK: Properties
+
     public let blockHash: String?
     public let blockHeight: Int?
     public let txOutputs: [BCoinTransactionOutputItem]
+
+    // MARK: Lifecycle
 
     public init(hash: String?, height: Int?, txOutputs: [BCoinTransactionOutputItem]) {
         blockHash = hash
@@ -72,6 +79,8 @@ open class BCoinTransactionItem: ImmutableMappable {
         txOutputs = (try? map.value("outputs")) ?? []
     }
 
+    // MARK: Static Functions
+
     static func == (lhs: BCoinTransactionItem, rhs: BCoinTransactionItem) -> Bool {
         lhs.blockHash == rhs.blockHash && lhs.blockHeight == rhs.blockHeight
     }
@@ -80,8 +89,12 @@ open class BCoinTransactionItem: ImmutableMappable {
 // MARK: - BCoinTransactionOutputItem
 
 open class BCoinTransactionOutputItem: ImmutableMappable {
+    // MARK: Properties
+
     public let script: String
     public let address: String?
+
+    // MARK: Lifecycle
 
     public init(script: String, address: String?) {
         self.script = script

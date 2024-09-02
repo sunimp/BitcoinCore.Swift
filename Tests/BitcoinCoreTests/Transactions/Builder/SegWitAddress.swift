@@ -1,3 +1,9 @@
+//
+//  SegWitAddress.swift
+//
+//  Created by Sun on 2019/4/23.
+//
+
 // @testable import BitcoinCore
 //
 // public class SegWitAddress: Address, Equatable {

@@ -1,6 +1,12 @@
+//
+//  Extensions.swift
+//
+//  Created by Sun on 2018/8/17.
+//
+
+@testable import BitcoinCore
 import Cuckoo
 import XCTest
-@testable import BitcoinCore
 //
 // extension XCTestCase {
 //
@@ -112,7 +118,8 @@ import XCTest
 // extension Output: Equatable {
 //
 //    public static func ==(lhs: Output, rhs: Output) -> Bool {
-//        lhs.keyHash == rhs.keyHash && lhs.scriptType == rhs.scriptType && lhs.value == rhs.value && lhs.index == rhs.index
+//        lhs.keyHash == rhs.keyHash && lhs.scriptType == rhs.scriptType && lhs.value == rhs.value && lhs.index ==
+//        rhs.index
 //    }
 //
 // }
@@ -120,7 +127,8 @@ import XCTest
 // extension BlockHeader: Equatable {
 //
 //    public static func ==(lhs: BlockHeader, rhs: BlockHeader) -> Bool {
-//        lhs.previousBlockHeaderHash == rhs.previousBlockHeaderHash && lhs.headerHash == rhs.headerHash && lhs.merkleRoot == rhs.merkleRoot
+//        lhs.previousBlockHeaderHash == rhs.previousBlockHeaderHash && lhs.headerHash == rhs.headerHash &&
+//        lhs.merkleRoot == rhs.merkleRoot
 //    }
 //
 // }

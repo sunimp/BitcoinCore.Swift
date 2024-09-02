@@ -1,8 +1,7 @@
 //
 //  BitcoinSendInfo.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/12/28.
 //
 
 import Foundation

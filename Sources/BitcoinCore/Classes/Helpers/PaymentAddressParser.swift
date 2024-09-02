@@ -1,25 +1,32 @@
 //
 //  PaymentAddressParser.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/12/3.
 //
 
 import Foundation
 
 public class PaymentAddressParser: IPaymentAddressParser {
+    // MARK: Static Properties
+
     fileprivate static let parameterVersion = "version"
     fileprivate static let parameterAmount = "amount"
     fileprivate static let parameterLabel = "label"
     fileprivate static let parameterMessage = "message"
 
+    // MARK: Properties
+
     private let validScheme: String
     private let removeScheme: Bool
+
+    // MARK: Lifecycle
 
     public init(validScheme: String, removeScheme: Bool) {
         self.validScheme = validScheme
         self.removeScheme = removeScheme
     }
+
+    // MARK: Functions
 
     func parse(paymentAddress: String) -> BitcoinPaymentData {
         var parsedString = paymentAddress
@@ -34,7 +41,8 @@ public class PaymentAddressParser: IPaymentAddressParser {
         var parametersParts = [String]()
 
         let schemeSeparatedParts = paymentAddress.components(separatedBy: ":")
-        // check exist scheme. If scheme equal network scheme (Bitcoin or bitcoincash), remove scheme for bitcoin or leave for cash. Otherwise, leave wrong scheme to make throw in validator
+        // check exist scheme. If scheme equal network scheme (Bitcoin or bitcoincash), remove scheme for bitcoin or
+        // leave for cash. Otherwise, leave wrong scheme to make throw in validator
         if schemeSeparatedParts.count >= 2 {
             if schemeSeparatedParts[0].lowercased() == validScheme {
                 parsedString = removeScheme ? schemeSeparatedParts[1] : paymentAddress
@@ -53,8 +61,7 @@ public class PaymentAddressParser: IPaymentAddressParser {
         address = versionSeparatedParts.removeFirst()
         if
             let firstPart = versionSeparatedParts.first?.lowercased(),
-            firstPart.range(of: PaymentAddressParser.parameterVersion) != nil
-        {
+            firstPart.range(of: PaymentAddressParser.parameterVersion) != nil {
             parametersParts.append(firstPart)
 
             versionSeparatedParts.removeFirst(1)

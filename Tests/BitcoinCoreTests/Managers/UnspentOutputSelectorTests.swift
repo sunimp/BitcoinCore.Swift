@@ -1,3 +1,9 @@
+//
+//  UnspentOutputSelectorTests.swift
+//
+//  Created by Sun on 2018/8/13.
+//
+
 // import XCTest
 // import Quick
 // import Nimble
@@ -37,7 +43,8 @@
 //        let mockDustCalculator = MockIDustCalculator()
 //        var selector: UnspentOutputSelector!
 //
-//        let outputs = [TestData.unspentOutput(output: Output(withValue: 1000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
+//        let outputs = [TestData.unspentOutput(output: Output(withValue: 1000, index: 0, lockingScript: Data(), type:
+//        .p2pkh, keyHash: Data())),
 //                       TestData.unspentOutput(output: Output(withValue: 2000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
 //                       TestData.unspentOutput(output: Output(withValue: 3000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
 //                       TestData.unspentOutput(output: Output(withValue: 8000, index: 0, lockingScript: Data(), type: .p2pkh, keyHash: Data())),
@@ -57,7 +64,8 @@
 //            stub(mockDustCalculator) { mock in
 //                when(mock.dust(type: any())).thenReturn(dust)
 //            }
-//            selector = UnspentOutputSelector(calculator: mockTransactionSizeCalculator, provider: mockUnspentOutputProvider, dustCalculator: mockDustCalculator)
+//            selector = UnspentOutputSelector(calculator: mockTransactionSizeCalculator, provider:
+//            mockUnspentOutputProvider, dustCalculator: mockDustCalculator)
 //        }
 //
 //        afterEach {
@@ -72,7 +80,8 @@
 //                    // recipientValue = givenValue
 //                    // givenValue = totalValue - fee
 //                    // CONDITION CHECK: totalValue == (totalValue - fee) + fee
-//                    let selectedOutputs = try! selector.select(value: totalValue - fee, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue - fee, feeRate: feeRate,
+//                    outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - fee))
 //                    expect(selectedOutputs.changeValue).to(beNil())
@@ -85,7 +94,8 @@
 //                    // recipientValue = givenValue
 //                    // givenValue = totalValue - fee - dust + 1
 //                    // CONDITION CHECK: totalValue == (totalValue - fee - dust + 1) + fee + (dust - 1)
-//                    let selectedOutputs = try! selector.select(value: totalValue - fee - dust + 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue - fee - dust + 1, feeRate: feeRate,
+//                    outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - fee - dust + 1))
 //                    expect(selectedOutputs.changeValue).to(beNil())
@@ -98,7 +108,8 @@
 //                    // recipientValue = givenValue
 //                    // givenValue = totalValue - feeWithChangeOutput - dust
 //                    // CONDITION CHECK: totalValue == (totalValue - feeWithChangeOutput - dust) + fee + dust
-//                    let selectedOutputs = try! selector.select(value: totalValue - feeWithChangeOutput - dust, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue - feeWithChangeOutput - dust,
+//                    feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - feeWithChangeOutput - dust))
 //                    expect(selectedOutputs.changeValue).to(equal(dust))
@@ -108,7 +119,8 @@
 //            context("when value is less than dust") {
 //                it("throws dust exception") {
 //                    do {
-//                        _ = try selector.select(value: dust - 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                        _ = try selector.select(value: dust - 1, feeRate: feeRate, outputScriptType: .p2pkh,
+//                        changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
 //                        fail("Exception expected")
 //                    } catch let error as BitcoinCoreErrors.SendValueErrors {
 //                        expect(error).to(equal(BitcoinCoreErrors.SendValueErrors.dust))
@@ -121,7 +133,9 @@
 //            context("when value is less than allAmount") {
 //                it("throws notEnough exception") {
 //                    do {
-//                        _ = try selector.select(value: outputs.reduce(0) { $0 + $1.output.value } - fee + 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                        _ = try selector.select(value: outputs.reduce(0) { $0 + $1.output.value } - fee + 1, feeRate:
+//                        feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize:
+//                        0)
 //                        fail("Exception expected")
 //                    } catch let error as BitcoinCoreErrors.SendValueErrors {
 //                        expect(error).to(equal(BitcoinCoreErrors.SendValueErrors.notEnough))
@@ -140,7 +154,8 @@
 //                }
 //
 //                it("selects output failed to spend") {
-//                    let selectedOutputs = try! selector.select(value: totalValue - fee, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue - fee, feeRate: feeRate,
+//                    outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: true, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[2]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - fee))
 //                    expect(selectedOutputs.changeValue).to(beNil())
@@ -155,7 +170,8 @@
 //                    // recipientValue = givenValue - fee
 //                    // givenValue = totalValue
 //                    // CONDITION CHECK: totalValue == (totalValue - fee) + fee
-//                    let selectedOutputs = try! selector.select(value: totalValue, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue, feeRate: feeRate, outputScriptType:
+//                    .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - fee))
 //                    expect(selectedOutputs.changeValue).to(beNil())
@@ -168,7 +184,8 @@
 //                    // recipientValue = givenValue - fee
 //                    // givenValue = totalValue - dust + 1
 //                    // CONDITION CHECK: totalValue == ((totalValue - dust + 1) - fee) + fee + (dust - 1)
-//                    let selectedOutputs = try! selector.select(value: totalValue - dust + 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
+//                    let selectedOutputs = try! selector.select(value: totalValue - dust + 1, feeRate: feeRate,
+//                    outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - dust + 1 - fee))
 //                    expect(selectedOutputs.changeValue).to(beNil())
@@ -180,8 +197,10 @@
 //                    // CONDITION: totalValue == recipientValue + feeWithChangeOutput + dust
 //                    // recipientValue = givenValue - feeWithChangeOutput
 //                    // givenValue = totalValue - dust
-//                    // CONDITION CHECK: totalValue == ((totalValue - dust) - feeWithChangeOutput) + feeWithChangeOutput + dust
-//                    let selectedOutputs = try! selector.select(value: totalValue - dust, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
+//                    // CONDITION CHECK: totalValue == ((totalValue - dust) - feeWithChangeOutput) +
+//                    /feeWithChangeOutput + dust
+//                    let selectedOutputs = try! selector.select(value: totalValue - dust, feeRate: feeRate,
+//                    outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
 //                    expect(selectedOutputs.unspentOutputs).to(equal([outputs[0], outputs[1]]))
 //                    expect(selectedOutputs.recipientValue).to(equal(totalValue - dust - feeWithChangeOutput))
 //                    expect(selectedOutputs.changeValue).to(equal(dust))
@@ -191,7 +210,8 @@
 //            context("when value is less than dust") {
 //                it("throws dust exception") {
 //                    do {
-//                        _ = try selector.select(value: dust + fee - 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
+//                        _ = try selector.select(value: dust + fee - 1, feeRate: feeRate, outputScriptType: .p2pkh,
+//                        changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
 //                        fail("Exception expected")
 //                    } catch let error as BitcoinCoreErrors.SendValueErrors {
 //                        expect(error).to(equal(BitcoinCoreErrors.SendValueErrors.dust))
@@ -204,7 +224,9 @@
 //            context("when value is less than allAmount") {
 //                it("throws notEnough exception") {
 //                    do {
-//                        _ = try selector.select(value: outputs.reduce(0) { $0 + $1.output.value } + 1, feeRate: feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize: 0)
+//                        _ = try selector.select(value: outputs.reduce(0) { $0 + $1.output.value } + 1, feeRate:
+//                        feeRate, outputScriptType: .p2pkh, changeType: .p2pkh, senderPay: false, pluginDataOutputSize:
+//                        0)
 //                        fail("Exception expected")
 //                    } catch let error as BitcoinCoreErrors.SendValueErrors {
 //                        expect(error).to(equal(BitcoinCoreErrors.SendValueErrors.notEnough))

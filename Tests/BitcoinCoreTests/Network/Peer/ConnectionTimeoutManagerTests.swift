@@ -1,3 +1,9 @@
+//
+//  ConnectionTimeoutManagerTests.swift
+//
+//  Created by Sun on 2018/11/29.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore

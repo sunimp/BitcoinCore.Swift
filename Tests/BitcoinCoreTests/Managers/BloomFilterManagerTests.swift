@@ -1,3 +1,9 @@
+//
+//  BloomFilterManagerTests.swift
+//
+//  Created by Sun on 2018/11/13.
+//
+
 // import Quick
 // import Nimble
 // import XCTest

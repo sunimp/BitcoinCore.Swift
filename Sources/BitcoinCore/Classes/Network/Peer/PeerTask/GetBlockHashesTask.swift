@@ -1,6 +1,20 @@
+//
+//  GetBlockHashesTask.swift
+//
+//  Created by Sun on 2018/10/17.
+//
+
 import Foundation
 
 class GetBlockHashesTask: PeerTask {
+    // MARK: Overridden Properties
+
+    override var state: String {
+        "expectedHashesMinCount: \(expectedHashesMinCount); allowedIdleTime: \(allowedIdleTime)"
+    }
+
+    // MARK: Properties
+
     var blockHashes = [Data]()
 
     private let maxAllowedIdleTime = 10.0
@@ -11,6 +25,8 @@ class GetBlockHashesTask: PeerTask {
     private let blockLocatorHashes: [Data]
     private let expectedHashesMinCount: Int32
     private let allowedIdleTime: Double
+
+    // MARK: Lifecycle
 
     init(hashes: [Data], expectedHashesMinCount: Int32, dateGenerator: @escaping () -> Date = Date.init) {
         blockLocatorHashes = hashes
@@ -35,9 +51,7 @@ class GetBlockHashesTask: PeerTask {
         super.init(dateGenerator: dateGenerator)
     }
 
-    override var state: String {
-        "expectedHashesMinCount: \(expectedHashesMinCount); allowedIdleTime: \(allowedIdleTime)"
-    }
+    // MARK: Overridden Functions
 
     override func start() {
         if let requester {
@@ -55,6 +69,24 @@ class GetBlockHashesTask: PeerTask {
             return handle(items: inventoryMessage.inventoryItems)
         }
         return false
+    }
+
+    override func checkTimeout() {
+        if let lastActiveTime {
+            if dateGenerator().timeIntervalSince1970 - lastActiveTime > allowedIdleTime {
+                delegate?.handle(completedTask: self)
+            }
+        }
+    }
+
+    // MARK: Functions
+
+    func equalTo(_ task: GetBlockHashesTask?) -> Bool {
+        guard let task else {
+            return false
+        }
+
+        return blockLocatorHashes == task.blockLocatorHashes && expectedHashesMinCount == task.expectedHashesMinCount
     }
 
     private func handle(items: [InventoryItem]) -> Bool {
@@ -85,21 +117,5 @@ class GetBlockHashesTask: PeerTask {
         }
 
         return true
-    }
-
-    override func checkTimeout() {
-        if let lastActiveTime {
-            if dateGenerator().timeIntervalSince1970 - lastActiveTime > allowedIdleTime {
-                delegate?.handle(completedTask: self)
-            }
-        }
-    }
-
-    func equalTo(_ task: GetBlockHashesTask?) -> Bool {
-        guard let task else {
-            return false
-        }
-
-        return blockLocatorHashes == task.blockLocatorHashes && expectedHashesMinCount == task.expectedHashesMinCount
     }
 }

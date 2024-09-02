@@ -1,8 +1,7 @@
 //
 //  PendingOutpointsProvider.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/1/8.
 //
 
 import Foundation
@@ -10,9 +9,13 @@ import Foundation
 // MARK: - PendingOutpointsProvider
 
 class PendingOutpointsProvider {
-    private let storage: IStorage
+    // MARK: Properties
 
     weak var bloomFilterManager: IBloomFilterManager?
+
+    private let storage: IStorage
+
+    // MARK: Lifecycle
 
     init(storage: IStorage) {
         self.storage = storage

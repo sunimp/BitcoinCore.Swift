@@ -1,8 +1,7 @@
 //
 //  UnspentOutputProvider.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/13.
 //
 
 import Foundation
@@ -10,9 +9,13 @@ import Foundation
 // MARK: - UnspentOutputProvider
 
 class UnspentOutputProvider {
+    // MARK: Properties
+
     let storage: IStorage
     let pluginManager: IPluginManager
     let confirmationsThreshold: Int
+
+    // MARK: Computed Properties
 
     /// Confirmed incoming and all outgoing unspent outputs
     private var allUtxo: [UnspentOutput] {
@@ -44,6 +47,8 @@ class UnspentOutputProvider {
         allUtxo.filter { $0.transaction.status != .relayed }
     }
 
+    // MARK: Lifecycle
+
     init(storage: IStorage, pluginManager: IPluginManager, confirmationsThreshold: Int) {
         self.storage = storage
         self.pluginManager = pluginManager
@@ -66,8 +71,7 @@ extension UnspentOutputProvider: IUnspentOutputProvider {
 
             if
                 let outputsCount = filters.maxOutputsCountForInputs,
-                storage.outputsCount(transactionHash: utxo.transaction.dataHash) > outputsCount
-            {
+                storage.outputsCount(transactionHash: utxo.transaction.dataHash) > outputsCount {
                 return false
             }
 

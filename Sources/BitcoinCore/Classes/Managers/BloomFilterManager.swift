@@ -1,8 +1,7 @@
 //
 //  BloomFilterManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/10/17.
 //
 
 import Foundation
@@ -10,14 +9,21 @@ import Foundation
 // MARK: - BloomFilterManager
 
 class BloomFilterManager {
+    // MARK: Nested Types
+
     class BloomFilterExpired: Error { }
+
+    // MARK: Properties
+
+    weak var delegate: IBloomFilterManagerDelegate?
+
+    var bloomFilter: BloomFilter?
 
     private var providers = [IBloomFilterProvider]()
 
     private let factory: IFactory
-    weak var delegate: IBloomFilterManagerDelegate?
 
-    var bloomFilter: BloomFilter?
+    // MARK: Lifecycle
 
     init(factory: IFactory) {
         self.factory = factory

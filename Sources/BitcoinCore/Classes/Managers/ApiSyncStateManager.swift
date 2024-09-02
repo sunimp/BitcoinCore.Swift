@@ -1,8 +1,7 @@
 //
 //  ApiSyncStateManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/23.
 //
 
 import Foundation
@@ -10,8 +9,12 @@ import Foundation
 // MARK: - ApiSyncStateManager
 
 public class ApiSyncStateManager {
+    // MARK: Properties
+
     private let storage: IStorage
     private let restoreFromApi: Bool
+
+    // MARK: Lifecycle
 
     public init(storage: IStorage, restoreFromApi: Bool) {
         self.storage = storage

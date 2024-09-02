@@ -1,3 +1,9 @@
+//
+//  TestData.swift
+//
+//  Created by Sun on 2018/7/25.
+//
+
 // import Foundation
 // import GRDB
 // @testable import BitcoinCore
@@ -200,7 +206,8 @@
 //        PublicKey(withAccount: 0, index: 0, external: true, hdPublicKeyData: pubKeyHash)
 //    }
 //
-//    static func input(previousTransaction: Transaction, previousOutput: Output, script: Data, sequence: Int) -> Input {
+//    static func input(previousTransaction: Transaction, previousOutput: Output, script: Data, sequence: Int) -> Input
+//    {
 //        Input(withPreviousOutputTxHash: previousTransaction.dataHash, previousOutputIndex: previousOutput.index, script: script, sequence: sequence)
 //    }
 //

@@ -1,8 +1,7 @@
 //
 //  TransactionBuilder.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/9.
 //
 
 import Foundation
@@ -10,10 +9,14 @@ import Foundation
 // MARK: - TransactionBuilder
 
 class TransactionBuilder {
+    // MARK: Properties
+
     private let recipientSetter: IRecipientSetter
     private let inputSetter: IInputSetter
     private let lockTimeSetter: ILockTimeSetter
     private let outputSetter: IOutputSetter
+
+    // MARK: Lifecycle
 
     init(
         recipientSetter: IRecipientSetter,

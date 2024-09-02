@@ -1,14 +1,18 @@
 //
 //  NetworkMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation
 
 struct NetworkMessage {
+    // MARK: Static Properties
+
     static let minimumLength = 24
+
+    // MARK: Properties
+
     /// Magic value indicating message origin network, and used to seek to next message when stream state is unknown
     let magic: UInt32
     /// ASCII string identifying the packet content, NULL padded (non-NULL padding results in packet rejected)

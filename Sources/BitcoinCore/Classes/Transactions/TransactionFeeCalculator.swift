@@ -1,8 +1,7 @@
 //
 //  TransactionFeeCalculator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/9/11.
 //
 
 import Foundation
@@ -10,9 +9,13 @@ import Foundation
 // MARK: - TransactionFeeCalculator
 
 class TransactionFeeCalculator {
+    // MARK: Properties
+
     private let recipientSetter: IRecipientSetter
     private let inputSetter: IInputSetter
     private let changeScriptType: ScriptType
+
+    // MARK: Lifecycle
 
     init(recipientSetter: IRecipientSetter, inputSetter: IInputSetter, changeScriptType: ScriptType) {
         self.recipientSetter = recipientSetter
@@ -30,7 +33,8 @@ extension TransactionFeeCalculator: ITransactionFeeCalculator {
         try recipientSetter.setRecipient(to: mutableTransaction, params: params, skipChecks: true)
         let outputInfo = try inputSetter.setInputs(to: mutableTransaction, params: params)
 
-        let inputsTotalValue = mutableTransaction.inputsToSign.reduce(0) { total, input in total + input.previousOutput.value }
+        let inputsTotalValue = mutableTransaction.inputsToSign
+            .reduce(0) { total, input in total + input.previousOutput.value }
         let outputsTotalValue = mutableTransaction.recipientValue + mutableTransaction.changeValue
 
         return BitcoinSendInfo(

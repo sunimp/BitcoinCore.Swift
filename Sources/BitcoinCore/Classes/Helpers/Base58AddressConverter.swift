@@ -1,8 +1,7 @@
 //
 //  Base58AddressConverter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
@@ -10,14 +9,23 @@ import Foundation
 import WWCryptoKit
 
 public class Base58AddressConverter: IAddressConverter {
+    // MARK: Static Properties
+
     private static let checkSumLength = 4
+
+    // MARK: Properties
+
     private let addressVersion: UInt8
     private let addressScriptVersion: UInt8
+
+    // MARK: Lifecycle
 
     public init(addressVersion: UInt8, addressScriptVersion: UInt8) {
         self.addressVersion = addressVersion
         self.addressScriptVersion = addressScriptVersion
     }
+
+    // MARK: Functions
 
     public func convert(address: String) throws -> Address {
         // check length of address to avoid wrong converting
@@ -53,11 +61,13 @@ public class Base58AddressConverter: IAddressConverter {
         let addressType: AddressType
 
         switch type {
-        case .p2pkh, .p2pk:
+        case .p2pkh,
+             .p2pk:
             version = addressVersion
             addressType = AddressType.pubKeyHash
 
-        case .p2sh, .p2wpkhSh:
+        case .p2sh,
+             .p2wpkhSh:
             version = addressScriptVersion
             addressType = AddressType.scriptHash
 

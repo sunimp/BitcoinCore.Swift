@@ -1,8 +1,7 @@
 //
 //  BaseTransactionInfoConverter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/5/3.
 //
 
 import Foundation
@@ -18,11 +17,17 @@ public protocol IBaseTransactionInfoConverter {
 // MARK: - BaseTransactionInfoConverter
 
 public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
+    // MARK: Properties
+
     private let pluginManager: IPluginManager
+
+    // MARK: Lifecycle
 
     public init(pluginManager: IPluginManager) {
         self.pluginManager = pluginManager
     }
+
+    // MARK: Functions
 
     public func transactionInfo<T: TransactionInfo>(fromTransaction transactionForInfo: FullTransactionForInfo) -> T {
         if let invalidTransactionInfo: T = transactionInfo(fromInvalidTransaction: transactionForInfo) {
@@ -46,7 +51,11 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
                 }
             }
 
-            inputsInfo.append(TransactionInputInfo(mine: mine, address: inputWithPreviousOutput.input.address, value: value))
+            inputsInfo.append(TransactionInputInfo(
+                mine: mine,
+                address: inputWithPreviousOutput.input.address,
+                value: value
+            ))
         }
 
         for output in transactionForInfo.outputs {
@@ -57,11 +66,11 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
                 address: output.address
             )
 
-            if let pluginId = output.pluginId, let pluginDataString = output.pluginData {
-                outputInfo.pluginId = pluginId
+            if let pluginID = output.pluginID, let pluginDataString = output.pluginData {
+                outputInfo.pluginID = pluginID
                 outputInfo.pluginDataString = pluginDataString
                 outputInfo.pluginData = pluginManager.parsePluginData(
-                    fromPlugin: pluginId,
+                    fromPlugin: pluginID,
                     pluginDataString: pluginDataString,
                     transactionTimestamp: transactionTimestamp
                 )
@@ -91,19 +100,21 @@ public class BaseTransactionInfoConverter: IBaseTransactionInfoConverter {
         )
     }
 
-    private func transactionInfo<T: TransactionInfo>(fromInvalidTransaction transactionForInfo: FullTransactionForInfo) -> T? {
+    private func transactionInfo<T: TransactionInfo>(fromInvalidTransaction transactionForInfo: FullTransactionForInfo)
+        -> T? {
         guard let invalidTransaction = transactionForInfo.transactionWithBlock.transaction as? InvalidTransaction else {
             return nil
         }
 
-        guard let transactionInfo: T = try? JSONDecoder().decode(T.self, from: invalidTransaction.transactionInfoJson) else {
+        guard let transactionInfo: T = try? JSONDecoder().decode(T.self, from: invalidTransaction.transactionInfoJson)
+        else {
             return nil
         }
 
         for addressInfo in transactionInfo.outputs {
-            if let pluginId = addressInfo.pluginId, let pluginDataString = addressInfo.pluginDataString {
+            if let pluginID = addressInfo.pluginID, let pluginDataString = addressInfo.pluginDataString {
                 addressInfo.pluginData = pluginManager.parsePluginData(
-                    fromPlugin: pluginId,
+                    fromPlugin: pluginID,
                     pluginDataString: pluginDataString,
                     transactionTimestamp: invalidTransaction.timestamp
                 )

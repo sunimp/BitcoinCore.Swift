@@ -1,15 +1,19 @@
 //
 //  PeerDiscovery.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/25.
 //
 
 import Foundation
 
 class PeerDiscovery: IPeerDiscovery {
+    // MARK: Properties
+
     weak var peerAddressManager: IPeerAddressManager?
+
     private var inProgress = false
+
+    // MARK: Functions
 
     func lookup(dnsSeeds: [String]) {
         guard !inProgress else {
@@ -44,8 +48,7 @@ class PeerDiscovery: IPeerDiscovery {
                         let ipPart1 = UInt8(String(s.prefix(2)), radix: 16),
                         let ipPart2 = UInt8(String(s.dropFirst(2).prefix(2)), radix: 16),
                         let ipPart3 = UInt8(String(s.dropFirst(4).prefix(2)), radix: 16),
-                        let ipPart4 = UInt8(String(s.dropFirst(6)), radix: 16)
-                    {
+                        let ipPart4 = UInt8(String(s.dropFirst(6)), radix: 16) {
                         ips.append("\(ipPart1).\(ipPart2).\(ipPart3).\(ipPart4)")
                     }
                 }

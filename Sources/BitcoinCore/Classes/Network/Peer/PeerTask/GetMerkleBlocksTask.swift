@@ -1,6 +1,14 @@
+//
+//  GetMerkleBlocksTask.swift
+//
+//  Created by Sun on 2018/9/18.
+//
+
 import Foundation
 
 class GetMerkleBlocksTask: PeerTask {
+    // MARK: Nested Types
+
     struct TooSlowPeer: Error {
         let minMerkleBlocks: Int
         let minTransactionsCount: Int
@@ -9,6 +17,14 @@ class GetMerkleBlocksTask: PeerTask {
         let transactionsCount: Int
         let transactionsSize: Int
     }
+
+    // MARK: Overridden Properties
+
+    override var state: String {
+        "minMerkleBlocksCount: \(minMerkleBlocksCount); minTransactionsCount: \(minTransactionsCount); minTransactionsSize: \(minTransactionsSize)"
+    }
+
+    // MARK: Properties
 
     private var waitingStartTime: Double = 0
     private var totalWaitingTime: Double = 0
@@ -27,6 +43,8 @@ class GetMerkleBlocksTask: PeerTask {
     private var pendingMerkleBlocks = [MerkleBlock]()
     private var merkleBlockValidator: IMerkleBlockValidator
     private weak var merkleBlockHandler: IMerkleBlockHandler?
+
+    // MARK: Lifecycle
 
     init(
         blockHashes: [BlockHash],
@@ -47,9 +65,7 @@ class GetMerkleBlocksTask: PeerTask {
         super.init(dateGenerator: dateGenerator)
     }
 
-    override var state: String {
-        "minMerkleBlocksCount: \(minMerkleBlocksCount); minTransactionsCount: \(minTransactionsCount); minTransactionsSize: \(minTransactionsSize)"
-    }
+    // MARK: Overridden Functions
 
     override func start() {
         let items = blockHashes.map { blockHash in
@@ -102,14 +118,14 @@ class GetMerkleBlocksTask: PeerTask {
 
         if
             merkleBlocksCount < minMerkleBlocksCount, transactionsCount < minTransactionsCount,
-            transactionsSize < minTransactionsSize
-        {
+            transactionsSize < minTransactionsSize {
             warningsCount += 1
             if warningsCount >= 10 {
                 delegate?.handle(failedTask: self, error: TooSlowPeer(
                     minMerkleBlocks: minMerkleBlocksCount, minTransactionsCount: minTransactionsCount,
                     minTransactionsSize: minTransactionsSize,
-                    merkleBlocks: merkleBlocksCount, transactionsCount: transactionsCount, transactionsSize: transactionsSize
+                    merkleBlocks: merkleBlocksCount, transactionsCount: transactionsCount,
+                    transactionsSize: transactionsSize
                 ))
                 return
             }
@@ -120,6 +136,16 @@ class GetMerkleBlocksTask: PeerTask {
         transactionsCount = 0
         transactionsSize = 0
         resumeWaiting()
+    }
+
+    // MARK: Functions
+
+    func equalTo(_ task: GetMerkleBlocksTask?) -> Bool {
+        guard let task else {
+            return false
+        }
+
+        return blockHashes == task.blockHashes
     }
 
     private func pauseWaiting() {
@@ -138,7 +164,8 @@ class GetMerkleBlocksTask: PeerTask {
     }
 
     private func handle(merkleBlock: MerkleBlock) -> Bool {
-        guard let blockHash = blockHashes.first(where: { blockHash in blockHash.headerHash == merkleBlock.headerHash }) else {
+        guard let blockHash = blockHashes.first(where: { blockHash in blockHash.headerHash == merkleBlock.headerHash })
+        else {
             return false
         }
         resetTimer()
@@ -155,7 +182,9 @@ class GetMerkleBlocksTask: PeerTask {
     }
 
     private func handle(transaction: FullTransaction) -> Bool {
-        if let index = pendingMerkleBlocks.firstIndex(where: { $0.transactionHashes.contains(transaction.header.dataHash) }) {
+        if
+            let index = pendingMerkleBlocks
+                .firstIndex(where: { $0.transactionHashes.contains(transaction.header.dataHash) }) {
             resetTimer()
 
             let block = pendingMerkleBlocks[index]
@@ -186,13 +215,5 @@ class GetMerkleBlocksTask: PeerTask {
         if blockHashes.isEmpty {
             delegate?.handle(completedTask: self)
         }
-    }
-
-    func equalTo(_ task: GetMerkleBlocksTask?) -> Bool {
-        guard let task else {
-            return false
-        }
-
-        return blockHashes == task.blockHashes
     }
 }

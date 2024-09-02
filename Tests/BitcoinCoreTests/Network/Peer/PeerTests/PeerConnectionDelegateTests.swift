@@ -1,3 +1,9 @@
+//
+//  PeerConnectionDelegateTests.swift
+//
+//  Created by Sun on 2018/11/15.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift
@@ -37,7 +43,8 @@
 //            when(mock.timePeriodPassed(peer: any())).thenDoNothing()
 //        }
 //
-//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager: mockConnectionTimeoutManager, queue: DispatchQueue.main)
+//        peer = Peer(host: "", network: mockNetwork, connection: mockConnection, connectionTimeoutManager:
+//        mockConnectionTimeoutManager, queue: DispatchQueue.main)
 //        peer.delegate = mockPeerGroup
 //    }
 //
@@ -260,7 +267,8 @@
 //        peer.connection(didReceiveMessage: message)
 //        waitForMainQueue()
 //
-//        let networkAddressesCompareFunction: ([NetworkAddress], [NetworkAddress]) -> Bool = listCompareFunction(compareItemFunction: { $0.address == $1.address })
+//        let networkAddressesCompareFunction: ([NetworkAddress], [NetworkAddress]) -> Bool =
+//        listCompareFunction(compareItemFunction: { $0.address == $1.address })
 //        verify(mockPeerGroup).peer(equal(to: peer, equalWhen: { $0 === $1 }), didReceiveAddresses: equal(to: [networkAddress], equalWhen: networkAddressesCompareFunction))
 //    }
 //
@@ -283,7 +291,8 @@
 //        peer.connection(didReceiveMessage: message)
 //        waitForMainQueue()
 //
-//        let networkAddressesCompareFunction: ([InventoryItem], [InventoryItem]) -> Bool = listCompareFunction(compareItemFunction: { $0.hash == $1.hash })
+//        let networkAddressesCompareFunction: ([InventoryItem], [InventoryItem]) -> Bool =
+//        listCompareFunction(compareItemFunction: { $0.hash == $1.hash })
 //        verify(mockPeerGroup).peer(equal(to: peer, equalWhen: { $0 === $1 }), didReceiveInventoryItems: equal(to: [inv], equalWhen: networkAddressesCompareFunction))
 //    }
 //
@@ -352,7 +361,8 @@
 //            when(mock.merkleBlockValidator.get).thenReturn(mockValidator)
 //        }
 //
-//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0, numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
+//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0,
+//        numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
 //        let task = newTask(extraMocks: { when($0).handle(merkleBlock: any()).thenReturn(true) })
 //        let task2 = newTask(extraMocks: { when($0).handle(merkleBlock: any()).thenReturn(false) })
 //
@@ -378,7 +388,8 @@
 //            when(mock.merkleBlockValidator.get).thenReturn(mockValidator)
 //        }
 //
-//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0, numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
+//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0,
+//        numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
 //        let task = newTask(extraMocks: { when($0).handle(merkleBlock: any()).thenReturn(true) })
 //
 //        peer.connected = false
@@ -401,7 +412,8 @@
 //            when(mock.merkleBlockValidator.get).thenReturn(mockValidator)
 //        }
 //
-//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0, numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
+//        let message = MerkleBlockMessage(blockHeader: TestData.firstBlock.header, totalTransactions: 0,
+//        numberOfHashes: 0, hashes: [], numberOfFlags: 0, flags: [])
 //        let task = newTask(extraMocks: { when($0).handle(merkleBlock: any()).thenReturn(true) })
 //
 //        peer.connected = true

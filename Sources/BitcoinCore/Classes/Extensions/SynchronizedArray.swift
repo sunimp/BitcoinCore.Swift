@@ -1,8 +1,7 @@
 //
 //  SynchronizedArray.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/18.
 //
 
 import Foundation
@@ -11,7 +10,6 @@ import Foundation
 
 /// A thread-safe array.
 public class SynchronizedArray<Element> {
-    
     private let queue = DispatchQueue(label: "io.SynchronizedArray", attributes: .concurrent)
     private var array = [Element]()
 }
@@ -60,7 +58,8 @@ extension SynchronizedArray {
 extension SynchronizedArray {
     /// Returns the first element of the sequence that satisfies the given predicate or nil if no such element is found.
     ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as its argument and returns a Boolean value indicating whether the element is a match.
+    /// - Parameter predicate: A closure that takes an element of the sequence as its argument and returns a Boolean
+    /// value indicating whether the element is a match.
     /// - Returns: The first match or nil if there was no match.
     public func first(where predicate: (Element) -> Bool) -> Element? {
         var result: Element?
@@ -70,7 +69,8 @@ extension SynchronizedArray {
 
     /// Returns an array containing, in order, the elements of the sequence that satisfy the given predicate.
     ///
-    /// - Parameter isIncluded: A closure that takes an element of the sequence as its argument and returns a Boolean value indicating whether the element should be included in the returned array.
+    /// - Parameter isIncluded: A closure that takes an element of the sequence as its argument and returns a Boolean
+    /// value indicating whether the element should be included in the returned array.
     /// - Returns: An array of the elements that includeElement allowed.
     public func filter(_ isIncluded: (Element) -> Bool) -> [Element] {
         var result = [Element]()
@@ -80,8 +80,10 @@ extension SynchronizedArray {
 
     /// Returns the first index in which an element of the collection satisfies the given predicate.
     ///
-    /// - Parameter predicate: A closure that takes an element as its argument and returns a Boolean value that indicates whether the passed element represents a match.
-    /// - Returns: The index of the first element for which predicate returns true. If no elements in the collection satisfy the given predicate, returns nil.
+    /// - Parameter predicate: A closure that takes an element as its argument and returns a Boolean value that
+    /// indicates whether the passed element represents a match.
+    /// - Returns: The index of the first element for which predicate returns true. If no elements in the collection
+    /// satisfy the given predicate, returns nil.
     public func index(where predicate: (Element) -> Bool) -> Int? {
         var result: Int?
         queue.sync { result = self.array.firstIndex(where: predicate) }
@@ -90,7 +92,8 @@ extension SynchronizedArray {
 
     /// Returns the elements of the collection, sorted using the given predicate as the comparison between elements.
     ///
-    /// - Parameter areInIncreasingOrder: A predicate that returns true if its first argument should be ordered before its second argument; otherwise, false.
+    /// - Parameter areInIncreasingOrder: A predicate that returns true if its first argument should be ordered before
+    /// its second argument; otherwise, false.
     /// - Returns: A sorted array of the collection’s elements.
     public func sorted(by areInIncreasingOrder: (Element, Element) -> Bool) -> [Element] {
         var result = [Element]()
@@ -98,9 +101,11 @@ extension SynchronizedArray {
         return result
     }
 
-    /// Returns an array containing the non-nil results of calling the given transformation with each element of this sequence.
+    /// Returns an array containing the non-nil results of calling the given transformation with each element of this
+    /// sequence.
     ///
-    /// - Parameter transform: A closure that accepts an element of this sequence as its argument and returns an optional value.
+    /// - Parameter transform: A closure that accepts an element of this sequence as its argument and returns an
+    /// optional value.
     /// - Returns: An array of the non-nil results of calling transform with each element of the sequence.
     public func flatMap<ElementOfResult>(_ transform: (Element) -> ElementOfResult?) -> [ElementOfResult] {
         var result = [ElementOfResult]()
@@ -117,7 +122,8 @@ extension SynchronizedArray {
 
     /// Returns a Boolean value indicating whether the sequence contains an element that satisfies the given predicate.
     ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as its argument and returns a Boolean value that indicates whether the passed element represents a match.
+    /// - Parameter predicate: A closure that takes an element of the sequence as its argument and returns a Boolean
+    /// value that indicates whether the passed element represents a match.
     /// - Returns: true if the sequence contains an element that satisfies predicate; otherwise, false.
     public func contains(where predicate: (Element) -> Bool) -> Bool {
         var result = false
@@ -176,11 +182,14 @@ extension SynchronizedArray {
     /// Removes and returns the element at the specified position.
     ///
     /// - Parameters:
-    ///   - predicate: A closure that takes an element of the sequence as its argument and returns a Boolean value indicating whether the element is a match.
+    ///   - predicate: A closure that takes an element of the sequence as its argument and returns a Boolean value
+    /// indicating whether the element is a match.
     ///   - completion: The handler with the removed element.
     public func remove(where predicate: @escaping (Element) -> Bool, completion: ((Element) -> Void)? = nil) {
         queue.async(flags: .barrier) {
-            guard let index = self.array.firstIndex(where: predicate) else { return }
+            guard let index = self.array.firstIndex(where: predicate) else {
+                return
+            }
             let element = self.array.remove(at: index)
 
             DispatchQueue.main.async {
@@ -214,14 +223,18 @@ extension SynchronizedArray {
             var result: Element?
 
             queue.sync {
-                guard self.array.startIndex ..< self.array.endIndex ~= index else { return }
+                guard self.array.startIndex ..< self.array.endIndex ~= index else {
+                    return
+                }
                 result = self.array[index]
             }
 
             return result
         }
         set {
-            guard let newValue else { return }
+            guard let newValue else {
+                return
+            }
 
             queue.async(flags: .barrier) {
                 self.array[index] = newValue

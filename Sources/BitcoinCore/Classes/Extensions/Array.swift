@@ -1,8 +1,7 @@
 //
-//  Array+.swift
-//  BitcoinCore
+//  Array.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -10,7 +9,6 @@ import Foundation
 import GRDB
 
 extension [FullTransaction] {
-    
     func inTopologicalOrder() -> [FullTransaction] {
         var ordered = [FullTransaction]()
 
@@ -23,7 +21,11 @@ extension [FullTransaction] {
         return ordered
     }
 
-    private func visit(transactionWithIndex transactionIndex: Int, picked: inout [FullTransaction], visited: inout [Bool]) {
+    private func visit(
+        transactionWithIndex transactionIndex: Int,
+        picked: inout [FullTransaction],
+        visited: inout [Bool]
+    ) {
         guard !picked.contains(where: { self[transactionIndex].header.dataHash == $0.header.dataHash }) else {
             return
         }
@@ -38,8 +40,7 @@ extension [FullTransaction] {
             for input in self[transactionIndex].inputs {
                 if
                     input.previousOutputTxHash == self[candidateTransactionIndex].header.dataHash,
-                    self[candidateTransactionIndex].outputs.count > input.previousOutputIndex
-                {
+                    self[candidateTransactionIndex].outputs.count > input.previousOutputIndex {
                     visit(transactionWithIndex: candidateTransactionIndex, picked: &picked, visited: &visited)
                 }
             }
@@ -72,7 +73,7 @@ extension [Data]: DatabaseValueConvertible, StatementBinding {
     }
 
     public static func fromDatabaseValue(_ dbValue: DatabaseValue) -> [Element]? {
-        if case DatabaseValue.Storage.blob(let value) = dbValue.storage {
+        if case let DatabaseValue.Storage.blob(value) = dbValue.storage {
             return DataListSerializer.deserialize(data: value)
         }
 

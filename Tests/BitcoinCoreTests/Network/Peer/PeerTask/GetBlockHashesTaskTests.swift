@@ -1,3 +1,9 @@
+//
+//  GetBlockHashesTaskTests.swift
+//
+//  Created by Sun on 2018/11/14.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -45,7 +51,8 @@
 //        hashes = [Data(from: 1000000)]
 //        expectedHashesMinCount = 10
 //        allowedIdleTime = 1.0
-//        task = GetBlockHashesTask(hashes: hashes, expectedHashesMinCount: expectedHashesMinCount, dateGenerator: dateGenerator)
+//        task = GetBlockHashesTask(hashes: hashes, expectedHashesMinCount: expectedHashesMinCount, dateGenerator:
+//        dateGenerator)
 //
 //        task.requester = mockRequester
 //        task.delegate = mockDelegate
@@ -104,7 +111,8 @@
 //        verify(mockDelegate).handle(completedTask: equal(to: task))
 //
 //        // Wait maxAllowedIdleTime before timeout
-//        task = GetBlockHashesTask(hashes: [], expectedHashesMinCount: maxExpectedBlockHashesCount + 100, dateGenerator: dateGenerator)
+//        task = GetBlockHashesTask(hashes: [], expectedHashesMinCount: maxExpectedBlockHashesCount + 100,
+//        dateGenerator: dateGenerator)
 //        task.delegate = mockDelegate
 //
 //        generatedDate = Date(timeIntervalSince1970: 1000000)
@@ -127,7 +135,8 @@
 //    }
 //
 //    func testHandleItems() {
-//        let blockInv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 200000000))
+//        let blockInv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        200000000))
 //        let txInv = InventoryItem(type: InventoryItem.ObjectType.transaction.rawValue, hash: Data(from: 200000001))
 //
 //        let handled = try! task.handle(message: InventoryMessage(inventoryItems: [blockInv, txInv]))
@@ -160,9 +169,12 @@
 //    }
 //
 //    func testHandleItems_NewHashesLessThanExisting() {
-//        let block0Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 200000000))
-//        let block1Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 300000000))
-//        let block2Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 400000000))
+//        let block0Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        200000000))
+//        let block1Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        300000000))
+//        let block2Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        400000000))
 //
 //        let _ = try! task.handle(message: InventoryMessage(inventoryItems: [block0Inv, block1Inv]))
 //        let handled = try! task.handle(message: InventoryMessage(inventoryItems: [block2Inv]))
@@ -174,9 +186,12 @@
 //    }
 //
 //    func testHandleItems_NewHashesMoreThanExisting() {
-//        let block0Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 200000000))
-//        let block1Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 300000000))
-//        let block2Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from: 400000000))
+//        let block0Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        200000000))
+//        let block1Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        300000000))
+//        let block2Inv = InventoryItem(type: InventoryItem.ObjectType.blockMessage.rawValue, hash: Data(from:
+//        400000000))
 //
 //        let _ = try! task.handle(message: InventoryMessage(inventoryItems: [block2Inv]))
 //        let handled = try! task.handle(message: InventoryMessage(inventoryItems: [block0Inv, block1Inv]))

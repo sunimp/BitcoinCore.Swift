@@ -1,3 +1,9 @@
+//
+//  BlockchainTests.swift
+//
+//  Created by Sun on 2018/10/17.
+//
+
 // import Quick
 // import Nimble
 // import XCTest
@@ -24,7 +30,8 @@
 //                when(mock.onInsert(block: any())).thenDoNothing()
 //            }
 //
-//            blockchain = Blockchain(storage: mockStorage, blockValidator: mockBlockValidator, factory: mockFactory, listener: mockBlockchainDataListener)
+//            blockchain = Blockchain(storage: mockStorage, blockValidator: mockBlockValidator, factory: mockFactory,
+//            listener: mockBlockchainDataListener)
 //        }
 //
 //        afterEach {
@@ -34,7 +41,8 @@
 //
 //        describe("#connect") {
 //            context("when block exists") {
-//                let merkleBlock = MerkleBlock(header: TestData.checkpointBlock.header, transactionHashes: [Data](), transactions: [FullTransaction]())
+//                let merkleBlock = MerkleBlock(header: TestData.checkpointBlock.header, transactionHashes: [Data](),
+//                transactions: [FullTransaction]())
 //                let block = Block(withHeader: TestData.checkpointBlock.header, height: 0)
 //
 //                beforeEach {
@@ -56,7 +64,8 @@
 //
 //            context("when block doesn't exist") {
 //                let previousBlock = Block(withHeader: TestData.checkpointBlock.header, height: 0)
-//                let merkleBlock = MerkleBlock(header: TestData.firstBlock.header, transactionHashes: [Data](), transactions: [FullTransaction]())
+//                let merkleBlock = MerkleBlock(header: TestData.firstBlock.header, transactionHashes: [Data](),
+//                transactions: [FullTransaction]())
 //                let newBlock = Block(withHeader: merkleBlock.header, previousBlock: previousBlock)
 //
 //                beforeEach {
@@ -149,7 +158,8 @@
 //        }
 //
 //        describe("#forceAdd") {
-//            let merkleBlock = MerkleBlock(header: TestData.checkpointBlock.header, transactionHashes: [Data](), transactions: [FullTransaction]())
+//            let merkleBlock = MerkleBlock(header: TestData.checkpointBlock.header, transactionHashes: [Data](),
+//            transactions: [FullTransaction]())
 //            let height = 1
 //            let block = Block(withHeader: TestData.checkpointBlock.header, height: height)
 //
@@ -212,7 +222,8 @@
 //                let newBlocks = [4: "11111114", 5: "11111115", 6: "11111116"]
 //
 //                it("makes new blocks not stale") {
-//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage: mockStorage)
+//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage:
+//                    mockStorage)
 //                    try! blockchain.handleFork()
 //
 //                    verify(mockStorage).unstaleAllBlocks()
@@ -224,9 +235,11 @@
 //                let newBlocks = [2: "11111112", 3: "11111113", 4: "11111114"]
 //
 //                beforeEach {
-//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage: mockStorage)
+//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage:
+//                    mockStorage)
 //                    inChainBlocksAfterFork = Array(mockedBlocks.blocksInChain.suffix(from: 1))
-//                    inChainBlocksAfterForkTransactionHexes = Array(mockedBlocks.blocksInChainTransactionHashes.suffix(from: 1))
+//                    inChainBlocksAfterForkTransactionHexes =
+//                    Array(mockedBlocks.blocksInChainTransactionHashes.suffix(from: 1))
 //                }
 //
 //                it("deletes old blocks in chain after the fork") {
@@ -249,7 +262,8 @@
 //                let newBlocks = [2: "11111112", 3: "11111113"]
 //
 //                it("deletes new blocks") {
-//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage: mockStorage)
+//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage:
+//                    mockStorage)
 //                    inChainBlocksAfterFork = Array(mockedBlocks.blocksInChain.suffix(from: 2))
 //                    try! blockchain.handleFork()
 //
@@ -264,7 +278,8 @@
 //                let newBlocks = [2: "11111112", 3: "11111113"]
 //
 //                it("deletes new blocks") {
-//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage: mockStorage)
+//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage:
+//                    mockStorage)
 //                    inChainBlocksAfterFork = Array(mockedBlocks.blocksInChain.suffix(from: 1))
 //                    try! blockchain.handleFork()
 //
@@ -292,7 +307,8 @@
 //                let newBlocks = [2: "11111112", 3: "11111113", 4: "11111114"]
 //
 //                it("makes new blocks not stale") {
-//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage: mockStorage)
+//                    mockedBlocks = self.mockBlocks(blocksInChain: blocksInChain, newBlocks: newBlocks, mockStorage:
+//                    mockStorage)
 //                    try! blockchain.handleFork()
 //
 //                    verify(mockStorage, never()).delete(blocks: any())
@@ -306,7 +322,8 @@
 //            var mockedBlocks: MockedBlocks!
 //
 //            beforeEach {
-//                mockedBlocks = self.mockBlocks(blocksInChain: [Int: String](), newBlocks: newBlocks, mockStorage: mockStorage)
+//                mockedBlocks = self.mockBlocks(blocksInChain: [Int: String](), newBlocks: newBlocks, mockStorage:
+//                mockStorage)
 //                try! blockchain.deleteBlocks(blocks: mockedBlocks.newBlocks)
 //            }
 //
@@ -320,7 +337,8 @@
 //        }
 //    }
 //
-//    private func mockBlocks(blocksInChain: [Int: String], newBlocks: [Int: String], mockStorage: MockIStorage) -> MockedBlocks {
+//    private func mockBlocks(blocksInChain: [Int: String], newBlocks: [Int: String], mockStorage: MockIStorage) ->
+//    MockedBlocks {
 //        var mockedBlocks = MockedBlocks()
 //
 //        stub(mockStorage) { mock in
@@ -364,7 +382,8 @@
 //                if let lastStale = mockedBlocks.newBlocks.last {
 //                    when(mock.block(stale: true, sortedHeight: "DESC")).thenReturn(lastStale)
 //
-//                    let inChainBlocksAfterForkPoint = mockedBlocks.blocksInChain.filter { $0.height >= firstStale.height }
+//                    let inChainBlocksAfterForkPoint = mockedBlocks.blocksInChain.filter { $0.height >=
+//                    firstStale.height }
 //                    when(mock.blocks(heightGreaterThanOrEqualTo: firstStale.height, stale: false)).thenReturn(inChainBlocksAfterForkPoint)
 //                }
 //            } else {

@@ -1,8 +1,7 @@
 //
 //  Transaction.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -16,35 +15,7 @@ public enum TransactionStatus: Int, DatabaseValueConvertible, Codable { case new
 // MARK: - Transaction
 
 public class Transaction: Record {
-    public var uid: String
-    public var dataHash: Data
-    public var version: Int
-    public var lockTime: Int
-    public var timestamp: Int
-    public var order: Int
-    public var blockHash: Data? = nil
-    public var isMine = false
-    public var isOutgoing = false
-    public var status: TransactionStatus = .relayed
-    public var segWit = false
-    public var conflictingTxHash: Data? = nil
-    public var transactionInfoJson: Data = .init()
-    public var rawTransaction: String? = nil
-
-    public init(version: Int = 0, lockTime: Int = 0, timestamp: Int? = nil) {
-        self.version = version
-        self.lockTime = lockTime
-        self.timestamp = timestamp ?? Int(Date().timeIntervalSince1970)
-        order = 0
-        dataHash = Data()
-        uid = UUID().uuidString
-
-        super.init()
-    }
-
-    override open class var databaseTableName: String {
-        "transactions"
-    }
+    // MARK: Nested Types
 
     enum Columns: String, ColumnExpression, CaseIterable {
         case uid
@@ -61,6 +32,42 @@ public class Transaction: Record {
         case conflictingTxHash
         case transactionInfoJson
         case rawTransaction
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "transactions"
+    }
+
+    // MARK: Properties
+
+    public var uid: String
+    public var dataHash: Data
+    public var version: Int
+    public var lockTime: Int
+    public var timestamp: Int
+    public var order: Int
+    public var blockHash: Data? = nil
+    public var isMine = false
+    public var isOutgoing = false
+    public var status: TransactionStatus = .relayed
+    public var segWit = false
+    public var conflictingTxHash: Data? = nil
+    public var transactionInfoJson: Data = .init()
+    public var rawTransaction: String? = nil
+
+    // MARK: Lifecycle
+
+    public init(version: Int = 0, lockTime: Int = 0, timestamp: Int? = nil) {
+        self.version = version
+        self.lockTime = lockTime
+        self.timestamp = timestamp ?? Int(Date().timeIntervalSince1970)
+        order = 0
+        dataHash = Data()
+        uid = UUID().uuidString
+
+        super.init()
     }
 
     required init(row: Row) throws {
@@ -81,6 +88,8 @@ public class Transaction: Record {
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.uid] = uid

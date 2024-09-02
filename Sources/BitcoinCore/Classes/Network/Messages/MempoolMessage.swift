@@ -1,14 +1,17 @@
 //
-//  MemPoolMessage.swift
-//  BitcoinCore
+//  MempoolMessage.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation
 
 struct MemPoolMessage: IMessage {
-    init() { }
+    // MARK: Properties
 
     let description = ""
+
+    // MARK: Lifecycle
+
+    init() { }
 }

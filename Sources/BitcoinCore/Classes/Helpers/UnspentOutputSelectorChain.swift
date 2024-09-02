@@ -1,19 +1,25 @@
 //
 //  UnspentOutputSelectorChain.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/5/7.
 //
 
 import Foundation
 
 class UnspentOutputSelectorChain: IUnspentOutputSelector {
-    private let provider: IUnspentOutputProvider
+    // MARK: Properties
+
     var concreteSelectors = [IUnspentOutputSelector]()
+
+    private let provider: IUnspentOutputProvider
+
+    // MARK: Lifecycle
 
     init(provider: IUnspentOutputProvider) {
         self.provider = provider
     }
+
+    // MARK: Functions
 
     public func all(filters: UtxoFilters) -> [UnspentOutput] {
         provider.spendableUtxo(filters: filters)
@@ -24,7 +30,8 @@ class UnspentOutputSelectorChain: IUnspentOutputSelector {
         outputScriptType: ScriptType,
         changeType: ScriptType,
         pluginDataOutputSize: Int
-    ) throws -> SelectedUnspentOutputInfo {
+    ) throws
+        -> SelectedUnspentOutputInfo {
         var lastError: Error = BitcoinCoreErrors.Unexpected.unknown
 
         for selector in concreteSelectors {

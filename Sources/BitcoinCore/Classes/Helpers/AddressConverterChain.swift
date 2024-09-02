@@ -1,28 +1,32 @@
 //
 //  AddressConverterChain.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
 
 public class AddressConverterChain: IAddressConverter {
+    // MARK: Properties
+
     private var concreteConverters = [IAddressConverter]()
+
+    // MARK: Lifecycle
+
+    public init() { }
+
+    // MARK: Functions
 
     public func prepend(addressConverter: IAddressConverter) {
         concreteConverters.insert(addressConverter, at: 0)
     }
-
-    public init() { }
 
     public func convert(address: String) throws -> Address {
         var errors = [Error]()
 
         for converter in concreteConverters {
             do {
-                let converted = try converter.convert(address: address)
-                return converted
+                return try converter.convert(address: address)
             } catch {
                 errors.append(error)
             }
@@ -36,8 +40,7 @@ public class AddressConverterChain: IAddressConverter {
 
         for converter in concreteConverters {
             do {
-                let converted = try converter.convert(lockingScriptPayload: lockingScriptPayload, type: type)
-                return converted
+                return try converter.convert(lockingScriptPayload: lockingScriptPayload, type: type)
             } catch {
                 errors.append(error)
             }
@@ -51,8 +54,7 @@ public class AddressConverterChain: IAddressConverter {
 
         for converter in concreteConverters {
             do {
-                let converted = try converter.convert(publicKey: publicKey, type: type)
-                return converted
+                return try converter.convert(publicKey: publicKey, type: type)
             } catch {
                 errors.append(error)
             }

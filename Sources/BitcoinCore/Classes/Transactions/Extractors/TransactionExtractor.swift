@@ -1,8 +1,7 @@
 //
 //  TransactionExtractor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2021/9/3.
 //
 
 import Foundation
@@ -10,12 +9,16 @@ import Foundation
 // MARK: - TransactionExtractor
 
 class TransactionExtractor {
+    // MARK: Properties
+
     private let outputScriptTypeParser: ITransactionExtractor
     private let publicKeySetter: ITransactionExtractor
     private let inputExtractor: ITransactionExtractor
     private let outputAddressExtractor: ITransactionExtractor
     private let metaDataExtractor: ITransactionExtractor
     private let pluginManager: IPluginManager
+
+    // MARK: Lifecycle
 
     init(
         outputScriptTypeParser: ITransactionExtractor,

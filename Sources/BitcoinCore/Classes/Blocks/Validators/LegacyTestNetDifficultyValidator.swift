@@ -1,8 +1,7 @@
 //
 //  LegacyTestNetDifficultyValidator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/15.
 //
 
 import Foundation
@@ -10,13 +9,17 @@ import Foundation
 import BigInt
 
 public class LegacyTestNetDifficultyValidator: IBlockChainedValidator {
-    private let diffDate = 1_329_264_000 // February 16th 2012
+    // MARK: Properties
+
+    private let diffDate = 1329264000 // February 16th 2012
 
     private let heightInterval: Int
     private let targetSpacing: Int
     private let maxTargetBits: Int
 
     private let blockHelper: IBlockValidatorHelper
+
+    // MARK: Lifecycle
 
     public init(blockHelper: IBlockValidatorHelper, heightInterval: Int, targetSpacing: Int, maxTargetBits: Int) {
         self.blockHelper = blockHelper
@@ -25,6 +28,8 @@ public class LegacyTestNetDifficultyValidator: IBlockChainedValidator {
         self.targetSpacing = targetSpacing
         self.maxTargetBits = maxTargetBits
     }
+
+    // MARK: Functions
 
     public func validate(block: Block, previousBlock: Block) throws {
         let timeDelta = block.timestamp - previousBlock.timestamp

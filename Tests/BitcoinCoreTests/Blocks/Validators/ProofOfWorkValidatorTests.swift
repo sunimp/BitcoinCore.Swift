@@ -1,3 +1,9 @@
+//
+//  ProofOfWorkValidatorTests.swift
+//
+//  Created by Sun on 2018/9/20.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore

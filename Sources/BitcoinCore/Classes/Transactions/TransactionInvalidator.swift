@@ -1,8 +1,7 @@
 //
 //  TransactionInvalidator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/9/24.
 //
 
 import Foundation
@@ -10,12 +9,20 @@ import Foundation
 // MARK: - TransactionInvalidator
 
 class TransactionInvalidator {
-    private let storage: IStorage
-    private let transactionInfoConverter: ITransactionInfoConverter
+    // MARK: Properties
 
     weak var listener: IBlockchainDataListener?
 
-    init(storage: IStorage, transactionInfoConverter: ITransactionInfoConverter, listener: IBlockchainDataListener? = nil) {
+    private let storage: IStorage
+    private let transactionInfoConverter: ITransactionInfoConverter
+
+    // MARK: Lifecycle
+
+    init(
+        storage: IStorage,
+        transactionInfoConverter: ITransactionInfoConverter,
+        listener: IBlockchainDataListener? = nil
+    ) {
         self.storage = storage
         self.transactionInfoConverter = transactionInfoConverter
         self.listener = listener
@@ -50,7 +57,8 @@ extension TransactionInvalidator: ITransactionInvalidator {
                 timestamp: transaction.timestamp,
                 order: transaction.order, blockHash: transaction.blockHash, isMine: transaction.isMine,
                 isOutgoing: transaction.isOutgoing,
-                status: transaction.status, segWit: transaction.segWit, conflictingTxHash: transaction.conflictingTxHash,
+                status: transaction.status, segWit: transaction.segWit,
+                conflictingTxHash: transaction.conflictingTxHash,
                 transactionInfoJson: transactionInfoJson, rawTransaction: transactionFullInfo.rawTransaction
             )
         }

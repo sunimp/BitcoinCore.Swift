@@ -1,18 +1,23 @@
 //
 //  BlockValidatorHelper.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/15.
 //
 
 import Foundation
 
 open class BlockValidatorHelper: IBlockValidatorHelper {
+    // MARK: Properties
+
     let storage: IStorage
+
+    // MARK: Lifecycle
 
     public init(storage: IStorage) {
         self.storage = storage
     }
+
+    // MARK: Functions
 
     public func previous(for block: Block, count: Int) -> Block? {
         let previousHeight = block.height - count

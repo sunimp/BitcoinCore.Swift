@@ -1,8 +1,7 @@
 //
 //  PeerGroup.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Combine
@@ -27,8 +26,17 @@ public enum PeerGroupEvent {
 // MARK: - PeerGroup
 
 class PeerGroup {
+    // MARK: Static Properties
+
     private static let acceptableBlockHeightDifference = 50000
     private static let peerCountToConnect = 100
+
+    // MARK: Properties
+
+    private(set) var started = false
+
+    weak var inventoryItemsHandler: IInventoryItemsHandler?
+    weak var peerTaskHandler: IPeerTaskHandler?
 
     private let factory: IFactory
 
@@ -41,18 +49,21 @@ class PeerGroup {
     private var peerCountToConnect: Int? // number of peers to connect to
     private var peerCountConnected = 0 // number of peers connected to
 
-    private(set) var started = false
-
     private let peersQueue: DispatchQueue
     private let inventoryQueue: DispatchQueue
     private var eventLoopGroup: MultiThreadedEventLoopGroup?
 
     private let logger: Logger?
 
-    weak var inventoryItemsHandler: IInventoryItemsHandler?
-    weak var peerTaskHandler: IPeerTaskHandler?
-
     private let subject = PassthroughSubject<PeerGroupEvent, Never>()
+
+    // MARK: Computed Properties
+
+    var publisher: AnyPublisher<PeerGroupEvent, Never> {
+        subject.eraseToAnyPublisher()
+    }
+
+    // MARK: Lifecycle
 
     init(
         factory: IFactory,
@@ -65,7 +76,10 @@ class PeerGroup {
             label: "com.sunimp.bitcoin-core.peer-group.peers",
             qos: .background
         ),
-        inventoryQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-group.inventory", qos: .background),
+        inventoryQueue: DispatchQueue = DispatchQueue(
+            label: "com.sunimp.bitcoin-core.peer-group.inventory",
+            qos: .background
+        ),
         logger: Logger? = nil
     ) {
         self.factory = factory
@@ -87,9 +101,7 @@ class PeerGroup {
         eventLoopGroup?.shutdownGracefully { _ in }
     }
 
-    var publisher: AnyPublisher<PeerGroupEvent, Never> {
-        subject.eraseToAnyPublisher()
-    }
+    // MARK: Functions
 
     private func connectPeersIfRequired() {
         peersQueue.async {
@@ -246,7 +258,10 @@ extension PeerGroup: PeerDelegate {
 
         case let inventoryMessage as InventoryMessage:
             inventoryQueue.async {
-                self.inventoryItemsHandler?.handleInventoryItems(peer: peer, inventoryItems: inventoryMessage.inventoryItems)
+                self.inventoryItemsHandler?.handleInventoryItems(
+                    peer: peer,
+                    inventoryItems: inventoryMessage.inventoryItems
+                )
             }
 
         default: ()

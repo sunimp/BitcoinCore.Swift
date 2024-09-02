@@ -1,20 +1,39 @@
+//
+//  SendTransactionTask.swift
+//
+//  Created by Sun on 2018/9/18.
+//
+
 import Foundation
 import WWExtensions
 
 class SendTransactionTask: PeerTask {
+    // MARK: Overridden Properties
+
+    override var state: String {
+        "transaction: \(transaction.header.dataHash.ww.reversedHex)"
+    }
+
+    // MARK: Properties
+
     var transaction: FullTransaction
+
     private let allowedIdleTime: TimeInterval
 
-    init(transaction: FullTransaction, allowedIdleTime: TimeInterval = 30, dateGenerator: @escaping () -> Date = Date.init) {
+    // MARK: Lifecycle
+
+    init(
+        transaction: FullTransaction,
+        allowedIdleTime: TimeInterval = 30,
+        dateGenerator: @escaping () -> Date = Date.init
+    ) {
         self.transaction = transaction
         self.allowedIdleTime = allowedIdleTime
 
         super.init(dateGenerator: dateGenerator)
     }
 
-    override var state: String {
-        "transaction: \(transaction.header.dataHash.ww.reversedHex)"
-    }
+    // MARK: Overridden Functions
 
     override func start() {
         let message = InventoryMessage(inventoryItems: [
@@ -51,6 +70,16 @@ class SendTransactionTask: PeerTask {
         }
     }
 
+    // MARK: Functions
+
+    func equalTo(_ task: SendTransactionTask?) -> Bool {
+        guard let task else {
+            return false
+        }
+
+        return transaction.header.dataHash == task.transaction.header.dataHash
+    }
+
     private func handle(getDataInventoryItem item: InventoryItem) -> Bool {
         guard item.objectType == .transaction, item.hash == transaction.header.dataHash else {
             return false
@@ -60,13 +89,5 @@ class SendTransactionTask: PeerTask {
         delegate?.handle(completedTask: self)
 
         return true
-    }
-
-    func equalTo(_ task: SendTransactionTask?) -> Bool {
-        guard let task else {
-            return false
-        }
-
-        return transaction.header.dataHash == task.transaction.header.dataHash
     }
 }

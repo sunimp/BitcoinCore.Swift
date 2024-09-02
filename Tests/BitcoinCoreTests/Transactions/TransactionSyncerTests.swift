@@ -1,3 +1,9 @@
+//
+//  TransactionSyncerTests.swift
+//
+//  Created by Sun on 2018/9/25.
+//
+
 // import XCTest
 // import Quick
 // import Nimble
@@ -20,7 +26,8 @@
 //                when(mock.fillGap()).thenDoNothing()
 //            }
 //
-//            syncer = TransactionSyncer(storage: mockStorage, processor: mockTransactionProcessor, publicKeyManager: mockAddressManager)
+//            syncer = TransactionSyncer(storage: mockStorage, processor: mockTransactionProcessor, publicKeyManager:
+//            mockAddressManager)
 //        }
 //
 //        afterEach {
@@ -67,7 +74,8 @@
 //                it("doesn't do anything") {
 //                    syncer.handleRelayed(transactions: [])
 //
-//                    verify(mockTransactionProcessor, never()).processReceived(transactions: any(), inBlock: any(), skipCheckBloomFilter: any())
+//                    verify(mockTransactionProcessor, never()).processReceived(transactions: any(), inBlock: any(),
+//                    skipCheckBloomFilter: any())
 //                    verify(mockAddressManager, never()).fillGap()
 //                }
 //            }

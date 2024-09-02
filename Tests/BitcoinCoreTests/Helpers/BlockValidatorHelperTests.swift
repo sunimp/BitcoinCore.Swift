@@ -1,3 +1,9 @@
+//
+//  BlockValidatorHelperTests.swift
+//
+//  Created by Sun on 2019/4/18.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -53,7 +59,8 @@
 //        let window = blockHelper.previousWindow(for: block, count: 2)
 //
 //        verify(mockStorage).blocks(from: 2016, to: 2017, ascending: true)
-//        XCTAssertEqual(window?.map { $0.headerHash }, [TestData.checkpointBlock.headerHash, TestData.firstBlock.headerHash])
+//        XCTAssertEqual(window?.map { $0.headerHash }, [TestData.checkpointBlock.headerHash,
+//        TestData.firstBlock.headerHash])
 //    }
 //
 //    func testNoPreviousWindow() {

@@ -1,8 +1,7 @@
 //
-//  RestoreKeyConverterChain.swift
-//  BitcoinCore
+//  RestoreKeyConverter.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/9/9.
 //
 
 import Foundation
@@ -12,7 +11,11 @@ import HDWalletKit
 // MARK: - RestoreKeyConverterChain
 
 class RestoreKeyConverterChain: IRestoreKeyConverter {
+    // MARK: Properties
+
     var converters = [IRestoreKeyConverter]()
+
+    // MARK: Functions
 
     func add(converter: IRestoreKeyConverter) {
         converters.append(converter)
@@ -40,7 +43,11 @@ class RestoreKeyConverterChain: IRestoreKeyConverter {
 // MARK: - Bip44RestoreKeyConverter
 
 public class Bip44RestoreKeyConverter {
+    // MARK: Properties
+
     let addressConverter: IAddressConverter
+
+    // MARK: Lifecycle
 
     public init(addressConverter: IAddressConverter) {
         self.addressConverter = addressConverter
@@ -51,7 +58,8 @@ public class Bip44RestoreKeyConverter {
 
 extension Bip44RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
-        let legacyAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip44.scriptType).stringValue
+        let legacyAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip44.scriptType)
+            .stringValue
 
         return [legacyAddress].compactMap { $0 }
     }
@@ -64,7 +72,11 @@ extension Bip44RestoreKeyConverter: IRestoreKeyConverter {
 // MARK: - Bip49RestoreKeyConverter
 
 public class Bip49RestoreKeyConverter {
+    // MARK: Properties
+
     let addressConverter: IAddressConverter
+
+    // MARK: Lifecycle
 
     public init(addressConverter: IAddressConverter) {
         self.addressConverter = addressConverter
@@ -75,7 +87,8 @@ public class Bip49RestoreKeyConverter {
 
 extension Bip49RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
-        let wpkhShAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip49.scriptType).stringValue
+        let wpkhShAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip49.scriptType)
+            .stringValue
 
         return [wpkhShAddress].compactMap { $0 }
     }
@@ -88,7 +101,11 @@ extension Bip49RestoreKeyConverter: IRestoreKeyConverter {
 // MARK: - Bip84RestoreKeyConverter
 
 public class Bip84RestoreKeyConverter {
+    // MARK: Properties
+
     let addressConverter: IAddressConverter
+
+    // MARK: Lifecycle
 
     public init(addressConverter: IAddressConverter) {
         self.addressConverter = addressConverter
@@ -99,7 +116,8 @@ public class Bip84RestoreKeyConverter {
 
 extension Bip84RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
-        let segwitAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip84.scriptType).stringValue
+        let segwitAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip84.scriptType)
+            .stringValue
 
         return [segwitAddress].compactMap { $0 }
     }
@@ -112,7 +130,11 @@ extension Bip84RestoreKeyConverter: IRestoreKeyConverter {
 // MARK: - Bip86RestoreKeyConverter
 
 public class Bip86RestoreKeyConverter {
+    // MARK: Properties
+
     let addressConverter: IAddressConverter
+
+    // MARK: Lifecycle
 
     public init(addressConverter: IAddressConverter) {
         self.addressConverter = addressConverter
@@ -123,7 +145,8 @@ public class Bip86RestoreKeyConverter {
 
 extension Bip86RestoreKeyConverter: IRestoreKeyConverter {
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
-        let taprootAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip86.scriptType).stringValue
+        let taprootAddress = try? addressConverter.convert(publicKey: publicKey, type: Purpose.bip86.scriptType)
+            .stringValue
 
         return [taprootAddress].compactMap { $0 }
     }
@@ -136,11 +159,17 @@ extension Bip86RestoreKeyConverter: IRestoreKeyConverter {
 // MARK: - KeyHashRestoreKeyConverter
 
 public class KeyHashRestoreKeyConverter: IRestoreKeyConverter {
+    // MARK: Properties
+
     let scriptType: ScriptType
+
+    // MARK: Lifecycle
 
     public init(scriptType: ScriptType) {
         self.scriptType = scriptType
     }
+
+    // MARK: Functions
 
     public func keysForApiRestore(publicKey: PublicKey) -> [String] {
         switch scriptType {
@@ -160,8 +189,13 @@ public class KeyHashRestoreKeyConverter: IRestoreKeyConverter {
 // MARK: - BlockchairCashRestoreKeyConverter
 
 public class BlockchairCashRestoreKeyConverter {
+    // MARK: Properties
+
     let addressConverter: IAddressConverter
+
     private let prefixCount: Int
+
+    // MARK: Lifecycle
 
     public init(addressConverter: IAddressConverter, prefix: String) {
         self.addressConverter = addressConverter

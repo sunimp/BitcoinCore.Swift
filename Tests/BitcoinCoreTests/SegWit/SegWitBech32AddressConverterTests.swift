@@ -1,3 +1,9 @@
+//
+//  SegWitBech32AddressConverterTests.swift
+//
+//  Created by Sun on 2019/4/22.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -75,7 +81,8 @@
 //        }
 //    }
 //
-//    func HexEncodesToBech32(hex: String, keyHash: Data, prefix: String, cashBech32: String, version: UInt8, scriptType: ScriptType) {
+//    func HexEncodesToBech32(hex: String, keyHash: Data, prefix: String, cashBech32: String, version: UInt8,
+//    scriptType: ScriptType) {
 //        //Encode
 //        let data = Data(hex: hex)!
 //        do {

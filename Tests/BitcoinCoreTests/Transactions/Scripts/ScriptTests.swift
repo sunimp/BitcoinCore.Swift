@@ -1,3 +1,9 @@
+//
+//  ScriptTests.swift
+//
+//  Created by Sun on 2018/8/22.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -21,7 +27,8 @@
 //    }
 //
 //    func testValidateSuccess() {
-//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 0, payloadRange: 1..<2), Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index: 3)])
+//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 0, payloadRange: 1..<2),
+//        Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index: 3)])
 //
 //        do {
 //            try script.validate(opCodes: Data([0x01, 0x45, 0x67]))
@@ -31,7 +38,8 @@
 //    }
 //
 //    func testValidateWrongLength() {
-//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index: 3)])
+//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index:
+//        3)])
 //
 //        do {
 //            try script.validate(opCodes: Data([0x01, 0x45, 0x67]))
@@ -43,7 +51,8 @@
 //    }
 //
 //    func testValidateWrongSequence() {
-//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 0, payloadRange: 1..<2), Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index: 3)])
+//        let script = Script(with: data, chunks: [Chunk(scriptData: data, index: 0, payloadRange: 1..<2),
+//        Chunk(scriptData: data, index: 2), Chunk(scriptData: data, index: 3)])
 //
 //        do {
 //            try script.validate(opCodes: Data([0x07, 0x33, 0x67]))

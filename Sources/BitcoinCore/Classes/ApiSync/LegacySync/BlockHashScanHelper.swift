@@ -1,8 +1,7 @@
 //
 //  BlockHashScanHelper.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/2/26.
 //
 
 import Foundation
@@ -29,8 +28,7 @@ class BlockHashScanHelper: IBlockHashScanHelper {
             for address in addresses[lastIndex - i] {
                 if
                     searchAddressStrings.contains(address) ||
-                    searchScriptStrings.firstIndex(where: { script in script.contains(address) }) != nil
-                {
+                    searchScriptStrings.firstIndex(where: { script in script.contains(address) }) != nil {
                     return lastIndex - i
                 }
             }

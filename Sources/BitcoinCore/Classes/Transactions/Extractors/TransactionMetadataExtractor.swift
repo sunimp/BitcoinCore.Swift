@@ -1,8 +1,7 @@
 //
 //  TransactionMetadataExtractor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2021/9/3.
 //
 
 import Foundation
@@ -10,8 +9,12 @@ import Foundation
 // MARK: - TransactionMetadataExtractor
 
 class TransactionMetadataExtractor {
+    // MARK: Properties
+
     private let myOutputsCache: IOutputsCache
     private let storage: IOutputStorage
+
+    // MARK: Lifecycle
 
     init(storage: IOutputStorage) {
         myOutputsCache = MyOutputsCache.instance(storage: storage)

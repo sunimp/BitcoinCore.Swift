@@ -1,8 +1,7 @@
 //
 //  BitcoinCoreBuilder.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
@@ -11,12 +10,13 @@ import HDWalletKit
 import WWToolKit
 
 public class BitcoinCoreBuilder {
-    
+    // MARK: Nested Types
+
     public enum BuildError: Error {
         case peerSizeLessThanRequired
         case noSeedData
         case noPurpose
-        case noWalletId
+        case noWalletID
         case noNetwork
         case noPaymentAddressParser
         case noAddressSelector
@@ -27,6 +27,8 @@ public class BitcoinCoreBuilder {
         case noCheckpoint
     }
 
+    // MARK: Properties
+
     /// chains
     public let addressConverter = AddressConverterChain()
 
@@ -36,7 +38,7 @@ public class BitcoinCoreBuilder {
     private var purpose: Purpose?
     private var network: INetwork?
     private var paymentAddressParser: IPaymentAddressParser?
-    private var walletId: String?
+    private var walletID: String?
     private var apiTransactionProvider: IApiTransactionProvider?
     private var plugins = [IPlugin]()
     private var logger: Logger
@@ -55,6 +57,14 @@ public class BitcoinCoreBuilder {
     private var storage: IStorage?
     private var checkpoint: Checkpoint?
     private var apiSyncStateManager: ApiSyncStateManager?
+
+    // MARK: Lifecycle
+
+    public init(logger: Logger) {
+        self.logger = logger
+    }
+
+    // MARK: Functions
 
     @discardableResult
     public func set(extendedKey: HDExtendedKey?) -> BitcoinCoreBuilder {
@@ -82,8 +92,8 @@ public class BitcoinCoreBuilder {
         return self
     }
 
-    public func set(walletId: String) -> BitcoinCoreBuilder {
-        self.walletId = walletId
+    public func set(walletID: String) -> BitcoinCoreBuilder {
+        self.walletID = walletID
         return self
     }
 
@@ -151,10 +161,6 @@ public class BitcoinCoreBuilder {
         return self
     }
 
-    public init(logger: Logger) {
-        self.logger = logger
-    }
-
     public func build() throws -> BitcoinCore {
         guard let purpose else {
             throw BuildError.noPurpose
@@ -182,7 +188,9 @@ public class BitcoinCoreBuilder {
         let restoreKeyConverterChain = RestoreKeyConverterChain()
         let pluginManager = PluginManager(scriptConverter: scriptConverter, logger: logger)
 
-        for item in plugins { pluginManager.add(plugin: item) }
+        for item in plugins {
+            pluginManager.add(plugin: item)
+        }
 
         let unspentOutputProvider = UnspentOutputProvider(
             storage: storage,
@@ -190,7 +198,8 @@ public class BitcoinCoreBuilder {
             confirmationsThreshold: confirmationsThreshold
         )
         var transactionInfoConverter = transactionInfoConverter ?? TransactionInfoConverter()
-        transactionInfoConverter.baseTransactionInfoConverter = BaseTransactionInfoConverter(pluginManager: pluginManager)
+        transactionInfoConverter
+            .baseTransactionInfoConverter = BaseTransactionInfoConverter(pluginManager: pluginManager)
         let dataProvider = DataProvider(
             storage: storage,
             balanceProvider: unspentOutputProvider,
@@ -216,7 +225,7 @@ public class BitcoinCoreBuilder {
             blockHashScanHelper = WatchAddressBlockHashScanHelper()
         } else if let extendedKey {
             switch extendedKey {
-            case .private(let privateKey):
+            case let .private(privateKey):
                 switch extendedKey.derivedType {
                 case .master:
                     let wallet = HDWallet(masterKey: privateKey, coinType: network.coinType, purpose: purpose)
@@ -246,7 +255,7 @@ public class BitcoinCoreBuilder {
                     throw BuildError.notSupported
                 }
 
-            case .public(let publicKey):
+            case let .public(publicKey):
                 switch extendedKey.derivedType {
                 case .account:
                     let wallet = HDWatchAccountWallet(publicKey: publicKey)
@@ -294,7 +303,10 @@ public class BitcoinCoreBuilder {
         )
         let publicKeySetter = TransactionPublicKeySetter(storage: storage)
         let outputScriptTypeParser = OutputScriptTypeParser()
-        let transactionAddressExtractor = TransactionOutputAddressExtractor(storage: storage, addressConverter: addressConverter)
+        let transactionAddressExtractor = TransactionOutputAddressExtractor(
+            storage: storage,
+            addressConverter: addressConverter
+        )
         let transactionExtractor = TransactionExtractor(
             outputScriptTypeParser: outputScriptTypeParser,
             publicKeySetter: publicKeySetter,
@@ -309,7 +321,10 @@ public class BitcoinCoreBuilder {
             listener: dataProvider
         )
         let transactionConflictResolver = TransactionConflictsResolver(storage: storage)
-        let transactionsProcessorQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.transaction-processor", qos: .background)
+        let transactionsProcessorQueue = DispatchQueue(
+            label: "com.sunimp.bitcoin-core.transaction-processor",
+            qos: .background
+        )
         let blockTransactionProcessor = BlockTransactionProcessor(
             storage: storage,
             extractor: transactionExtractor,
@@ -358,7 +373,12 @@ public class BitcoinCoreBuilder {
 
         let bloomFilterManager = BloomFilterManager(factory: factory)
         let bloomFilterLoader = BloomFilterLoader(bloomFilterManager: bloomFilterManager, peerManager: peerManager)
-        let blockchain = Blockchain(storage: storage, blockValidator: blockValidator, factory: factory, listener: dataProvider)
+        let blockchain = Blockchain(
+            storage: storage,
+            blockValidator: blockValidator,
+            factory: factory,
+            listener: dataProvider
+        )
         let blockSyncer = BlockSyncer.instance(
             storage: storage,
             checkpoint: checkpoint,
@@ -377,7 +397,7 @@ public class BitcoinCoreBuilder {
                 if let provider = apiTransactionProvider as? BlockchairTransactionProvider {
                     provider.blockchairApi
                 } else {
-                    BlockchairApi(chainId: network.blockchairChainId)
+                    BlockchairApi(chainID: network.blockchairChainID)
                 }
 
             let lastBlockProvider = BlockchairLastBlockProvider(blockchairApi: blockchairApi)
@@ -482,7 +502,10 @@ public class BitcoinCoreBuilder {
                 inputSorterFactory: transactionDataSorterFactory
             )
             let lockTimeSetter = LockTimeSetter(storage: storage)
-            let transactionSigner = TransactionSigner(ecdsaInputSigner: ecdsaInputSigner, schnorrInputSigner: schnorrInputSigner)
+            let transactionSigner = TransactionSigner(
+                ecdsaInputSigner: ecdsaInputSigner,
+                schnorrInputSigner: schnorrInputSigner
+            )
             let _transactionBuilder = TransactionBuilder(
                 recipientSetter: recipientSetter,
                 inputSetter: inputSetter,

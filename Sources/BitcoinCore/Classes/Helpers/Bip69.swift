@@ -1,13 +1,14 @@
 //
 //  Bip69.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/1/15.
 //
 
 import Foundation
 
 enum Bip69 {
+    // MARK: Static Properties
+
     static var outputComparator: ((Output, Output) -> Bool) = { o, o1 in
         if o.value != o1.value {
             return o.value < o1.value
@@ -28,6 +29,8 @@ enum Bip69 {
 
         return result || o.output.index < o1.output.index
     }
+
+    // MARK: Static Functions
 
     private static func compare(data: Data, data2: Data) -> Bool {
         guard data.count == data2.count else {

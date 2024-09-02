@@ -1,3 +1,9 @@
+//
+//  WatchedTransactionManagerTests.swift
+//
+//  Created by Sun on 2019/7/13.
+//
+
 // import Quick
 // import Nimble
 // import XCTest

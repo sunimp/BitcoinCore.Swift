@@ -1,8 +1,7 @@
 //
 //  Checkpoint.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/3/5.
 //
 
 import Foundation
@@ -13,8 +12,12 @@ import WWExtensions
 // MARK: - Checkpoint
 
 public struct Checkpoint {
+    // MARK: Properties
+
     public let block: Block
     public let additionalBlocks: [Block]
+
+    // MARK: Lifecycle
 
     public init(block: Block, additionalBlocks: [Block]) {
         self.block = block
@@ -34,6 +37,8 @@ public struct Checkpoint {
         block = try Checkpoint.readBlock(data: checkpointData.block)
         additionalBlocks = try checkpointData.additionalBlocks.map { try Checkpoint.readBlock(data: $0) }
     }
+
+    // MARK: Static Functions
 
     private static func readBlock(data: Data) throws -> Block {
         let byteStream = ByteStream(data)
@@ -66,7 +71,12 @@ extension Checkpoint {
         case wrongParameters
     }
 
-    public static func resolveCheckpoint(network: INetwork, syncMode: BitcoinCore.SyncMode, storage: IStorage) -> Checkpoint {
+    public static func resolveCheckpoint(
+        network: INetwork,
+        syncMode: BitcoinCore.SyncMode,
+        storage: IStorage
+    )
+        -> Checkpoint {
         let lastBlock = storage.lastBlock
         let checkpoint: Checkpoint
 

@@ -1,8 +1,7 @@
 //
 //  MerkleBlockMessage.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -12,6 +11,8 @@ import WWExtensions
 // MARK: - MerkleBlockMessage
 
 struct MerkleBlockMessage: IMessage {
+    // MARK: Properties
+
     let blockHeader: BlockHeader
 
     /// Number of transactions in the block (including unmatched ones)
@@ -22,6 +23,8 @@ struct MerkleBlockMessage: IMessage {
     /// flag bits, packed per 8 in a byte, least significant bit first (including standard varint size prefix)
     let numberOfFlags: VarInt
     let flags: [UInt8]
+
+    // MARK: Computed Properties
 
     var description: String {
         "\(blockHeader.headerHash.ww.reversedHex)"

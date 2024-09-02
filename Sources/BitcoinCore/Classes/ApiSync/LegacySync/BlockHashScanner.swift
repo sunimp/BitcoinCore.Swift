@@ -1,8 +1,7 @@
 //
 //  BlockHashScanner.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/2/26.
 //
 
 import Foundation
@@ -10,17 +9,23 @@ import Foundation
 // MARK: - BlockHashScanner
 
 class BlockHashScanner {
+    // MARK: Properties
+
     weak var listener: IApiSyncerListener?
 
     private let restoreKeyConverter: IRestoreKeyConverter
     private let provider: IApiTransactionProvider
     private let helper: IBlockHashScanHelper
 
+    // MARK: Lifecycle
+
     init(restoreKeyConverter: IRestoreKeyConverter, provider: IApiTransactionProvider, helper: IBlockHashScanHelper) {
         self.restoreKeyConverter = restoreKeyConverter
         self.provider = provider
         self.helper = helper
     }
+
+    // MARK: Functions
 
     func getBlockHashes(externalKeys: [PublicKey], internalKeys: [PublicKey]) async throws -> BlockHashesResponse {
         let externalAddresses = externalKeys.map {

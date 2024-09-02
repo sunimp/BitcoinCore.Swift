@@ -1,8 +1,7 @@
 //
 //  PendingTransactionProcessor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/9/24.
 //
 
 import Foundation
@@ -10,6 +9,11 @@ import Foundation
 // MARK: - PendingTransactionProcessor
 
 class PendingTransactionProcessor {
+    // MARK: Properties
+
+    weak var listener: IBlockchainDataListener?
+    weak var transactionListener: ITransactionListener?
+
     private let storage: IStorage
     private let extractor: ITransactionExtractor
     private let publicKeyManager: IPublicKeyManager
@@ -17,12 +21,11 @@ class PendingTransactionProcessor {
     private let conflictsResolver: ITransactionConflictsResolver
     private let ignoreIncoming: Bool
 
-    weak var listener: IBlockchainDataListener?
-    weak var transactionListener: ITransactionListener?
-
     private let queue: DispatchQueue
 
     private var notMineTransactions = Set<Data>()
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -43,6 +46,8 @@ class PendingTransactionProcessor {
         self.listener = listener
         self.queue = queue
     }
+
+    // MARK: Functions
 
     private func relay(transaction: Transaction, order: Int) {
         transaction.status = .relayed

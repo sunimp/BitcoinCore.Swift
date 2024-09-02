@@ -1,8 +1,7 @@
 //
 //  PublicKey.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/20.
 //
 
 import Foundation
@@ -13,10 +12,31 @@ import WWCryptoKit
 // MARK: - PublicKey
 
 public class PublicKey: Record {
+    // MARK: Nested Types
+
     public enum InitError: Error {
         case invalid
         case wrongNetwork
     }
+
+    enum Columns: String, ColumnExpression, CaseIterable {
+        case path
+        case account
+        case index
+        case external
+        case raw
+        case keyHash
+        case scriptHashForP2WPKH
+        case convertedForP2tr
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "publicKeys"
+    }
+
+    // MARK: Properties
 
     public let path: String
     public let account: Int
@@ -27,18 +47,7 @@ public class PublicKey: Record {
     public let hashP2wpkhWrappedInP2sh: Data
     public let convertedForP2tr: Data
 
-    init(path: String, hashP2pkh: Data = Data(), hashP2wpkhWrappedInP2sh: Data = Data(), convertedForP2tr: Data = Data()) {
-        self.path = path
-        account = 0
-        index = 0
-        external = false
-        raw = Data()
-        self.hashP2pkh = hashP2pkh
-        self.hashP2wpkhWrappedInP2sh = hashP2wpkhWrappedInP2sh
-        self.convertedForP2tr = convertedForP2tr
-
-        super.init()
-    }
+    // MARK: Lifecycle
 
     public init(withAccount account: Int, index: Int, external: Bool, hdPublicKeyData data: Data) throws {
         self.account = account
@@ -53,19 +62,22 @@ public class PublicKey: Record {
         super.init()
     }
 
-    override open class var databaseTableName: String {
-        "publicKeys"
-    }
+    init(
+        path: String,
+        hashP2pkh: Data = Data(),
+        hashP2wpkhWrappedInP2sh: Data = Data(),
+        convertedForP2tr: Data = Data()
+    ) {
+        self.path = path
+        account = 0
+        index = 0
+        external = false
+        raw = Data()
+        self.hashP2pkh = hashP2pkh
+        self.hashP2wpkhWrappedInP2sh = hashP2wpkhWrappedInP2sh
+        self.convertedForP2tr = convertedForP2tr
 
-    enum Columns: String, ColumnExpression, CaseIterable {
-        case path
-        case account
-        case index
-        case external
-        case raw
-        case keyHash
-        case scriptHashForP2WPKH
-        case convertedForP2tr
+        super.init()
     }
 
     required init(row: Row) throws {
@@ -80,6 +92,8 @@ public class PublicKey: Record {
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.path] = path

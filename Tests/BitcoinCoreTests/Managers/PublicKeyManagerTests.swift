@@ -1,3 +1,9 @@
+//
+//  PublicKeyManagerTests.swift
+//
+//  Created by Sun on 2018/8/28.
+//
+
 // import XCTest
 // import Cuckoo
 // import HDWalletKit
@@ -30,8 +36,10 @@
 //            when(mock.regenerateBloomFilter()).thenDoNothing()
 //        }
 //
-//        hdWallet = HDWallet(seed: Data(), coinType: UInt32(1), xPrivKey: UInt32(0x04358394), xPubKey: UInt32(0x043587cf))
-//        manager = PublicKeyManager(storage: mockStorage, hdWallet: mockHDWallet, restoreKeyConverter: mockRestoreKeyConverter)
+//        hdWallet = HDWallet(seed: Data(), coinType: UInt32(1), xPrivKey: UInt32(0x04358394), xPubKey:
+//        UInt32(0x043587cf))
+//        manager = PublicKeyManager(storage: mockStorage, hdWallet: mockHDWallet, restoreKeyConverter:
+//        mockRestoreKeyConverter)
 //        manager.bloomFilterManager = mockBloomFilterManager
 //    }
 //
@@ -67,7 +75,8 @@
 //    }
 //
 //    func testChangePublicKey_NoUnusedPublicKey() {
-//        let publicKey = PublicKeyWithUsedState(publicKey: getPublicKey(withAccount: 0, index: 0, chain: .internal), used: true)
+//        let publicKey = PublicKeyWithUsedState(publicKey: getPublicKey(withAccount: 0, index: 0, chain: .internal),
+//        used: true)
 //
 //        stub(mockStorage) { mock in
 //            when(mock.publicKeysWithUsedState()).thenReturn([publicKey])
@@ -102,7 +111,8 @@
 //    }
 //
 //    func testReceivePublicKey_NoUnusedPublicKey() {
-//        let publicKey = PublicKeyWithUsedState(publicKey: getPublicKey(withAccount: 0, index: 0, chain: .external), used: true)
+//        let publicKey = PublicKeyWithUsedState(publicKey: getPublicKey(withAccount: 0, index: 0, chain: .external),
+//        used: true)
 //
 //        stub(mockStorage) { mock in
 //            when(mock.publicKeysWithUsedState()).thenReturn([publicKey])
@@ -413,7 +423,8 @@
 //
 //    private func getPublicKey(withAccount account: Int, index: Int, chain: HDWallet.Chain) -> PublicKey {
 //        let hdPrivKeyData = try! hdWallet.privateKeyData(account: account, index: index, external: chain == .external)
-//        return PublicKey(withAccount: account, index: index, external: chain == .external, hdPublicKeyData: hdPrivKeyData)
+//        return PublicKey(withAccount: account, index: index, external: chain == .external, hdPublicKeyData:
+//        hdPrivKeyData)
 //    }
 //
 // }

@@ -1,8 +1,7 @@
 //
 //  Address.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/6.
 //
 
 import Foundation
@@ -23,9 +22,13 @@ public protocol Address: AnyObject {
 // MARK: - LegacyAddress
 
 public class LegacyAddress: Address, Equatable {
+    // MARK: Properties
+
     public let type: AddressType
     public let lockingScriptPayload: Data
     public let stringValue: String
+
+    // MARK: Computed Properties
 
     public var scriptType: ScriptType {
         switch type {
@@ -41,11 +44,15 @@ public class LegacyAddress: Address, Equatable {
         }
     }
 
+    // MARK: Lifecycle
+
     public init(type: AddressType, payload: Data, base58: String) {
         self.type = type
         lockingScriptPayload = payload
         stringValue = base58
     }
+
+    // MARK: Static Functions
 
     public static func == (lhs: LegacyAddress, rhs: some Address) -> Bool {
         guard let rhs = rhs as? LegacyAddress else {

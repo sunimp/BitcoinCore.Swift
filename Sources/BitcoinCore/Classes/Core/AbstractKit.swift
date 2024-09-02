@@ -1,32 +1,18 @@
 //
 //  AbstractKit.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Foundation
 
 open class AbstractKit {
+    // MARK: Properties
+
     public var bitcoinCore: BitcoinCore
     public var network: INetwork
 
-    public init(bitcoinCore: BitcoinCore, network: INetwork) {
-        self.bitcoinCore = bitcoinCore
-        self.network = network
-    }
-
-    public var watchAccount: Bool {
-        bitcoinCore.watchAccount
-    }
-
-    open func start() {
-        bitcoinCore.start()
-    }
-
-    open func stop() {
-        bitcoinCore.stop()
-    }
+    // MARK: Computed Properties
 
     open var lastBlockInfo: BlockInfo? {
         bitcoinCore.lastBlockInfo
@@ -40,7 +26,41 @@ open class AbstractKit {
         bitcoinCore.syncState
     }
 
-    open func transactions(fromUid: String? = nil, type: TransactionFilterType?, limit: Int? = nil) -> [TransactionInfo] {
+    open var debugInfo: String {
+        bitcoinCore.debugInfo(network: network)
+    }
+
+    open var statusInfo: [(String, Any)] {
+        bitcoinCore.statusInfo
+    }
+
+    public var watchAccount: Bool {
+        bitcoinCore.watchAccount
+    }
+
+    // MARK: Lifecycle
+
+    public init(bitcoinCore: BitcoinCore, network: INetwork) {
+        self.bitcoinCore = bitcoinCore
+        self.network = network
+    }
+
+    // MARK: Functions
+
+    open func start() {
+        bitcoinCore.start()
+    }
+
+    open func stop() {
+        bitcoinCore.stop()
+    }
+
+    open func transactions(
+        fromUid: String? = nil,
+        type: TransactionFilterType?,
+        limit: Int? = nil
+    )
+        -> [TransactionInfo] {
         bitcoinCore.transactions(fromUid: fromUid, type: type, limit: limit)
     }
 
@@ -50,16 +70,6 @@ open class AbstractKit {
 
     open func send(params: SendParameters) throws -> FullTransaction {
         try bitcoinCore.send(params: params)
-    }
-
-    public func send(to hash: Data, scriptType: ScriptType, params: SendParameters) throws -> FullTransaction {
-        params.address = try bitcoinCore.address(fromHash: hash, scriptType: scriptType).stringValue
-
-        return try bitcoinCore.send(params: params)
-    }
-
-    public func redeem(from unspentOutput: UnspentOutput, params: SendParameters) throws -> FullTransaction {
-        try bitcoinCore.redeem(from: unspentOutput, params: params)
     }
 
     open func createRawTransaction(params: SendParameters) throws -> Data {
@@ -120,20 +130,22 @@ open class AbstractKit {
         try bitcoinCore.receivePublicKey()
     }
 
-    public func publicKey(byPath path: String) throws -> PublicKey {
-        try bitcoinCore.publicKey(byPath: path)
-    }
-
     open func watch(transaction: BitcoinCore.TransactionFilter, delegate: IWatchedTransactionDelegate) {
         bitcoinCore.watch(transaction: transaction, delegate: delegate)
     }
 
-    open var debugInfo: String {
-        bitcoinCore.debugInfo(network: network)
+    public func send(to hash: Data, scriptType: ScriptType, params: SendParameters) throws -> FullTransaction {
+        params.address = try bitcoinCore.address(fromHash: hash, scriptType: scriptType).stringValue
+
+        return try bitcoinCore.send(params: params)
     }
 
-    open var statusInfo: [(String, Any)] {
-        bitcoinCore.statusInfo
+    public func redeem(from unspentOutput: UnspentOutput, params: SendParameters) throws -> FullTransaction {
+        try bitcoinCore.redeem(from: unspentOutput, params: params)
+    }
+
+    public func publicKey(byPath path: String) throws -> PublicKey {
+        try bitcoinCore.publicKey(byPath: path)
     }
 
     public func rawTransaction(transactionHash: String) -> String? {
@@ -157,15 +169,16 @@ open class AbstractKit {
         try bitcoinCore.send(replacementTransaction: replacementTransaction)
     }
 
-    public func speedUpTransactionInfo(transactionHash: String) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
+    public func speedUpTransactionInfo(transactionHash: String)
+        -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
         bitcoinCore.replacmentTransactionInfo(transactionHash: transactionHash, type: .speedUp)
     }
 
-    public func cancelTransactionInfo(transactionHash: String) -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
+    public func cancelTransactionInfo(transactionHash: String)
+        -> (originalTransactionSize: Int, feeRange: Range<Int>)? {
         if
             let receivePublicKey = try? bitcoinCore.receivePublicKey(),
-            let address = try? bitcoinCore.address(from: receivePublicKey)
-        {
+            let address = try? bitcoinCore.address(from: receivePublicKey) {
             bitcoinCore.replacmentTransactionInfo(
                 transactionHash: transactionHash,
                 type: .cancel(address: address, publicKey: receivePublicKey)

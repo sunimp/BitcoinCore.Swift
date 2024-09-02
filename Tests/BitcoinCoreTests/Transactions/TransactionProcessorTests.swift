@@ -1,3 +1,9 @@
+//
+//  TransactionProcessorTests.swift
+//
+//  Created by Sun on 2018/7/30.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -172,7 +178,8 @@
 //            when(mock.transaction(byHash: equal(to: transaction.header.dataHash))).thenReturn(transaction.header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//        false)
 //
 //        verify(mockOutputExtractor, never()).extract(transaction: equal(to: transaction))
 //        verify(mockOutputsCache, never()).hasOutputs(forInputs: any())
@@ -198,7 +205,8 @@
 //            when(mock.transaction(byHash: equal(to: transactions[3].header.dataHash))).thenReturn(transactions[3].header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transactions[3], transactions[1], transactions[2], transactions[0]], inBlock: nil, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transactions[3], transactions[1], transactions[2],
+//        transactions[0]], inBlock: nil, skipCheckBloomFilter: false)
 //
 //        verify(mockStorage).add(transaction: equal(to: transactions[0]))
 //        verify(mockStorage).update(transaction: equal(to: transactions[1].header))
@@ -223,7 +231,8 @@
 //            when(mock.transaction(byHash: equal(to: transaction.header.dataHash))).thenReturn(transaction.header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: block, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: block, skipCheckBloomFilter:
+//        false)
 //        verify(mockStorage).update(transaction: equal(to: transaction.header))
 //        verify(mockBlockchainDataListener).onUpdate(updated: equal(to: [transaction.header]), inserted: equal(to: []), inBlock: equal(to: block))
 //
@@ -232,10 +241,12 @@
 //            when(mock.transaction(byHash: equal(to: transaction.header.dataHash))).thenReturn(transaction.header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//        false)
 //
 //        verify(mockStorage, never()).update(transaction: equal(to: transaction.header))
-//        verify(mockBlockchainDataListener, never()).onUpdate(updated: equal(to: [transaction.header]), inserted: equal(to: []), inBlock: equal(to: nil))
+//        verify(mockBlockchainDataListener, never()).onUpdate(updated: equal(to: [transaction.header]), inserted:
+//        equal(to: []), inBlock: equal(to: nil))
 //
 //        XCTAssertEqual(transaction.header.status, TransactionStatus.relayed)
 //        XCTAssertEqual(transaction.header.blockHash, block.headerHash)
@@ -254,7 +265,8 @@
 //            when(mock.transaction(byHash: equal(to: transaction.header.dataHash))).thenReturn(transaction.header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: block, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: block, skipCheckBloomFilter:
+//        false)
 //        verify(mockStorage).update(transaction: equal(to: transaction.header))
 //        verify(mockBlockchainDataListener).onUpdate(updated: equal(to: [transaction.header]), inserted: equal(to: []), inBlock: equal(to: block))
 //
@@ -268,7 +280,8 @@
 //            when(mock.onUpdate(updated: any(), inserted: any(), inBlock: any())).thenDoNothing()
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nextBlock, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nextBlock,
+//        skipCheckBloomFilter: false)
 //
 //        verify(mockStorage).update(transaction: equal(to: transaction.header))
 //        verify(mockBlockchainDataListener).onUpdate(updated: equal(to: [transaction.header]), inserted: equal(to: []), inBlock: equal(to: nextBlock))
@@ -296,7 +309,8 @@
 //            when(mock.transaction(byHash: equal(to: transactions[3].header.dataHash))).thenReturn(transactions[3].header)
 //        }
 //
-//        try! transactionProcessor.processReceived(transactions: [transactions[3], transactions[1], transactions[2], transactions[0]], inBlock: block, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transactions[3], transactions[1], transactions[2],
+//        transactions[0]], inBlock: block, skipCheckBloomFilter: false)
 //
 //        verify(mockStorage).add(transaction: equal(to: transactions[0]))
 //        verify(mockStorage).update(transaction: equal(to: transactions[1].header))
@@ -317,7 +331,8 @@
 //        let transaction = TestData.p2pkhTransaction
 //        transaction.header.isMine = true
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//        false)
 //
 //        verify(mockOutputExtractor).extract(transaction: equal(to: transaction))
 //        verify(mockOutputsCache).hasOutputs(forInputs: equal(to: transaction.inputs))
@@ -335,7 +350,8 @@
 //        let transaction = TestData.p2pkhTransaction
 //        transaction.header.isMine = false
 //
-//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//        try! transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//        false)
 //
 //        verify(mockOutputExtractor).extract(transaction: equal(to: transaction))
 //        verify(mockOutputsCache).hasOutputs(forInputs: equal(to: transaction.inputs))
@@ -355,7 +371,8 @@
 //        }
 //
 //        do {
-//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//            false)
 //            XCTFail("Should throw exception")
 //        } catch _ as BloomFilterManager.BloomFilterExpired {
 //        } catch {
@@ -382,7 +399,8 @@
 //        }
 //
 //        do {
-//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//            false)
 //            XCTFail("Should throw exception")
 //        } catch _ as BloomFilterManager.BloomFilterExpired {
 //        } catch {
@@ -406,7 +424,8 @@
 //        transaction.outputs[0].publicKeyPath = TestData.pubKey().path
 //
 //        do {
-//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: true)
+//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//            true)
 //        } catch {
 //            XCTFail("Unknown error thrown")
 //        }
@@ -431,7 +450,8 @@
 //        }
 //
 //        do {
-//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter: false)
+//            try transactionProcessor.processReceived(transactions: [transaction], inBlock: nil, skipCheckBloomFilter:
+//            false)
 //        } catch {
 //            XCTFail("Shouldn't throw exception")
 //        }
@@ -464,7 +484,8 @@
 //
 //                        calledTransactions = []
 //
-//                        try! transactionProcessor.processReceived(transactions: [transactions[i], transactions[j], transactions[k], transactions[l]], inBlock: nil, skipCheckBloomFilter: false)
+//                        try! transactionProcessor.processReceived(transactions: [transactions[i], transactions[j],
+//                        transactions[k], transactions[l]], inBlock: nil, skipCheckBloomFilter: false)
 //
 //                        verifyNoMoreInteractions(mockBlockchainDataListener)
 //

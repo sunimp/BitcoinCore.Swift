@@ -1,8 +1,7 @@
 //
-//  ScriptType.swift
-//  BitcoinCore
+//  Output.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/22.
 //
 
 import Foundation
@@ -13,7 +12,18 @@ import WWExtensions
 // MARK: - ScriptType
 
 public enum ScriptType: Int, DatabaseValueConvertible {
-    case unknown, p2pkh, p2pk, p2multi, p2sh, p2wsh, p2wpkh, p2wpkhSh, p2tr, nullData
+    case unknown
+    case p2pkh
+    case p2pk
+    case p2multi
+    case p2sh
+    case p2wsh
+    case p2wpkh
+    case p2wpkhSh
+    case p2tr
+    case nullData
+
+    // MARK: Computed Properties
 
     var size: Int {
         switch self {
@@ -36,26 +46,49 @@ public enum ScriptType: Int, DatabaseValueConvertible {
 // MARK: - Output
 
 public class Output: Record {
+    // MARK: Nested Types
+
+    enum Columns: String, ColumnExpression, CaseIterable {
+        case value
+        case lockingScript
+        case index
+        case transactionHash
+        case publicKeyPath
+        case changeOutput
+        case scriptType
+        case redeemScript
+        case keyHash
+        case address
+        case pluginID
+        case pluginData
+        case failedToSpend
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "outputs"
+    }
+
+    // MARK: Properties
+
     public var value: Int
     public var lockingScript: Data
     public var index: Int
     public var transactionHash: Data
-    var publicKeyPath: String? = nil
-    private(set) var changeOutput = false
     public var scriptType: ScriptType = .unknown
     public var redeemScript: Data? = nil
     public var lockingScriptPayload: Data? = nil
-    var address: String? = nil
-    var failedToSpend = false
-
-    public var pluginId: UInt8? = nil
+    public var pluginID: UInt8? = nil
     public var pluginData: String? = nil
     public var signatureScriptFunction: (([Data]) -> Data)? = nil
 
-    public func set(publicKey: PublicKey) {
-        publicKeyPath = publicKey.path
-        changeOutput = !publicKey.external
-    }
+    var publicKeyPath: String? = nil
+    private(set) var changeOutput = false
+    var address: String? = nil
+    var failedToSpend = false
+
+    // MARK: Lifecycle
 
     public init(original: Output) {
         value = original.value
@@ -69,7 +102,7 @@ public class Output: Record {
         lockingScriptPayload = original.lockingScriptPayload
         address = original.address
         failedToSpend = original.failedToSpend
-        pluginId = original.pluginId
+        pluginID = original.pluginID
         pluginData = original.pluginData
         signatureScriptFunction = original.signatureScriptFunction
 
@@ -103,26 +136,6 @@ public class Output: Record {
         }
     }
 
-    override open class var databaseTableName: String {
-        "outputs"
-    }
-
-    enum Columns: String, ColumnExpression, CaseIterable {
-        case value
-        case lockingScript
-        case index
-        case transactionHash
-        case publicKeyPath
-        case changeOutput
-        case scriptType
-        case redeemScript
-        case keyHash
-        case address
-        case pluginId
-        case pluginData
-        case failedToSpend
-    }
-
     required init(row: Row) throws {
         value = row[Columns.value]
         lockingScript = row[Columns.lockingScript]
@@ -134,12 +147,14 @@ public class Output: Record {
         redeemScript = row[Columns.redeemScript]
         lockingScriptPayload = row[Columns.keyHash]
         address = row[Columns.address]
-        pluginId = row[Columns.pluginId]
+        pluginID = row[Columns.pluginID]
         pluginData = row[Columns.pluginData]
         failedToSpend = row[Columns.failedToSpend]
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) throws {
         container[Columns.value] = value
@@ -152,15 +167,22 @@ public class Output: Record {
         container[Columns.redeemScript] = redeemScript
         container[Columns.keyHash] = lockingScriptPayload
         container[Columns.address] = address
-        container[Columns.pluginId] = pluginId
+        container[Columns.pluginID] = pluginID
         container[Columns.pluginData] = pluginData
         container[Columns.failedToSpend] = failedToSpend
+    }
+
+    // MARK: Functions
+
+    public func set(publicKey: PublicKey) {
+        publicKeyPath = publicKey.path
+        changeOutput = !publicKey.external
     }
 }
 
 extension Output {
     var memo: String? {
-        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginId == nil else {
+        guard scriptType == .nullData, let payload = lockingScriptPayload, !payload.isEmpty, pluginID == nil else {
             return nil
         }
 
@@ -170,7 +192,10 @@ extension Output {
         let length = byteStream.read(VarInt.self).underlyingValue
         if byteStream.availableBytes >= length {
             let data = byteStream.read(Data.self, count: Int(length))
-            return String(data: data, encoding: .utf8) // TODO: make memo manager if need parse not only memo (some instructions)
+            return String(
+                data: data,
+                encoding: .utf8
+            ) // TODO: make memo manager if need parse not only memo (some instructions)
         }
 
         return nil

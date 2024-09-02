@@ -1,18 +1,23 @@
 //
 //  BlockHeaderParser.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation
 
 class BlockHeaderParser: IBlockHeaderParser {
+    // MARK: Properties
+
     private let hasher: IHasher
+
+    // MARK: Lifecycle
 
     init(hasher: IHasher) {
         self.hasher = hasher
     }
+
+    // MARK: Functions
 
     func parse(byteStream: ByteStream) -> BlockHeader {
         let version = Int(byteStream.read(Int32.self))
@@ -26,7 +31,8 @@ class BlockHeaderParser: IBlockHeaderParser {
         let headerHash = hasher.hash(data: headerData)
 
         return BlockHeader(
-            version: version, headerHash: headerHash, previousBlockHeaderHash: previousBlockHeaderHash, merkleRoot: merkleRoot,
+            version: version, headerHash: headerHash, previousBlockHeaderHash: previousBlockHeaderHash,
+            merkleRoot: merkleRoot,
             timestamp: timestamp, bits: bits, nonce: nonce
         )
     }

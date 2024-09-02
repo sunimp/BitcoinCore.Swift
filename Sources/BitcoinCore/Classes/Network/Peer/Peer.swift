@@ -1,8 +1,7 @@
 //
 //  Peer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
@@ -12,6 +11,8 @@ import WWToolKit
 // MARK: - Peer
 
 class Peer {
+    // MARK: Nested Types
+
     enum PeerError: Error {
         case peerBestBlockIsLessThanOne
         case peerHasExpiredBlockChain(localHeight: Int32, peerHeight: Int32)
@@ -20,18 +21,9 @@ class Peer {
         case peerProtocolVersionOutdated
     }
 
-    private var remotePeerValidated = false
-    private var versionSent = false
-    private var mempoolSent = false
-    private var connectStartTime: Double?
+    // MARK: Properties
 
     weak var delegate: PeerDelegate?
-
-    private let connection: IPeerConnection
-    private let connectionTimeoutManager: IConnectionTimeoutManager
-
-    private let network: INetwork
-    private let logger: Logger?
 
     var tasks: [PeerTask] = []
     var subVersion = ""
@@ -40,6 +32,19 @@ class Peer {
     // TODO: seems like property connected is not needed. It is always true in PeerManager. Need to check it and remove
     var connected = false
     var connectionTime: Double = 1000
+
+    private var remotePeerValidated = false
+    private var versionSent = false
+    private var mempoolSent = false
+    private var connectStartTime: Double?
+
+    private let connection: IPeerConnection
+    private let connectionTimeoutManager: IConnectionTimeoutManager
+
+    private let network: INetwork
+    private let logger: Logger?
+
+    // MARK: Computed Properties
 
     var protocolVersion: Int32 {
         network.protocolVersion
@@ -56,6 +61,8 @@ class Peer {
     var logName: String {
         connection.logName
     }
+
+    // MARK: Lifecycle
 
     init(
         host _: String,
@@ -75,6 +82,8 @@ class Peer {
     deinit {
         connection.disconnect(error: nil)
     }
+
+    // MARK: Functions
 
     private func sendVersion() {
         let versionMessage = VersionMessage(

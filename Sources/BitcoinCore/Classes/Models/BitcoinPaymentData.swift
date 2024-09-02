@@ -1,13 +1,14 @@
 //
 //  BitcoinPaymentData.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/11/30.
 //
 
 import Foundation
 
 public struct BitcoinPaymentData: Equatable {
+    // MARK: Properties
+
     public let address: String
 
     public let version: String?
@@ -17,21 +18,7 @@ public struct BitcoinPaymentData: Equatable {
 
     public let parameters: [String: String]?
 
-    init(
-        address: String,
-        version: String? = nil,
-        amount: Double? = nil,
-        label: String? = nil,
-        message: String? = nil,
-        parameters: [String: String]? = nil
-    ) {
-        self.address = address
-        self.version = version
-        self.amount = amount
-        self.label = label
-        self.message = message
-        self.parameters = parameters
-    }
+    // MARK: Computed Properties
 
     var uriPaymentAddress: String {
         var uriAddress = address
@@ -55,6 +42,26 @@ public struct BitcoinPaymentData: Equatable {
 
         return uriAddress
     }
+
+    // MARK: Lifecycle
+
+    init(
+        address: String,
+        version: String? = nil,
+        amount: Double? = nil,
+        label: String? = nil,
+        message: String? = nil,
+        parameters: [String: String]? = nil
+    ) {
+        self.address = address
+        self.version = version
+        self.amount = amount
+        self.label = label
+        self.message = message
+        self.parameters = parameters
+    }
+
+    // MARK: Static Functions
 
     public static func == (lhs: BitcoinPaymentData, rhs: BitcoinPaymentData) -> Bool {
         lhs.address == rhs.address &&

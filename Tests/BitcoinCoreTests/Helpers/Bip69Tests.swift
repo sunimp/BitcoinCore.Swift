@@ -1,3 +1,9 @@
+//
+//  Bip69Tests.swift
+//
+//  Created by Sun on 2020/1/15.
+//
+
 // import XCTest
 // import Quick
 // import Nimble
@@ -10,8 +16,10 @@
 //        describe("sort two outputs") {
 //
 //            it("sort by amount") {
-//                let outputWithBigAmount = Output(withValue: 140, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
-//                let outputWithSmallAmount = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+//                let outputWithBigAmount = Output(withValue: 140, index: 0, lockingScript: Data(), keyHash:
+//                "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+//                let outputWithSmallAmount = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
 //
 //                let expected = [outputWithSmallAmount, outputWithBigAmount]
 //                let array = [outputWithBigAmount, outputWithSmallAmount]
@@ -20,8 +28,10 @@
 //            }
 //
 //            it("amount are equal, sort by hashes") {
-//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
-//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9145be32612930b8323add2212a4ec03c1562084f8488ac".data(using: .utf8))
+//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "76a9145be32612930b8323add2212a4ec03c1562084f8488ac".data(using: .utf8))
 //
 //                let expected = [outputHashA, outputHashB]
 //                let array = [outputHashA, outputHashB]
@@ -30,8 +40,10 @@
 //            }
 //
 //            it("amount are equal, sort by hashes with different length") {
-//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
-//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f7".data(using: .utf8))
+//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "76a9144a5fba237213a062f6f57978f7".data(using: .utf8))
 //
 //                let expected = [outputHashB, outputHashA]
 //                let array = [outputHashB, outputHashA]
@@ -40,8 +52,10 @@
 //            }
 //
 //            it("sort by hashes") {
-//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "3d8ed454f4fcc03ba35568aa37528748e56c0142".data(using: .utf8))
-//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "e191794cbc83dfaabe399af396904dd22b721ce2".data(using: .utf8))
+//                let outputHashA = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "3d8ed454f4fcc03ba35568aa37528748e56c0142".data(using: .utf8))
+//                let outputHashB = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+//                "e191794cbc83dfaabe399af396904dd22b721ce2".data(using: .utf8))
 //
 //                let expected = [outputHashA, outputHashB]
 //                let array = [outputHashB, outputHashA]
@@ -97,8 +111,10 @@
 ////    }
 //
 ////    func testSortTwoOutputs() {
-////        let outputWithBigAmount = Output(withValue: 140, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
-////        let outputWithSmallAmount = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash: "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+////        let outputWithBigAmount = Output(withValue: 140, index: 0, lockingScript: Data(), keyHash:
+/// "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
+////        let outputWithSmallAmount = Output(withValue: 12, index: 0, lockingScript: Data(), keyHash:
+/// "76a9144a5fba237213a062f6f57978f796390bdcf8d01588ac".data(using: .utf8))
 ////
 ////        let expected = [outputWithSmallAmount, outputWithBigAmount]
 ////        let array = [outputWithBigAmount, outputWithSmallAmount]
@@ -113,30 +129,38 @@
 ////
 ////        // Check bitcoincash addresses parsing with keep scheme if it's valid
 ////        paymentData = BitcoinPaymentData(address: "bitcoincash:address_data")
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data", paymentData:
+/// paymentData)
 ////
 ////        // invalid scheme - need to leave scheme
 ////        paymentData = BitcoinPaymentData(address: "bitcoin:address_data")
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoin:address_data", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoin:address_data", paymentData:
+/// paymentData)
 ////
 ////        // check parameters
 ////        paymentData = BitcoinPaymentData(address: "address_data", version: "1.0")
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "address_data;version=1.0", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress: "address_data;version=1.0", paymentData:
+/// paymentData)
 ////
 ////        paymentData = BitcoinPaymentData(address: "bitcoincash:address_data", version: "1.0", label: "test")
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data;version=1.0?label=test", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress:
+/// "bitcoincash:address_data;version=1.0?label=test", paymentData: paymentData)
 ////
 ////        paymentData = BitcoinPaymentData(address: "bitcoincash:address_data", amount: 0.01)
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?amount=0.01", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?amount=0.01",
+/// paymentData: paymentData)
 ////
 ////        paymentData = BitcoinPaymentData(address: "bitcoincash:address_data", amount: 0.01, label: "test_sender")
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?amount=0.01&label=test_sender", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress:
+/// "bitcoincash:address_data?amount=0.01&label=test_sender", paymentData: paymentData)
 ////
 ////        paymentData = BitcoinPaymentData(address: "bitcoincash:address_data", parameters: ["custom":"any"])
-////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?custom=any", paymentData: paymentData)
+////        checkPaymentData(addressParser: addressParser, paymentAddress: "bitcoincash:address_data?custom=any",
+/// paymentData: paymentData)
 ////    }
 //
-////    private func checkPaymentData(addressParser: PaymentAddressParser, paymentAddress: String, paymentData: BitcoinPaymentData) {
+////    private func checkPaymentData(addressParser: PaymentAddressParser, paymentAddress: String, paymentData:
+/// BitcoinPaymentData) {
 ////        let bitcoinPaymentData = addressParser.parse(paymentAddress: paymentAddress)
 ////        XCTAssertEqual(bitcoinPaymentData, paymentData)
 ////    }

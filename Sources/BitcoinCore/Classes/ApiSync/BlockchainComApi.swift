@@ -1,8 +1,7 @@
 //
 //  BlockchainComApi.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
@@ -14,13 +13,19 @@ import WWToolKit
 // MARK: - BlockchainComApi
 
 public class BlockchainComApi {
+    // MARK: Static Properties
+
     private static let paginationLimit = 100
     private static let addressesLimit = 50
+
+    // MARK: Properties
 
     private let url: String
     private let delayedNetworkManager: NetworkManager
     private let networkManager: NetworkManager
     private let blockHashFetcher: IBlockHashFetcher
+
+    // MARK: Lifecycle
 
     public init(url: String, blockHashFetcher: IBlockHashFetcher, logger: Logger? = nil) {
         self.url = url
@@ -28,6 +33,8 @@ public class BlockchainComApi {
         delayedNetworkManager = NetworkManager(interRequestInterval: 0.5, logger: logger)
         networkManager = NetworkManager(logger: logger)
     }
+
+    // MARK: Functions
 
     private func addresses(addresses: [String], offset: Int = 0) async throws -> AddressesResponse {
         let parameters: Parameters = [
@@ -39,7 +46,12 @@ public class BlockchainComApi {
         return try await delayedNetworkManager.fetch(url: "\(url)/multiaddr", method: .get, parameters: parameters)
     }
 
-    private func _transactions(addressChunk: [String], stopHeight: Int?, offset: Int = 0) async throws -> [TransactionResponse] {
+    private func _transactions(
+        addressChunk: [String],
+        stopHeight: Int?,
+        offset: Int = 0
+    ) async throws
+        -> [TransactionResponse] {
         let addressesResponse = try await addresses(addresses: addressChunk, offset: offset)
         let transactions = addressesResponse.transactions
 
@@ -89,7 +101,7 @@ extension BlockchainComApi: IApiTransactionProvider {
 
         let hashesMap = try await blockHashFetcher.fetch(heights: blockHeights)
 
-        let items = transactions.compactMap { response -> ApiTransactionItem? in
+        return transactions.compactMap { response -> ApiTransactionItem? in
             guard let blockHeight = response.blockHeight, let blockHash = hashesMap[blockHeight] else {
                 return nil
             }
@@ -102,14 +114,16 @@ extension BlockchainComApi: IApiTransactionProvider {
                 }
             )
         }
-
-        return items
     }
 }
 
 extension BlockchainComApi {
     struct AddressesResponse: ImmutableMappable {
+        // MARK: Properties
+
         let transactions: [TransactionResponse]
+
+        // MARK: Lifecycle
 
         init(map: Map) throws {
             transactions = try map.value("txs")
@@ -117,8 +131,12 @@ extension BlockchainComApi {
     }
 
     struct TransactionResponse: ImmutableMappable {
+        // MARK: Properties
+
         let blockHeight: Int?
         let outputs: [TransactionOutputResponse]
+
+        // MARK: Lifecycle
 
         init(map: Map) throws {
             blockHeight = try? map.value("block_height")
@@ -127,8 +145,12 @@ extension BlockchainComApi {
     }
 
     struct TransactionOutputResponse: ImmutableMappable {
+        // MARK: Properties
+
         let script: String
         let address: String?
+
+        // MARK: Lifecycle
 
         init(map: Map) throws {
             script = try map.value("script")

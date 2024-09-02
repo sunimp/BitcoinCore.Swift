@@ -1,16 +1,21 @@
 //
 //  BlockValidatorSet.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2020/3/3.
 //
 
 import Foundation
 
 public class BlockValidatorSet: IBlockValidator {
+    // MARK: Properties
+
     private var validators = [IBlockValidator]()
 
+    // MARK: Lifecycle
+
     public init() { }
+
+    // MARK: Functions
 
     public func validate(block: Block, previousBlock: Block) throws {
         for validator in validators {

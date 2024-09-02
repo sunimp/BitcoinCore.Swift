@@ -1,3 +1,9 @@
+//
+//  StateManagerTests.swift
+//
+//  Created by Sun on 2019/1/7.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift

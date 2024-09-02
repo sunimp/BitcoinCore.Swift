@@ -1,22 +1,27 @@
 //
 //  BlockHashFetcher.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
 
 public class BlockHashFetcher: IBlockHashFetcher {
+    // MARK: Properties
+
     private let wwFetcher: WWBlockHashFetcher
     private let blockchairFetcher: BlockchairBlockHashFetcher
     private let checkpointHeight: Int
+
+    // MARK: Lifecycle
 
     public init(wwFetcher: WWBlockHashFetcher, blockchairFetcher: BlockchairBlockHashFetcher, checkpointHeight: Int) {
         self.wwFetcher = wwFetcher
         self.blockchairFetcher = blockchairFetcher
         self.checkpointHeight = checkpointHeight
     }
+
+    // MARK: Functions
 
     public func fetch(heights: [Int]) async throws -> [Int: String] {
         let sorted = heights.sorted()
@@ -30,7 +35,10 @@ public class BlockHashFetcher: IBlockHashFetcher {
         }
 
         if !afterCheckpoint.isEmpty {
-            try await blockHashes.merge(blockchairFetcher.fetch(heights: afterCheckpoint), uniquingKeysWith: { a, _ in a })
+            try await blockHashes.merge(
+                blockchairFetcher.fetch(heights: afterCheckpoint),
+                uniquingKeysWith: { a, _ in a }
+            )
         }
 
         return blockHashes

@@ -1,3 +1,9 @@
+//
+//  KitStateProviderTests.swift
+//
+//  Created by Sun on 2018/12/6.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -40,7 +46,8 @@
 //        syncer.syncStarted()
 //        syncer.syncStarted()
 //
-//        verify(mockDelegate, times(1)).handleKitStateUpdate(state: equal(to: BitcoinKit.KitState.syncing(progress: 0)))
+//        verify(mockDelegate, times(1)).handleKitStateUpdate(state: equal(to: BitcoinKit.KitState.syncing(progress:
+//        0)))
 //    }
 //
 //    func testSyncStarted() {
@@ -102,7 +109,8 @@
 //        syncer.currentBestBlockHeightUpdated(height: 101, maxBlockHeight: 200)
 //
 //        verify(mockDelegate).handleKitStateUpdate(state: equal(to: BitcoinKit.KitState.syncing(progress: 0.02)))
-//        verify(mockDelegate, never()).handleKitStateUpdate(state: equal(to: BitcoinKit.KitState.syncing(progress: 0.01)))
+//        verify(mockDelegate, never()).handleKitStateUpdate(state: equal(to: BitcoinKit.KitState.syncing(progress:
+//        0.01)))
 //    }
 //
 // }

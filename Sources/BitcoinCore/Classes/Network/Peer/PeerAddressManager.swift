@@ -1,8 +1,7 @@
 //
 //  PeerAddressManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/4.
 //
 
 import Foundation
@@ -12,6 +11,8 @@ import WWToolKit
 // MARK: - PeerAddressManager
 
 class PeerAddressManager {
+    // MARK: Properties
+
     weak var delegate: IPeerAddressManagerDelegate?
 
     private let storage: IStorage
@@ -20,6 +21,8 @@ class PeerAddressManager {
     private let state: PeerAddressManagerState
     private let logger: Logger?
     private let queue = DispatchQueue(label: "com.sunimp.bitcoin-core.peer-address-manager", qos: .background)
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,

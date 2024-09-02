@@ -1,3 +1,9 @@
+//
+//  BlockDiscoveryBatchTest.swift
+//
+//  Created by Sun on 2019/2/26.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift
@@ -39,7 +45,8 @@
 //            when(mock.gapLimit.get).thenReturn(3)
 //        }
 //
-//        blockDiscovery = BlockDiscoveryBatch(checkpoint: checkpoint, wallet: mockWallet, blockHashFetcher: mockBlockHashFetcher, logger: nil)
+//        blockDiscovery = BlockDiscoveryBatch(checkpoint: checkpoint, wallet: mockWallet, blockHashFetcher:
+//        mockBlockHashFetcher, logger: nil)
 //    }
 //
 //    override func tearDown() {

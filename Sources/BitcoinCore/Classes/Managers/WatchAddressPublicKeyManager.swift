@@ -1,17 +1,20 @@
 //
 //  WatchAddressPublicKeyManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/11/22.
 //
 
 import Foundation
 
 class WatchAddressPublicKeyManager: IPublicKeyFetcher, IPublicKeyManager, IBloomFilterProvider {
+    // MARK: Properties
+
+    weak var bloomFilterManager: IBloomFilterManager?
+
     private let publicKey: WatchAddressPublicKey
     private let restoreKeyConverter: RestoreKeyConverterChain
 
-    weak var bloomFilterManager: IBloomFilterManager?
+    // MARK: Lifecycle
 
     init(storage: IStorage, publicKey: WatchAddressPublicKey, restoreKeyConverter: RestoreKeyConverterChain) {
         self.publicKey = publicKey
@@ -21,6 +24,8 @@ class WatchAddressPublicKeyManager: IPublicKeyFetcher, IPublicKeyManager, IBloom
             storage.add(publicKeys: [publicKey])
         }
     }
+
+    // MARK: Functions
 
     func publicKeys(indices _: Range<UInt32>, external _: Bool) throws -> [PublicKey] {
         [publicKey]

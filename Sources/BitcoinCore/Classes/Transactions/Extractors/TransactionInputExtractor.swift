@@ -1,8 +1,7 @@
 //
 //  TransactionInputExtractor.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/12/17.
 //
 
 import Foundation
@@ -17,13 +16,22 @@ enum ScriptError: Error { case wrongScriptLength, wrongSequence }
 // MARK: - TransactionInputExtractor
 
 class TransactionInputExtractor {
+    // MARK: Properties
+
     private let storage: IStorage
     private let scriptConverter: IScriptConverter
     private let addressConverter: IAddressConverter
 
     private let logger: Logger?
 
-    init(storage: IStorage, scriptConverter: IScriptConverter, addressConverter: IAddressConverter, logger: Logger? = nil) {
+    // MARK: Lifecycle
+
+    init(
+        storage: IStorage,
+        scriptConverter: IScriptConverter,
+        addressConverter: IAddressConverter,
+        logger: Logger? = nil
+    ) {
         self.storage = storage
         self.scriptConverter = scriptConverter
         self.addressConverter = addressConverter
@@ -53,15 +61,13 @@ extension TransactionInputExtractor: ITransactionExtractor {
                 // PFromSH input {push-sig}{signature}{push-redeem}{script}
                 let chunkData = script.chunks.last?.data,
                 let redeemScript = try? scriptConverter.decode(data: chunkData),
-                let opCode = redeemScript.chunks.last?.opCode
-            {
+                let opCode = redeemScript.chunks.last?.opCode {
                 // parse PFromSH transaction input
                 var verifyChunkCode: UInt8 = opCode
                 if
                     verifyChunkCode == OpCode.endIf,
                     redeemScript.chunks.count > 1,
-                    let opCode = redeemScript.chunks.suffix(2).first?.opCode
-                {
+                    let opCode = redeemScript.chunks.suffix(2).first?.opCode {
                     verifyChunkCode = opCode // check pre-last chunk
                 }
                 if OpCode.pFromShCodes.contains(verifyChunkCode) {
@@ -85,8 +91,7 @@ extension TransactionInputExtractor: ITransactionExtractor {
                 payload == nil, sigScriptCount == ScriptType.p2wpkhSh.size,
                 signatureScript[0] == 0x16,
                 signatureScript[1] == 0 || (signatureScript[1] > 0x50 && signatureScript[1] < 0x61),
-                signatureScript[2] == 0x14
-            {
+                signatureScript[2] == 0x14 {
                 // parse PFromWPKH-SH transaction input
                 payload = signatureScript.subdata(in: 1 ..< sigScriptCount) // 0014{20-byte-key-hash}
                 validScriptType = .p2wpkhSh

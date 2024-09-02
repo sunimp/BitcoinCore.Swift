@@ -1,3 +1,9 @@
+//
+//  BitcoinTestNetTests.swift
+//
+//  Created by Sun on 2018/9/20.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore
@@ -13,7 +19,8 @@
 //
 //        mockValidatorHelper = MockValidatorHelper()
 //        mockMerkleBranch = MockIMerkleBranch()
-//        mockNetwork = BitcoinTestNet(validatorFactory: mockValidatorHelper.mockFactory, merkleBranch: mockMerkleBranch)
+//        mockNetwork = BitcoinTestNet(validatorFactory: mockValidatorHelper.mockFactory, merkleBranch:
+//        mockMerkleBranch)
 //    }
 //
 //    override func tearDown() {
@@ -28,10 +35,14 @@
 //        block.height = 4032
 //        do {
 //            try mockNetwork.validate(block: block, previousBlock: TestData.checkpointBlock)
-//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyValidator, times(1)).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyTestNetValidator, never()).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockBitsValidator, never()).validate(candidate: any(), block: any(), network: any())
+//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockLegacyValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockLegacyTestNetValidator, never()).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockBitsValidator, never()).validate(candidate: any(), block: any(), network:
+//            any())
 //        } catch let error {
 //            XCTFail("\(error) Exception Thrown")
 //        }
@@ -43,10 +54,14 @@
 //        previousBlock.timestamp = 1329264000 + 1
 //        do {
 //            try mockNetwork.validate(block: block, previousBlock: previousBlock)
-//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyValidator, never()).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyTestNetValidator, times(1)).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockBitsValidator, never()).validate(candidate: any(), block: any(), network: any())
+//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockLegacyValidator, never()).validate(candidate: any(), block: any(), network:
+//            any())
+//            verify(mockValidatorHelper.mockLegacyTestNetValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockBitsValidator, never()).validate(candidate: any(), block: any(), network:
+//            any())
 //        } catch let error {
 //            XCTFail("\(error) Exception Thrown")
 //        }
@@ -58,10 +73,14 @@
 //        previousBlock.timestamp = 0
 //        do {
 //            try mockNetwork.validate(block: block, previousBlock: previousBlock)
-//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyValidator, never()).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockLegacyTestNetValidator, never()).validate(candidate: any(), block: any(), network: any())
-//            verify(mockValidatorHelper.mockBitsValidator, times(1)).validate(candidate: any(), block: any(), network: any())
+//            verify(mockValidatorHelper.mockHeaderValidator, times(1)).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockLegacyValidator, never()).validate(candidate: any(), block: any(), network:
+//            any())
+//            verify(mockValidatorHelper.mockLegacyTestNetValidator, never()).validate(candidate: any(), block: any(),
+//            network: any())
+//            verify(mockValidatorHelper.mockBitsValidator, times(1)).validate(candidate: any(), block: any(), network:
+//            any())
 //        } catch let error {
 //            XCTFail("\(error) Exception Thrown")
 //        }

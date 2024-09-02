@@ -1,8 +1,7 @@
 //
 //  MempoolTransactions.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/3.
 //
 
 import Combine
@@ -11,20 +10,40 @@ import Foundation
 // MARK: - MempoolTransactions
 
 class MempoolTransactions {
+    // MARK: Properties
+
     private var cancellables = Set<AnyCancellable>()
     private let transactionSyncer: ITransactionSyncer
     private let transactionSender: ITransactionSender?
     private var requestedTransactions = [String: [Data]]()
     private let peersQueue: DispatchQueue
 
+    // MARK: Lifecycle
+
     init(
         transactionSyncer: ITransactionSyncer,
         transactionSender: ITransactionSender?,
-        peersQueue: DispatchQueue = DispatchQueue(label: "com.sunimp.bitcoin-core.mempool-transactions", qos: .userInitiated)
+        peersQueue: DispatchQueue = DispatchQueue(
+            label: "com.sunimp.bitcoin-core.mempool-transactions",
+            qos: .userInitiated
+        )
     ) {
         self.transactionSyncer = transactionSyncer
         self.transactionSender = transactionSender
         self.peersQueue = peersQueue
+    }
+
+    // MARK: Functions
+
+    func subscribeTo(publisher: AnyPublisher<PeerGroupEvent, Never>) {
+        publisher
+            .sink { [weak self] event in
+                switch event {
+                case let .onPeerDisconnect(peer, error): self?.onPeerDisconnect(peer: peer, error: error)
+                default: ()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func addToRequestTransactions(peerHost: String, transactionHashes: [Data]) {
@@ -56,17 +75,6 @@ class MempoolTransactions {
             return false
         }
     }
-
-    func subscribeTo(publisher: AnyPublisher<PeerGroupEvent, Never>) {
-        publisher
-            .sink { [weak self] event in
-                switch event {
-                case .onPeerDisconnect(let peer, let error): self?.onPeerDisconnect(peer: peer, error: error)
-                default: ()
-                }
-            }
-            .store(in: &cancellables)
-    }
 }
 
 // MARK: IPeerTaskHandler
@@ -76,7 +84,10 @@ extension MempoolTransactions: IPeerTaskHandler {
         switch task {
         case let task as RequestTransactionsTask:
             transactionSyncer.handleRelayed(transactions: task.transactions)
-            removeFromRequestedTransactions(peerHost: peer.host, transactionHashes: task.transactions.map(\.header.dataHash))
+            removeFromRequestedTransactions(
+                peerHost: peer.host,
+                transactionHashes: task.transactions.map(\.header.dataHash)
+            )
             transactionSender?.transactionsRelayed(transactions: task.transactions)
             return true
 
@@ -94,8 +105,7 @@ extension MempoolTransactions: IInventoryItemsHandler {
         for item in inventoryItems {
             if
                 case .transaction = item.objectType, !isTransactionRequested(hash: item.hash),
-                transactionSyncer.shouldRequestTransaction(hash: item.hash)
-            {
+                transactionSyncer.shouldRequestTransaction(hash: item.hash) {
                 transactionHashes.append(item.hash)
             }
         }

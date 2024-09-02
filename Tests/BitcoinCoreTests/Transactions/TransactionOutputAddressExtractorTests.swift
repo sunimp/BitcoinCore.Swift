@@ -1,3 +1,9 @@
+//
+//  TransactionOutputAddressExtractorTests.swift
+//
+//  Created by Sun on 2018/12/17.
+//
+
 // import XCTest
 // import Cuckoo
 // @testable import BitcoinCore

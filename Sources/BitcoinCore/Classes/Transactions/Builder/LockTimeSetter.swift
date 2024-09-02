@@ -1,8 +1,7 @@
 //
 //  LockTimeSetter.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/10/4.
 //
 
 import Foundation
@@ -10,7 +9,11 @@ import Foundation
 // MARK: - LockTimeSetter
 
 class LockTimeSetter {
+    // MARK: Properties
+
     private let storage: IStorage
+
+    // MARK: Lifecycle
 
     init(storage: IStorage) {
         self.storage = storage

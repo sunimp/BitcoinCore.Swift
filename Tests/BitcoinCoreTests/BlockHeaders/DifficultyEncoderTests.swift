@@ -1,3 +1,9 @@
+//
+//  DifficultyEncoderTests.swift
+//
+//  Created by Sun on 2018/7/24.
+//
+
 // import XCTest
 // import Cuckoo
 // import BigInt

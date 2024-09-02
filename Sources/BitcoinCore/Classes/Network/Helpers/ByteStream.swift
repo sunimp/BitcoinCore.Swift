@@ -1,17 +1,20 @@
 //
 //  ByteStream.swift
-//  BitcoinKit
 //
-//  Created by Kishikawa Katsumi on 2018/02/11.
-//  Copyright © 2018 Kishikawa Katsumi. All rights reserved.
+//  Created by Sun on 2018/7/18.
 //
 
 import Foundation
 import WWExtensions
 
 public class ByteStream {
+    // MARK: Properties
+
     public let data: Data
+
     private var offset = 0
+
+    // MARK: Computed Properties
 
     public var availableBytes: Int {
         data.count - offset
@@ -21,9 +24,13 @@ public class ByteStream {
         data[offset]
     }
 
+    // MARK: Lifecycle
+
     public init(_ data: Data) {
         self.data = data
     }
+
+    // MARK: Functions
 
     public func read<T>(_ type: T.Type) -> T {
         let size = MemoryLayout<T>.size

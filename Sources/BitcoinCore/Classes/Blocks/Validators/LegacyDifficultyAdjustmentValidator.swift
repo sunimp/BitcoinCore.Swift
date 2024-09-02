@@ -1,8 +1,7 @@
 //
 //  LegacyDifficultyAdjustmentValidator.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/4/15.
 //
 
 import Foundation
@@ -10,12 +9,16 @@ import Foundation
 import BigInt
 
 public class LegacyDifficultyAdjustmentValidator: IBlockChainedValidator {
+    // MARK: Properties
+
+    let difficultyEncoder: IDifficultyEncoder
+    let blockValidatorHelper: IBlockValidatorHelper
+
     private let heightInterval: Int
     private let targetTimespan: Int
     private let maxTargetBits: Int
 
-    let difficultyEncoder: IDifficultyEncoder
-    let blockValidatorHelper: IBlockValidatorHelper
+    // MARK: Lifecycle
 
     public init(
         encoder: IDifficultyEncoder,
@@ -31,6 +34,8 @@ public class LegacyDifficultyAdjustmentValidator: IBlockChainedValidator {
         self.targetTimespan = targetTimespan
         self.maxTargetBits = maxTargetBits
     }
+
+    // MARK: Functions
 
     public func validate(block: Block, previousBlock: Block) throws {
         guard let firstBlock = blockValidatorHelper.previous(for: previousBlock, count: heightInterval - 1) else {

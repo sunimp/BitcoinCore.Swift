@@ -1,8 +1,7 @@
 //
 //  TransactionSerializer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/4.
 //
 
 import Foundation
@@ -40,7 +39,8 @@ public enum TransactionSerializer {
         outputs: [Output],
         inputIndex: Int,
         forked: Bool = false
-    ) throws -> Data {
+    ) throws
+        -> Data {
         var data = Data()
 
         if forked { // use bip143 for new transaction digest algorithm
@@ -72,7 +72,10 @@ public enum TransactionSerializer {
 
             default:
                 data += OpCode
-                    .push(OpCode.p2pkhStart + OpCode.push(inputToSign.previousOutputPublicKey.hashP2pkh) + OpCode.p2pkhFinish)
+                    .push(
+                        OpCode.p2pkhStart + OpCode.push(inputToSign.previousOutputPublicKey.hashP2pkh) + OpCode
+                            .p2pkhFinish
+                    )
             }
 
             data += inputToSign.previousOutput.value
@@ -103,7 +106,8 @@ public enum TransactionSerializer {
         inputsToSign: [InputToSign],
         outputs: [Output],
         inputIndex: Int
-    ) throws -> Data {
+    ) throws
+        -> Data {
         var data = Data()
 
         data += UInt8(0)

@@ -1,3 +1,9 @@
+//
+//  LegacyTestNetDifficultyValidatorTests.swift
+//
+//  Created by Sun on 2018/9/20.
+//
+
 // import XCTest
 // import Cuckoo
 // import BigInt
@@ -39,7 +45,8 @@
 //            when(mock.previous(for: equal(to: block), count: 1)).thenReturn(previousBlock)
 //        }
 //
-//        validator = LegacyTestNetDifficultyValidator(blockHelper: mockBlockHelper, heightInterval: heightInterval, targetSpacing: targetSpacing, maxTargetBits: maxDifficulty)
+//        validator = LegacyTestNetDifficultyValidator(blockHelper: mockBlockHelper, heightInterval: heightInterval,
+//        targetSpacing: targetSpacing, maxTargetBits: maxDifficulty)
 //    }
 //
 //    override func tearDown() {

@@ -1,8 +1,7 @@
 //
 //  ReadOnlyWallet.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/4/7.
 //
 
 import Foundation
@@ -12,13 +11,20 @@ import HDWalletKit
 // MARK: - ReadOnlyWallet
 
 class ReadOnlyWallet {
+    // MARK: Nested Types
+
     enum ReadOnlyWalletError: Error {
         case noKeyForGivenAccount
         case publicKeysDerivationFailed
     }
 
-    private let keys: [Int: String] // [accountId: extendedPublicKey]
+    // MARK: Properties
+
     var gapLimit: Int
+
+    private let keys: [Int: String] // [accountId: extendedPublicKey]
+
+    // MARK: Lifecycle
 
     init(keys: [Int: String], gapLimit: Int) {
         self.keys = keys

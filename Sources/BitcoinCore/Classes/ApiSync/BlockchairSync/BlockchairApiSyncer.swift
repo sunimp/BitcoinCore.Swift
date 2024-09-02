@@ -1,8 +1,7 @@
 //
 //  BlockchairApiSyncer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Combine
@@ -15,7 +14,10 @@ import WWToolKit
 // MARK: - BlockchairApiSyncer
 
 class BlockchairApiSyncer {
+    // MARK: Properties
+
     weak var listener: IApiSyncerListener?
+
     private var task: AnyTask?
     private var syncing = false
 
@@ -27,6 +29,8 @@ class BlockchairApiSyncer {
     private let publicKeyManager: IPublicKeyManager
     private let blockchain: Blockchain
     private let apiSyncStateManager: ApiSyncStateManager
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -49,9 +53,15 @@ class BlockchairApiSyncer {
         self.apiSyncStateManager = apiSyncStateManager
     }
 
+    // MARK: Functions
+
     private func scan() async throws {
         let allKeys = storage.publicKeys()
-        try await fetchRecursive(keys: allKeys, allKeys: allKeys, stopHeight: storage.downloadedTransactionsBestBlockHeight)
+        try await fetchRecursive(
+            keys: allKeys,
+            allKeys: allKeys,
+            stopHeight: storage.downloadedTransactionsBestBlockHeight
+        )
         apiSyncStateManager.restored = true
         listener?.onSyncSuccess()
     }
@@ -139,7 +149,9 @@ extension BlockchairApiSyncer: IApiSyncer {
     }
 
     func sync() {
-        guard !syncing else { return }
+        guard !syncing else {
+            return
+        }
 
         task = Task { [weak self] in
             self?.syncing = false

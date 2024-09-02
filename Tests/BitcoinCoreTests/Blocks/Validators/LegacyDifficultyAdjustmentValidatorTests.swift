@@ -1,3 +1,9 @@
+//
+//  LegacyDifficultyAdjustmentValidatorTests.swift
+//
+//  Created by Sun on 2018/9/20.
+//
+
 // import XCTest
 // import Cuckoo
 // import BigInt
@@ -26,7 +32,8 @@
 //        }
 //        mockBlockHelper = MockIBlockValidatorHelper()
 //
-//        validator = LegacyDifficultyAdjustmentValidator(encoder: mockEncoder, blockValidatorHelper: mockBlockHelper, heightInterval: 2016, targetTimespan: 1209600, maxTargetBits: 0x1d00ffff)
+//        validator = LegacyDifficultyAdjustmentValidator(encoder: mockEncoder, blockValidatorHelper: mockBlockHelper,
+//        heightInterval: 2016, targetTimespan: 1209600, maxTargetBits: 0x1d00ffff)
 //
 //        checkPointBlock = TestData.checkpointBlock
 //        checkPointBlock.height = 40320

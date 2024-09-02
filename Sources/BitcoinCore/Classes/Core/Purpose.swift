@@ -1,8 +1,7 @@
 //
 //  Purpose.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/9/5.
 //
 
 import Foundation

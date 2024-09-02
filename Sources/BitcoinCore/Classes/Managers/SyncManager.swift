@@ -1,8 +1,7 @@
 //
 //  SyncManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2019/3/1.
 //
 
 import Combine
@@ -13,19 +12,23 @@ import WWToolKit
 // MARK: - SyncManager
 
 class SyncManager {
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: Properties
+
     weak var delegate: ISyncManagerDelegate?
 
+    let syncMode: BitcoinCore.SyncMode
+
+    private var cancellables = Set<AnyCancellable>()
     private let reachabilityManager: ReachabilityManager
     private let apiSyncer: IApiSyncer
     private let peerGroup: IPeerGroup
     private let storage: IStorage
-    let syncMode: BitcoinCore.SyncMode
-
     private var initialBestBlockHeight: Int32
     private var currentBestBlockHeight: Int32
     private var foundTransactionsCount = 0
     private var forceAddedBlocksTotal = 0
+
+    // MARK: Computed Properties
 
     private(set) var syncState: BitcoinCore.KitState = .notSynced(error: BitcoinCore.StateError.notStarted) {
         didSet {
@@ -36,7 +39,7 @@ class SyncManager {
     }
 
     private var syncIdle: Bool {
-        guard case .notSynced(error: let error) = syncState else {
+        guard case let .notSynced(error: error) = syncState else {
             return false
         }
 
@@ -49,10 +52,13 @@ class SyncManager {
 
     private var peerGroupRunning: Bool {
         switch syncState {
-        case .syncing, .synced: true
+        case .syncing,
+             .synced: true
         default: false
         }
     }
+
+    // MARK: Lifecycle
 
     init(
         reachabilityManager: ReachabilityManager,
@@ -88,6 +94,8 @@ class SyncManager {
             }
             .store(in: &cancellables)
     }
+
+    // MARK: Functions
 
     private func onChange(isReachable: Bool) {
         if isReachable {
@@ -147,7 +155,8 @@ extension SyncManager: ISyncManager {
     func start() {
         if case .blockchair = syncMode {
             switch syncState {
-            case .apiSyncing, .syncing: return
+            case .apiSyncing,
+                 .syncing: return
             default: ()
             }
         } else {
@@ -168,7 +177,8 @@ extension SyncManager: ISyncManager {
         switch syncState {
         case .apiSyncing:
             apiSyncer.terminate()
-        case .syncing, .synced:
+        case .syncing,
+             .synced:
             peerGroup.stop()
         default: ()
         }

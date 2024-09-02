@@ -1,8 +1,7 @@
 //
 //  TransactionSyncer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/9/25.
 //
 
 import Foundation
@@ -10,10 +9,14 @@ import Foundation
 // MARK: - TransactionSyncer
 
 public class TransactionSyncer {
+    // MARK: Properties
+
     private let storage: IStorage
     private let processor: IPendingTransactionProcessor
     private let invalidator: TransactionInvalidator
     private let publicKeyManager: IPublicKeyManager
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,

@@ -1,8 +1,7 @@
 //
 //  BlockHashPublicKey.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2023/10/27.
 //
 
 import Foundation
@@ -12,8 +11,25 @@ import GRDB
 // MARK: - BlockHashPublicKey
 
 public class BlockHashPublicKey: Record {
+    // MARK: Nested Types
+
+    enum Columns: String, ColumnExpression {
+        case blockHash
+        case publicKeyPath
+    }
+
+    // MARK: Overridden Properties
+
+    override open class var databaseTableName: String {
+        "blockHashPublicKeys"
+    }
+
+    // MARK: Properties
+
     let blockHash: Data
     var publicKeyPath: String
+
+    // MARK: Lifecycle
 
     public init(blockHash: Data, publicKeyPath: String) {
         self.blockHash = blockHash
@@ -22,21 +38,14 @@ public class BlockHashPublicKey: Record {
         super.init()
     }
 
-    override open class var databaseTableName: String {
-        "blockHashPublicKeys"
-    }
-
-    enum Columns: String, ColumnExpression {
-        case blockHash
-        case publicKeyPath
-    }
-
     required init(row: Row) throws {
         blockHash = row[Columns.blockHash]
         publicKeyPath = row[Columns.publicKeyPath]
 
         try super.init(row: row)
     }
+
+    // MARK: Overridden Functions
 
     override open func encode(to container: inout PersistenceContainer) {
         container[Columns.blockHash] = blockHash

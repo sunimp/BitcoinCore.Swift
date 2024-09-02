@@ -1,3 +1,9 @@
+//
+//  TransactionCreatorTests.swift
+//
+//  Created by Sun on 2018/8/15.
+//
+
 // import XCTest
 // import Cuckoo
 // import Nimble
@@ -35,7 +41,9 @@
 //                when(mock.regenerateBloomFilter()).thenDoNothing()
 //            }
 //
-//            creator = TransactionCreator(transactionBuilder: mockTransactionBuilder, transactionProcessor: mockTransactionProcessor, transactionSender: mockTransactionSender, bloomFilterManager: mockBloomFilterManager)
+//            creator = TransactionCreator(transactionBuilder: mockTransactionBuilder, transactionProcessor:
+//            mockTransactionProcessor, transactionSender: mockTransactionSender, bloomFilterManager:
+//            mockBloomFilterManager)
 //        }
 //
 //        afterEach {
@@ -49,7 +57,8 @@
 //                    stub(mockTransactionSender) { mock in
 //                        when(mock.verifyCanSend()).thenDoNothing()
 //                    }
-//                    _ = try! creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay: senderPay, sortType: sortType)
+//                    _ = try! creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay:
+//                    senderPay, sortType: sortType)
 //                }
 //
 //                it("creates transaction") {
@@ -71,7 +80,8 @@
 //                        when(mock.verifyCanSend()).thenDoNothing()
 //                    }
 //
-//                    _ = try? creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay: senderPay, sortType: sortType)
+//                    _ = try? creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay:
+//                    senderPay, sortType: sortType)
 //                }
 //
 //                it("does create transaction") {
@@ -94,7 +104,8 @@
 //                        when(mock.verifyCanSend()).thenThrow(BitcoinCoreErrors.TransactionSendError.noConnectedPeers)
 //                    }
 //
-//                    _ = try? creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay: senderPay, sortType: sortType)
+//                    _ = try? creator.create(to: toAddress, value: sendingValue, feeRate: feeRate, senderPay:
+//                    senderPay, sortType: sortType)
 //                }
 //
 //                it("doesn't create transaction") {
@@ -108,7 +119,8 @@
 //        }
 //
 //        describe("#create(from:to:feeRate:)") {
-//            let unspentOutput = UnspentOutput(output: TestData.p2shTransaction.outputs[0], publicKey: TestData.pubKey(), transaction: Transaction(), blockHeight: nil)
+//            let unspentOutput = UnspentOutput(output: TestData.p2shTransaction.outputs[0], publicKey:
+//            TestData.pubKey(), transaction: Transaction(), blockHeight: nil)
 //
 //            beforeEach {
 //                stub(mockTransactionBuilder) { mock in

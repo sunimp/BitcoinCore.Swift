@@ -1,8 +1,7 @@
 //
 //  ApiSyncer.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/8/23.
 //
 
 import Foundation
@@ -21,6 +20,8 @@ protocol IMultiAccountPublicKeyFetcher {
 // MARK: - ApiSyncer
 
 class ApiSyncer {
+    // MARK: Properties
+
     weak var listener: IApiSyncerListener?
 
     private var tasks = Set<AnyTask>()
@@ -32,6 +33,8 @@ class ApiSyncer {
     private let apiSyncStateManager: ApiSyncStateManager
 
     private let logger: Logger?
+
+    // MARK: Lifecycle
 
     init(
         storage: IStorage,
@@ -49,6 +52,8 @@ class ApiSyncer {
 
         self.logger = logger
     }
+
+    // MARK: Functions
 
     private func _sync() async {
         do {

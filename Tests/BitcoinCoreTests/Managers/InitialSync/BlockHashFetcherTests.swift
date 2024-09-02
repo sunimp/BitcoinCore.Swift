@@ -1,3 +1,9 @@
+//
+//  BlockHashFetcherTests.swift
+//
+//  Created by Sun on 2019/2/26.
+//
+
 // import XCTest
 // import Cuckoo
 // import RxSwift
@@ -35,7 +41,8 @@
 //            when(mock.getAddressVariants(publicKey: equal(to: publicKeys[2]))).thenReturn(addresses[2])
 //        }
 //
-//        blockHashFetcher = BlockHashFetcher(addressSelector: mockAddressSelector, apiManager: mockApiManager, helper: mockBlockHashFetcherHelper)
+//        blockHashFetcher = BlockHashFetcher(addressSelector: mockAddressSelector, apiManager: mockApiManager, helper:
+//        mockBlockHashFetcherHelper)
 //    }
 //
 //    override func tearDown() {

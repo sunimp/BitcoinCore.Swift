@@ -1,3 +1,9 @@
+//
+//  BlockSyncerTests.swift
+//
+//  Created by Sun on 2018/7/30.
+//
+
 // import XCTest
 // import Quick
 // import Nimble
@@ -111,7 +117,8 @@
 //                        }
 //
 //                        it("saves bip44Checkpoint to storage") {
-//                            _ = BlockSyncer.resolveCheckpoint(network: mockNetwork, syncMode: .full, storage: mockStorage)
+//                            _ = BlockSyncer.resolveCheckpoint(network: mockNetwork, syncMode: .full, storage:
+//                            mockStorage)
 //                            verify(mockStorage).save(block: sameInstance(as: bip44Checkpoint.block))
 //                        }
 //                    }
@@ -122,7 +129,8 @@
 //                        }
 //
 //                        it("saves lastCheckpoint to storage") {
-//                            _ = BlockSyncer.resolveCheckpoint(network: mockNetwork, syncMode: .api, storage: mockStorage)
+//                            _ = BlockSyncer.resolveCheckpoint(network: mockNetwork, syncMode: .api, storage:
+//                            mockStorage)
 //                            verify(mockStorage).save(block: sameInstance(as: lastCheckpoint.block))
 //                        }
 //                    }
@@ -132,7 +140,8 @@
 //
 //        context("instance methods") {
 //            beforeEach {
-//                syncer = BlockSyncer(storage: mockStorage, checkpoint: checkpoint, factory: mockFactory, transactionProcessor: mockTransactionProcessor,
+//                syncer = BlockSyncer(storage: mockStorage, checkpoint: checkpoint, factory: mockFactory,
+//                transactionProcessor: mockTransactionProcessor,
 //                        blockchain: mockBlockchain, publicKeyManager: mockAddressManager,
 //                        hashCheckpointThreshold: 100, logger: nil, state: mockState)
 //

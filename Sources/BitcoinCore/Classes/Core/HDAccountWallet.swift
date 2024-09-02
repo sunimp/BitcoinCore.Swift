@@ -1,8 +1,7 @@
 //
 //  HDAccountWallet.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/17.
 //
 
 import Foundation
@@ -50,8 +49,7 @@ extension HDAccountWallet: IPrivateHDWallet {
         index: Int,
         external: Bool
     ) throws
-        -> Data
-    { // todo. Refactor protocol. Because HDWallet and HDAccountWallet use different fields for derive
+        -> Data { // todo. Refactor protocol. Because HDWallet and HDAccountWallet use different fields for derive
         try privateKey(index: index, chain: external ? .external : .internal).raw
     }
 }

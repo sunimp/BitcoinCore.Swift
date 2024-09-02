@@ -1,14 +1,17 @@
 //
 //  PeerManager.swift
-//  BitcoinCore
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2018/11/13.
 //
 
 import Foundation
 
 class PeerManager: IPeerManager {
+    // MARK: Properties
+
     private var peers: [IPeer] = []
+
+    // MARK: Computed Properties
 
     var totalPeersCount: Int {
         peers.count
@@ -25,6 +28,8 @@ class PeerManager: IPeerManager {
     var readyPeers: [IPeer] {
         peers.filter { $0.connected && $0.ready }
     }
+
+    // MARK: Functions
 
     func add(peer: IPeer) {
         peers.append(peer)
